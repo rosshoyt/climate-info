@@ -31,13 +31,25 @@ def get_average_monthly_temperature():
     url += "&startdate=2020-06-01"
     url += "&enddate=2020-06-30"
 
+
     # send the GET request with auth token header
     response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
 
-    # TODO get the average of all the weather stations returned
-    # for key, value in response.json().items():
+    results = response.json()["results"]
+
+    avgTemp = 0
+    for entry in results:
+        avgTemp += entry["value"]
+
+    avgTemp = avgTemp / len(results)    
+    print("Average temp was ", avgTemp)
+
+    # Get the average of all the weather stations returned
+    #for 
+
+    #for key, value in response.json().items():
     #     if key == "results"
     #         for 
     #     print(key, value)
 
-    return{'temperature': response.text}
+    return{'temperature': avgTemp}
