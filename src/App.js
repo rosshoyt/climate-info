@@ -21,18 +21,8 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
+        <p><code>Climate Change Tools</code></p>
         <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
         <p>The current time is {currentTime}.</p>
         <p>The average temperature for Seattle, WA in June 2020 was {averageTemp}°F.</p>
       </header>
