@@ -75,6 +75,7 @@ def get_average_daily_max_temp_city():
     # maps dates to the number of TMAX data samples for the date, used to calculate average TMAX for day  
     dateNumEntries = {} 
     
+    # sum the total max temperatures for each date and track the number of data samples per date
     for entry in results:
         date = entry["date"]     
         
@@ -85,12 +86,12 @@ def get_average_daily_max_temp_city():
             dateNumEntries[date] = 1
             dateAverages[date] = entry["value"]
 
-    # TODO implement date average calculation
-    # for dateAverage in dateAverages.items():
-    #     print(type(dateAverage))
-    #     dateAverage[1] = dateAverage[1] / dateNumEntries[dateAverage[0]]
+    # calculate the average TMAX and store in dateAverages
+    for date, numEntries in dateNumEntries.items():
+        if date in dateAverages:
+            dateAverages[date] = dateAverages[date] / numEntries
 
-    print("Num entries", dateNumEntries)
     print("Date Temp Totals", dateAverages)
+    print("Num entries per date", dateNumEntries)
 
     return dateAverages
