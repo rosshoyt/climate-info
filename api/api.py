@@ -42,14 +42,55 @@ def get_average_monthly_temperature():
         avgTemp += entry["value"]
 
     avgTemp = avgTemp / len(results)    
-    print("Average temp was ", avgTemp)
-
-    # Get the average of all the weather stations returned
-    #for 
-
-    #for key, value in response.json().items():
-    #     if key == "results"
-    #         for 
-    #     print(key, value)
+    print("Average temp for Seattle in June 2020 was ", avgTemp)
 
     return{'temperature': avgTemp}
+
+
+@app.route('/api/temperatures/max')
+def get_average_daily_max_temp_city():
+    # First, we'll setup the request URL
+    url = URL_NOAA_NCDC_CDO
+    # Get average monthly temperature for Seattle
+    url += "/data?"
+    url += "datasetid=GHCND"
+    url += "&datatypeid=TMAX"
+    # Seattle city code:
+    url += "&locationid=CITY:US530018"
+    # Get results in Farenheight
+    url += "&units=standard"
+    # Use June 2020
+    url += "&startdate=2020-06-01"
+    url += "&enddate=2020-06-30"
+    url += "&limit=500"
+    
+    # send the GET request with auth token header
+    # TODO move NOAA API code to a separate class, add request method
+    response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
+
+    results = response.json()["results"]
+
+    # maps dates to TMAX data
+    dateAverages = {}
+    # maps dates to the number of TMAX data samples for the date, used to calculate average TMAX for day  
+    dateNumEntries = {} 
+    
+    for entry in results:
+        date = entry["date"]     
+        
+        if date in dateAverages:
+            dateNumEntries[date] += 1
+            dateAverages[date] += entry["value"]
+        else:
+            dateNumEntries[date] = 1
+            dateAverages[date] = entry["value"]
+
+    # TODO implement date average calculation
+    # for dateAverage in dateAverages.items():
+    #     print(type(dateAverage))
+    #     dateAverage[1] = dateAverage[1] / dateNumEntries[dateAverage[0]]
+
+    print("Num entries", dateNumEntries)
+    print("Date Temp Totals", dateAverages)
+
+    return dateAverages
