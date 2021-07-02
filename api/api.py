@@ -15,7 +15,7 @@ def get_current_time():
     return{'time': time.time()}
 
 
-@app.route('/api/temperature')
+@app.route('/api/temperature/average')
 def get_average_monthly_temperature():
     # First, we'll setup the request URL
     url = URL_NOAA_NCDC_CDO
@@ -47,7 +47,7 @@ def get_average_monthly_temperature():
     return{'temperature': avgTemp}
 
 
-@app.route('/api/temperatures/max')
+@app.route('/api/temperature/max')
 def get_average_daily_max_temp_city():
     # First, we'll setup the request URL
     url = URL_NOAA_NCDC_CDO

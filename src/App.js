@@ -9,7 +9,7 @@ function App() {
   const [averageTemp, setAverageTemp] = useState(0);
 
   useEffect(() => {
-    fetch('/api/temperature').then(res => res.json()).then(data => {
+    fetch('/api/temperature/average').then(res => res.json()).then(data => {
       setAverageTemp(data.temperature);
     });
   }, []);
