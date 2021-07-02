@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 import LocationSelect from './Components/LocationSelect';
 import { Grid, Button } from '@material-ui/core';
+import LineChart from './Components/Charts/LineChart';
+import { line } from "./data";
 
 function App() {
   const [averageTemp, setAverageTemp] = useState(0);
@@ -22,6 +24,9 @@ function App() {
           Start
         </Button>
       </Grid>
+      <div style={{ height: 500 }}>
+        <LineChart data={line}/>
+      </div>
     </div>
   );
 }
