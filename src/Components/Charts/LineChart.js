@@ -1,8 +1,10 @@
 import { ResponsiveLine } from '@nivo/line'
+import { line } from '../../data'
 
-const LineChart = ({ data }) => (
+function LineChart() {
+  return (
     <ResponsiveLine
-          data={data}
+          data={line}
           margin={{ top: 50, right: 110, bottom: 50, left: 60 }}
           xScale={{ type: 'point' }}
           yScale={{ type: 'linear', min: 'auto', max: 'auto', stacked: true, reverse: false }}
@@ -14,7 +16,7 @@ const LineChart = ({ data }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'transportation',
+            legend: 'Date',
             legendOffset: 36,
             legendPosition: 'middle'
           }}
@@ -23,7 +25,7 @@ const LineChart = ({ data }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'count',
+            legend: 'Temperature (°F)',
             legendOffset: -40,
             legendPosition: 'middle'
           }}
@@ -60,6 +62,7 @@ const LineChart = ({ data }) => (
             }
           ]}
         />
-)
+  );
+}
 
 export default LineChart;

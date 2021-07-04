@@ -3,7 +3,6 @@ import './App.css';
 import LocationSelect from './Components/LocationSelect';
 import { Grid, Button } from '@material-ui/core';
 import LineChart from './Components/Charts/LineChart';
-import { line } from "./data";
 
 function App() {
   const [averageTemp, setAverageTemp] = useState(0);
@@ -25,7 +24,7 @@ function App() {
         </Button>
       </Grid>
       <div style={{ height: 500 }}>
-        <LineChart data={line}/>
+        <LineChart/>
       </div>
     </div>
   );
