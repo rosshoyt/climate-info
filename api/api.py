@@ -31,7 +31,6 @@ def get_average_monthly_temperature():
     url += "&startdate=2020-06-01"
     url += "&enddate=2020-06-30"
 
-
     # send the GET request with auth token header
     response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
 
@@ -95,3 +94,23 @@ def get_average_daily_max_temp_city():
     print("Num entries per date", dateNumEntries)
 
     return dateAverages
+
+
+@app.route('/api/locations/cities')
+def get_cities():
+    url = URL_NOAA_NCDC_CDO
+    url += "/locations?"
+    url += "locationcategoryid=CITY"
+    url += "&sortfield=name"
+    url += "&sortorder=desc"
+    # TODO get the rest of the available cities (~800 more) in second request
+    url += "&limit=1000"
+
+    # send the GET request with auth token header
+    # TODO move NOAA API code to a separate class, add request method
+    response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
+
+    results = response.json()["results"]
+
+    return { 'cities' : results }
+    
