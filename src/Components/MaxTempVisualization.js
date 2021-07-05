@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import LocationSelect from './LocationSelect';
 import { Grid, Button } from '@material-ui/core';
 import LineChart from './Charts/LineChart';
+import DatePicker from './DatePicker'
 
 
 const MaxTempVisualization = () => {
@@ -55,6 +56,7 @@ const MaxTempVisualization = () => {
     return (
         <>
             <Grid container direction="row" justify="center" alignItems="stretch">
+                <DatePicker />
                 <LocationSelect />
                 <Button onClick={changeChart} variant="contained" color="primary">
                     Start
