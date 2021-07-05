@@ -46,21 +46,21 @@ def get_average_monthly_temperature():
     return{'temperature': avgTemp}
 
 
-@app.route('/api/temperature/max')
-def get_average_daily_max_temp_city():
+@app.route('/api/temperature/max/<location_id>/<start_date>/<end_date>')
+def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=None):
     # First, we'll setup the request URL
     url = URL_NOAA_NCDC_CDO
-    # Get average monthly temperature for Seattle
+    # Get average monthly temperature for location during time range
     url += "/data?"
     url += "datasetid=GHCND"
     url += "&datatypeid=TMAX"
-    # Seattle city code:
-    url += "&locationid=CITY:US530018"
+    # Location code:
+    url += "&locationid=" + location_id
     # Get results in Farenheight
     url += "&units=standard"
-    # Use June 2020
-    url += "&startdate=2020-06-01"
-    url += "&enddate=2020-06-30"
+    # Set time range
+    url += "&startdate=" + start_date
+    url += "&enddate=" + end_date
     url += "&limit=500"
     
     # send the GET request with auth token header

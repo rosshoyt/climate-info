@@ -37,15 +37,22 @@ const MaxTempVisualization = () => {
         }
       ]);
 
+      const [location, setLocation] = useState('CITY:US530018');
+
+      const[startDate, setStartDate] = useState('2020-06-01');
+
+      const[endDate, setEndDate] = useState('2020-06-30');
+
       function changeChart() {
         console.log('Pressed start button!');
-        fetch('/api/temperature/max').then(res => res.json()).then(recData => {
+        let url = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
+        fetch(url).then(res => res.json()).then(recData => {
             let formattedList = [];
             for (const [key, value] of Object.entries(recData)) {
                 formattedList.push({ x : key, y: value});
             }
             setChartData([{
-                id: "June 1 - June 30, 2020",
+                id: startDate + " - " + endDate,
                 color: "hsl(175, 70%, 50%)",
                 data: formattedList
             }]);
