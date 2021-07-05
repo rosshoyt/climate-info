@@ -7,7 +7,7 @@ import LineChart from './Charts/LineChart';
 const MaxTempVisualization = () => {
     const [chartData, setChartData] = useState([
         {
-          id: "japan",
+          id: "",
           color: "hsl(221, 70%, 50%)",
           data: [
             {
@@ -37,37 +37,19 @@ const MaxTempVisualization = () => {
       ]);
 
       function changeChart() {
-        console.log('Pressed button!');
-        setChartData([
-          {
-            id: "japan",
-            color: "hsl(221, 70%, 50%)",
-            data: [
-              {
-                x: "new planes",
-                y: 403
-              },
-              {
-                x: "helicopter",
-                y: 234
-              }
-            ]
-          },
-          {
-            id: "france",
-            color: "hsl(175, 70%, 50%)",
-            data: [
-              {
-                x: "new planes",
-                y: 400
-              },
-              {
-                x: "helicopter",
-                y: 2
-              }
-            ]
-          }
-        ]);
+        console.log('Pressed start button!');
+        fetch('/api/temperature/max').then(res => res.json()).then(recData => {
+            let formattedList = [];
+            for (const [key, value] of Object.entries(recData)) {
+                formattedList.push({ x : key, y: value});
+            }
+            setChartData([{
+                id: "June 1 - June 30, 2020",
+                color: "hsl(175, 70%, 50%)",
+                data: formattedList
+            }]);
+            
+          });
       }
 
     return (
