@@ -14,8 +14,8 @@ const useStyles = makeStyles({
   },
 });
 
-export default function LocationSelect() {
-  const [locations, setLocations] = useState({
+export default function LocationSelect({setLocation}) {
+  const [locations, setLocationOptions] = useState({
     "datacoverage": 1,
     "id": "CITY:US530018",
     "maxdate": "2021-07-02",
@@ -26,7 +26,7 @@ export default function LocationSelect() {
   useEffect(async () => {
     const result = await fetch('/api/locations/cities').then(res => res.json()).then(data => {
       //console.log(data.cities);
-      setLocations(data.cities);
+      setLocationOptions(data.cities);
     });
   }, []);
 
@@ -35,6 +35,7 @@ export default function LocationSelect() {
 
   return (
     <Autocomplete
+      onChange={(event, value) => setLocation(value.id)}
       id="location-select"
       style={{ width: 300 }}
       options={locations}

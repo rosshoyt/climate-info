@@ -63,7 +63,7 @@ const MaxTempVisualization = () => {
     return (
         <>
             <Grid container direction="row" justify="center" alignItems="stretch">
-                <LocationSelect />
+                <LocationSelect setLocation={setLocation} />
                 <DatePicker label='Start' defaultValue={startDate}/>
                 <DatePicker label='End' defaultValue={endDate}/>
                 <Button onClick={changeChart} variant="contained" color="primary">
