@@ -53,7 +53,7 @@ export default function LocationSelect({setLocation}) {
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Choose a location"
+          label="Enter a location (default: Seattle)" 
           variant="outlined"
           inputProps={{
             ...params.inputProps,
