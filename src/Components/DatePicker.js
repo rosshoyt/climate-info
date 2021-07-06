@@ -14,12 +14,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DatePicker({label, defaultValue}) {
+export default function DatePicker({label, defaultValue, setDate}) {
   const classes = useStyles();
 
   return (
     <form className={classes.container} noValidate>
       <TextField
+        onChange={(event) => {setDate(event.target.value);}}
         id="date"
         label={label}
         type="date"
