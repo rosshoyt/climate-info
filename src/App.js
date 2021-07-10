@@ -1,21 +1,23 @@
-import React, { Component } from 'react';
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
+import MaxTempVisualization from './Components/MaxTempVisualization';
 
-class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
-        </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
-      </div>
-    );
-  }
+function App() {
+  const [averageTemp, setAverageTemp] = useState(0);
+
+  useEffect(() => {
+    fetch('/api/temperature/average').then(res => res.json()).then(data => {
+      setAverageTemp(data.temperature);
+    });
+  }, []);
+
+  return (
+    <div className="App">
+      <h1><code>Climate Change Tools</code></h1>
+      <h3>The average temperature for Seattle, WA in June 2020 was {averageTemp}°F.</h3>
+      <MaxTempVisualization/ >
+    </div>
+  );
 }
 
 export default App;
