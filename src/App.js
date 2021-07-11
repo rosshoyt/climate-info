@@ -4,6 +4,7 @@ import MaxTempVisualization from './Components/MaxTempVisualization';
 import GSOMVisualization from './Components/GSOMVisualization';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import { Switch, Typography, Paper } from '@material-ui/core';
+import TitleAppBar from './Components/TitleAppBar';
 
 
 function App() {
@@ -19,7 +20,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Paper style={{ height: "100vh" }}>
         <div className="App">
-          <Typography variant="h1"><code>Climate Change Tools</code></Typography>
+          <TitleAppBar title="ClimateInfo.us"/>
           <MaxTempVisualization />
           <GSOMVisualization />
           <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
