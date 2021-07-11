@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import LocationSelect from './LocationSelect';
 import { Grid, Button } from '@material-ui/core';
 import LineChart from './Charts/LineChart';
@@ -36,15 +36,20 @@ const MaxTempVisualization = () => {
           ]
         }
       ]);
-
+      
       const [location, setLocation] = useState('CITY:US530018');
 
       const[startDate, setStartDate] = useState('2020-06-01');
 
       const[endDate, setEndDate] = useState('2020-06-30');
 
-      function changeChart() {
-        console.log('Pressed start button!');
+      // Fill the graph when component mounts, using the default query values
+      useEffect(() => {
+        updateChart();
+      }, []);
+
+      function updateChart() {
+        console.log('Updating chart!');
         let url = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
         fetch(url).then(res => res.json()).then(recData => {
             let formattedList = [];
@@ -60,13 +65,15 @@ const MaxTempVisualization = () => {
           });
       }
 
+    
+
     return (
         <>
             <Grid container direction="row" justify="center" alignItems="stretch">
                 <LocationSelect setLocation={setLocation} />
                 <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate}/>
                 <DatePicker label='End' defaultValue={endDate} setDate={setEndDate}/>
-                <Button onClick={changeChart} variant="contained" color="primary">
+                <Button onClick={updateChart} variant="contained" color="primary">
                     Start
                 </Button>
             </Grid>
