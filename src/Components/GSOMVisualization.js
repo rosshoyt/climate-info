@@ -5,23 +5,24 @@ import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
 
 const GSOMVisualization = () => {
-  
+
   useEffect(() => {
     updateData();
   }, []);
 
-  const [dataType, setDataType] = useState('TMAX');
+  const [dataType, setDataType] = useState('TAVG');
 
   const [location, setLocation] = useState('CITY:US530018');
 
   const [startDate, setStartDate] = useState('2021-06-01');
 
-  const [endDate, setEndDate] = useState('2020-06-01');
+  const [endDate, setEndDate] = useState('2021-06-02');
 
   // An example statistic from the GSOM api
   const [averageTemp, setAverageTemp] = useState(0);
 
   function updateData() {
+    console.log('GSOM Visualization fetching data...')
     let url = '/api/gsom/' + dataType + '/' + location + '/' + startDate + '/' + endDate;
     console.log('Updating data, fetching ' + url);
     fetch(url).then(res => res.json()).then(recData => {
