@@ -1,9 +1,15 @@
 import os
+from os import path
 from flask import Flask
+from dotenv import load_dotenv
 import requests
 
 app = Flask(__name__, static_folder='build/', static_url_path='/')
 app.debug = 'DEBUG' in os.environ
+
+# Load environment variables from .env if exists (during local debug mode)
+if os.path.exists('.env'):
+    load_dotenv('.env')
 
 # API url TODO use flask.Config? https://flask.palletsprojects.com/en/2.0.x/api/#flask.Config
 URL_NOAA_NCDC_CDO = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
@@ -30,7 +36,7 @@ def get_average_monthly_temperature():
     url += "&enddate=2020-06-30"
 
     # send the GET request with auth token header
-    response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
+    response = requests.get(url, headers ={"token" : os.environ['TOKEN_NOAA_NCDC_CDO']})
 
     results = response.json()["results"]
 
@@ -63,7 +69,7 @@ def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=
     
     # send the GET request with auth token header
     # TODO move NOAA API code to a separate class, add request method
-    response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
+    response = requests.get(url, headers ={"token" : os.environ['TOKEN_NOAA_NCDC_CDO']})
 
     results = response.json()["results"]
 
@@ -106,7 +112,7 @@ def get_cities():
 
     # send the GET request with auth token header
     # TODO move NOAA API code to a separate class, add request method
-    response = requests.get(url, headers ={"token" : os.getenv('TOKEN_NOAA_NCDC_CDO')})
+    response = requests.get(url, headers ={"token" : os.environ['TOKEN_NOAA_NCDC_CDO']})
 
     results = response.json()["results"]
 
