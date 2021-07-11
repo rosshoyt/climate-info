@@ -6,82 +6,66 @@ import DatePicker from './DatePicker'
 
 
 const MaxTempVisualization = () => {
-    const [chartData, setChartData] = useState([
+  const [chartData, setChartData] = useState([
+    {
+      id: "First",
+      color: "hsl(221, 70%, 50%)",
+      data: [
         {
-          id: "",
-          color: "hsl(221, 70%, 50%)",
-          data: [
-            {
-              x: "plane",
-              y: 89
-            },
-            {
-              x: "helicopter",
-              y: 118
-            }
-          ]
+          x: 0,
+          y: 0
         },
         {
-          id: "france",
-          color: "hsl(175, 70%, 50%)",
-          data: [
-            {
-              x: "plane",
-              y: 173
-            },
-            {
-              x: "helicopter",
-              y: 183
-            }
-          ]
+          x: 1,
+          y: 0
         }
-      ]);
-      
-      const [location, setLocation] = useState('CITY:US530018');
+      ]
+    }
+  ]);
 
-      const[startDate, setStartDate] = useState('2020-06-01');
+  const [location, setLocation] = useState('CITY:US530018');
+  const [startDate, setStartDate] = useState('2021-06-01')
+  const [endDate, setEndDate] = useState('2021-06-30')
 
-      const[endDate, setEndDate] = useState('2020-06-30');
+  // Fill the graph when component mounts, using the default query values
+  useEffect(() => {
+    updateChart();
+  }, []);
 
-      // Fill the graph when component mounts, using the default query values
-      useEffect(() => {
-        updateChart();
-      }, []);
-
-      function updateChart() {
-        console.log('Updating chart!');
-        let url = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
-        fetch(url).then(res => res.json()).then(recData => {
-            let formattedList = [];
-            for (const [key, value] of Object.entries(recData)) {
-                formattedList.push({ x : key, y: value});
-            }
-            setChartData([{
-                id: startDate + " - " + endDate,
-                color: "hsl(175, 70%, 50%)",
-                data: formattedList
-            }]);
-            
-          });
+  function updateChart() {
+    console.log('Updating chart!');
+    let url = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
+    fetch(url).then(res => res.json()).then(recData => {
+      let formattedList = [];
+      for (const [key, value] of Object.entries(recData)) {
+        formattedList.push({ x: key, y: value });
       }
+      setChartData([{
+        id: startDate + " - " + endDate,
+        color: "hsl(175, 70%, 50%)",
+        data: formattedList
+      }]);
 
-    
+    });
+  }
 
-    return (
-        <>
-            <Grid container direction="row" justify="center" alignItems="stretch">
-                <LocationSelect setLocation={setLocation} />
-                <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate}/>
-                <DatePicker label='End' defaultValue={endDate} setDate={setEndDate}/>
-                <Button onClick={updateChart} variant="contained" color="primary">
-                    Start
-                </Button>
-            </Grid>
-            <div style={{ height: 500 }}>
-                <LineChart data={chartData}/>
-            </div>
-        </>
-    );
+
+
+  return (
+    <>
+      <Grid container direction="row" justify="center" alignItems="stretch">
+        <LocationSelect setLocation={setLocation} />
+        <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
+        <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
+        <Button onClick={updateChart} variant="contained" color="primary">
+          Start
+        </Button>
+      </Grid>
+      <div style={{ height: 500 }}>
+        <LineChart data={chartData} />
+      </div>
+    </>
+  );
 }
 
 export default MaxTempVisualization;
