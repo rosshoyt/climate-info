@@ -19,21 +19,22 @@ def index():
     return app.send_static_file('index.html')
 
 
-@app.route('/api/temperature/average')
-def get_average_monthly_temperature():
+# API route for accessing NOAA NCDC CDO GSOM (Global summary of the month) climate data 
+@app.route('/api/gsom/<datatype_id>/<location_id>/<start_date>/<end_date>')
+def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=None):
     # First, we'll setup the request URL
     url = URL_NOAA_NCDC_CDO
     # Get average monthly temperature for Seattle
     url += "/data?"
     url += "datasetid=GSOM"
-    url += "&datatypeid=TAVG"
+    url += "&datatypeid=" + datatype_id
     # Seattle city code:
-    url += "&locationid=CITY:US530018"
+    url += "&locationid=" + location_id
     # Get results in Farenheight
     url += "&units=standard"
     # Use June 2020
-    url += "&startdate=2020-06-01"
-    url += "&enddate=2020-06-30"
+    url += "&startdate=" + start_date
+    url += "&enddate=" + end_date
 
     # send the GET request with auth token header
     response = requests.get(url, headers ={"token" : os.environ['TOKEN_NOAA_NCDC_CDO']})
