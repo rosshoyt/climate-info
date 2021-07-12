@@ -1,8 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import LocationSelect from './LocationSelect';
-import { Grid, Button } from '@material-ui/core';
-import LineChart from './Charts/LineChart';
-import DatePicker from './DatePicker'
+import VisualizationTitle from './VisualizationTitle';
 
 const GSOMVisualization = () => {
 
@@ -35,7 +32,8 @@ const GSOMVisualization = () => {
 
   return (
     <>
-      <h3>The average temperature for Seattle, WA in June 2021 was {averageTemp}°F.</h3>
+      <VisualizationTitle title="Global Summary of the Month API"/>
+      <h3>[Placeholder API usage]:The average temperature for Seattle, WA in June 2021 was {averageTemp}°F.</h3>
       {/* <Grid container direction="row" justify="center" alignItems="stretch">
         <LocationSelect setLocation={setLocation} />
         <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
