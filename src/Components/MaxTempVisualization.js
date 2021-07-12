@@ -3,7 +3,7 @@ import LocationSelect from './LocationSelect';
 import { Grid, Button } from '@material-ui/core';
 import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
-
+import VisualizationTitle from './VisualizationTitle'
 
 const MaxTempVisualization = () => {
   const [chartData, setChartData] = useState([
@@ -53,7 +53,8 @@ const MaxTempVisualization = () => {
 
   return (
     <>
-      <Grid container direction="row" justify="center" alignItems="stretch">
+      <VisualizationTitle title="Average Max Temperature"/>
+      <Grid container direction="row" justify="left" alignItems="stretch">
         <LocationSelect setLocation={setLocation} />
         <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
         <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
