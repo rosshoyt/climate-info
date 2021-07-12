@@ -29,7 +29,7 @@ export default function TitleAppBar({title, darkMode, setDarkMode}) {
           <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h4" className={classes.title} align='left'>
             {title}
           </Typography>
           <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode) } />
