@@ -1,11 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
+import { ThemeProvider, createTheme } from '@material-ui/core/styles';
+import { Paper } from '@material-ui/core';
+import TitleAppBar from './Components/TitleAppBar';
 import MaxTempVisualization from './Components/MaxTempVisualization';
 import GSOMVisualization from './Components/GSOMVisualization';
-import { ThemeProvider, createTheme } from '@material-ui/core/styles';
-import { Switch, Typography, Paper } from '@material-ui/core';
-import TitleAppBar from './Components/TitleAppBar';
-
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -20,10 +19,9 @@ function App() {
     <ThemeProvider theme={theme}>
       <Paper style={{ height: "100vh" }}>
         <div className="App">
-          <TitleAppBar title="ClimateInfo.us"/>
-          <MaxTempVisualization />
-          <GSOMVisualization />
-          <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} />
+          <TitleAppBar title="ClimateInfo.us" darkMode={darkMode} setDarkMode={setDarkMode}/>
+          <MaxTempVisualization/>
+          <GSOMVisualization/>   
         </div>
       </Paper>
     </ThemeProvider>
