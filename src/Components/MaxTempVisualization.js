@@ -4,6 +4,7 @@ import { Grid, Button } from '@material-ui/core';
 import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
 import VisualizationTitle from './VisualizationTitle'
+import YearPicker from '../YearPicker';
 
 const MaxTempVisualization = () => {
   const [chartData, setChartData] = useState([
@@ -26,6 +27,8 @@ const MaxTempVisualization = () => {
   const [location, setLocation] = useState('CITY:US530018');
   const [startDate, setStartDate] = useState('2021-06-01')
   const [endDate, setEndDate] = useState('2021-06-30')
+
+  const [otherYear, setOtherYear] = useState('1980');
 
   // Fill the graph when component mounts, using the default query values
   useEffect(() => {
@@ -62,6 +65,7 @@ const MaxTempVisualization = () => {
           Start
         </Button>
       </Grid>
+      <YearPicker handleDateChange={setOtherYear}/>
       <div style={{ height: 500 }}>
         <LineChart data={chartData} />
       </div>
