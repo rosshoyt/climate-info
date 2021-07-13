@@ -4,7 +4,7 @@ import { Typography } from '@material-ui/core';
 
 const VisualizationTitle = ({title}) => {
     return(
-        <Typography variant='h4' align='left'>{title}</Typography>
+        <Typography noWrap variant='h4' align='left' fontWeight="fontWeightBold">{title}</Typography>
     );
 }
 
