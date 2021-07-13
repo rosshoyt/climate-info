@@ -5,6 +5,9 @@ import { Box, Grid, Container, Paper } from '@material-ui/core';
 import TitleAppBar from './Components/TitleAppBar';
 import MaxTempVisualization from './Components/MaxTempVisualization';
 import GSOMVisualization from './Components/GSOMVisualization';
+import { MuiPickersUtilsProvider } from '@material-ui/pickers';
+// pick a date util library
+import MomentUtils from '@date-io/moment';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -19,6 +22,7 @@ function App() {
   });
 
   return (
+    <MuiPickersUtilsProvider utils={MomentUtils}>
     <ThemeProvider theme={theme}>
       <Paper style={{ height: "100vh" }}>
         <div className="App">
@@ -37,6 +41,7 @@ function App() {
 
       </Paper>
     </ThemeProvider>
+    </MuiPickersUtilsProvider>
   );
 }
 
