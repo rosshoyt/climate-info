@@ -5,8 +5,11 @@ import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
 import VisualizationTitle from './VisualizationTitle'
 import YearPicker from '../YearPicker';
+import moment from 'moment';
 
 const MaxTempVisualization = () => {
+  const [refreshChartData, setRefreshChartData] = useState(false);
+
   const [chartData, setChartData] = useState([
     {
       id: "First",
@@ -28,31 +31,66 @@ const MaxTempVisualization = () => {
   const [startDate, setStartDate] = useState('2021-06-01')
   const [endDate, setEndDate] = useState('2021-06-30')
 
+  // the other year to compare the time series with. TODO add ability to choose more than 1 year to compare with
   const [otherYear, setOtherYear] = useState('1980');
 
-  // Fill the graph when component mounts, using the default query values
+  // Refresh the chart when component first mounts
   useEffect(() => {
-    updateChart();
+    setRefreshChartData(!refreshChartData);
   }, []);
 
-  function updateChart() {
-    console.log('Updating chart!');
-    let url = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
-    fetch(url).then(res => res.json()).then(recData => {
-      let formattedList = [];
-      for (const [key, value] of Object.entries(recData)) {
-        formattedList.push({ x: key, y: value });
-      }
-      setChartData([{
-        id: startDate + " - " + endDate,
-        color: "hsl(175, 70%, 50%)",
-        data: formattedList
-      }]);
+  // Hook to fetch data from the API 
+  useEffect(() => {
+    async function fetchData() {
+      // prepare the urls
+      let url1 = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
+      // assume formate of date
+      let newStartDate = moment(startDate).set('year', otherYear);
+      let newEndDate = moment(endDate).set('year', otherYear);
+      let url2 = '/api/temperature/max/' + location + '/' + newStartDate.format("YYYY-MM-DD") + '/' + newEndDate.format("YYYY-MM-DD");
 
-    });
+      await Promise.all([
+        fetch(url1),
+        fetch(url2)
+      ]).then(function (responses) {
+        // Get a JSON object from each of the responses
+        console.log('Hello');
+        return Promise.all(responses.map(function (response) {
+          return response.json();
+        }));
+      }).then(function (data) {
+        console.log(data);    
+        // local list to store formatted chart data
+        let cleanedData = [];
+        
+        data.forEach((element) => {
+          cleanedData.push({
+            id: element['timeRange'],
+            data: processData(element['data'])
+          });
+        });
+        setChartData(cleanedData); 
+      }).catch(function (error) {
+        // if there's an error, log it
+        console.log(error);
+      }); 
+    }
+
+    console.log('Updating chart from useEffect!');
+    fetchData();
+
+  }, [refreshChartData]);
+
+  // formats the data for Nivo line chart
+  function processData(data) {
+    let list = [];
+    for (const [key, value] of Object.entries(data)) {
+      let entry = { x: key, y: value };
+      list.push(entry);
+      //console.log(entry);
+    }
+    return list;
   }
-
-
 
   return (
     <>
@@ -65,7 +103,7 @@ const MaxTempVisualization = () => {
           <LocationSelect setLocation={setLocation} />
         </Grid>
         <Grid item xs={1}>
-          <Button onClick={updateChart} variant="contained" color="primary" size="large">Start</Button>
+          <Button onClick={() => setRefreshChartData(!refreshChartData)} variant="contained" color="primary" size="large">Start</Button>
         </Grid>
 
         <Grid item xs={2}>
