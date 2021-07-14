@@ -9,9 +9,10 @@ const LineChart = ({ data }) => {
     // can filter the x axis values, a la https://github.com/plouc/nivo/issues/524
   }, [data]);
 
-  function formatDate(date) {
-    return moment(date).format('M-D-YYYY');
-  }
+  // TODO implement function to only show ~1/2 of the X axis labels
+  // function formatBottomAxis(date) {
+  //  //return value;
+  // }
 
   return (
     <ResponsiveLine
@@ -30,7 +31,7 @@ const LineChart = ({ data }) => {
         legend: 'Date',
         legendOffset: 36,
         legendPosition: 'middle',
-        format: value => formatDate(value)
+        //format: value => formatBottomAxis(value)
       }}
       axisLeft={{
         orient: 'left',

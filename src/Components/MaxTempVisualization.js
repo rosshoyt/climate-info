@@ -34,58 +34,58 @@ const MaxTempVisualization = () => {
   // the other year to compare the time series with. TODO add ability to choose more than 1 year to compare with
   const [otherYear, setOtherYear] = useState('1980');
 
-  // Refresh the chart when component first mounts
-  useEffect(() => {
-    setRefreshChartData(!refreshChartData);
-  }, []);
 
-  // Hook to fetch data from the API 
+  // Hook to fetch data from the API.
+  // Runs when refreshChartData state boolean is changed
+  // TODO make API calls async, or just call fetchData() from regular useEffect and the onClick handler 
   useEffect(() => {
-    async function fetchData() {
-      // prepare the urls
+    console.log('Updating chart from useEffect!');
+    fetchData();
+
+    // TODO make async
+    function fetchData() {
+      // prepare the urls TODO allow user to choose more time series 
       let url1 = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
-      // assume formate of date
+      // format the other dates using url1
       let newStartDate = moment(startDate).set('year', otherYear);
       let newEndDate = moment(endDate).set('year', otherYear);
       let url2 = '/api/temperature/max/' + location + '/' + newStartDate.format("YYYY-MM-DD") + '/' + newEndDate.format("YYYY-MM-DD");
 
-      await Promise.all([
-        fetch(url1),
-        fetch(url2)
-      ]).then(function (responses) {
-        // Get a JSON object from each of the responses
-        console.log('Hello');
-        return Promise.all(responses.map(function (response) {
-          return response.json();
-        }));
-      }).then(function (data) {
-        console.log(data);    
-        // local list to store formatted chart data
-        let cleanedData = [];
-        
-        data.forEach((element) => {
-          cleanedData.push({
-            id: element['timeRange'],
-            data: processData(element['data'])
+      let urlList = [url1, url2], apiResultList = [];
+
+      // fetch all requested data in order 
+      // TODO make asynchronous
+      for(let i = 0; i < urlList.length; i++){
+        let url = urlList[i];
+        console.log('Fetching data for ' + url);
+        fetch(url).then(res => res.json()).then(recData => {
+          let formattedDataList = [];
+          for (const [key, value] of Object.entries(recData)) {
+            formattedDataList.push({ x: key, y: value });
+          }
+          apiResultList.push({
+            id:  recData['timeRange'],
+            color: "hsl(175, 70%, 50%)",
+            data:  processData(recData['data'])
           });
+          
+          // if its the last query, add the new results to the chart
+          if (i === urlList.length - 1){
+            console.log('Adding the data to the chart')
+            console.log(apiResultList);
+            setChartData(apiResultList);
+          }
         });
-        setChartData(cleanedData); 
-      }).catch(function (error) {
-        // if there's an error, log it
-        console.log(error);
-      }); 
+      }
     }
-
-    console.log('Updating chart from useEffect!');
-    fetchData();
-
   }, [refreshChartData]);
 
   // formats the data for Nivo line chart
   function processData(data) {
     let list = [];
     for (const [key, value] of Object.entries(data)) {
-      let entry = { x: key, y: value };
+      // x value is assumed to be a timestamp
+      let entry = { x: moment(key).format('M-D'), y: value };
       list.push(entry);
       //console.log(entry);
     }
@@ -94,7 +94,6 @@ const MaxTempVisualization = () => {
 
   return (
     <>
-
       <Grid container spacing={3} direction="row" justifyContent="space-between" alignItems="center">
         <Grid item xs={6}>
           <VisualizationTitle title="Average Max Temperature" />
@@ -131,13 +130,8 @@ const MaxTempVisualization = () => {
 
       </Grid>
       <Grid container direction="row" justify="left" alignItems="stretch">
-
-
-
-
       </Grid>
-
-
+      
       <div style={{ height: 500 }}>
         <LineChart data={chartData} />
       </div>
