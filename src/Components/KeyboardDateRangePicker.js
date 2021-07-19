@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { KeyboardDatePicker } from "@material-ui/pickers";
 
-function KeyboardDatePicker(props) {
+function KeyboardDateRangePicker(props) {
   const [selectedDate, handleDateChange] = useState(new Date());
 
   return (
@@ -25,4 +25,4 @@ function KeyboardDatePicker(props) {
   );
 }
 
-export default KeyboardDatePicker;
+export default KeyboardDateRangePicker;
