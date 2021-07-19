@@ -4,7 +4,7 @@ import { Grid, Button, Typography } from '@material-ui/core';
 import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
 import VisualizationTitle from './VisualizationTitle'
-import YearPicker from '../YearPicker';
+import YearPicker from './YearPicker';
 import moment from 'moment';
 
 const MaxTempVisualization = () => {
