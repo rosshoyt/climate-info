@@ -3,7 +3,7 @@ Automat==0.8.0
 blinker==1.4
 cdo-api-py==1.0.0.dev13
 certifi==2019.11.28
-chardet==3.0.4
+chardet==4.0.0
 cliapp==1.20180812.1
 click==8.0.1
 cloud-init==21.1
