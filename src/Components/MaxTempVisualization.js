@@ -6,6 +6,7 @@ import DatePicker from './DatePicker'
 import VisualizationTitle from './VisualizationTitle'
 import YearPicker from './YearPicker';
 import moment from 'moment';
+import InfoTooltip from './InfoTooltip'
 
 const MaxTempVisualization = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
@@ -95,10 +96,13 @@ const MaxTempVisualization = () => {
   return (
     <>
       <Grid container spacing={3} direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={6}>
-          <VisualizationTitle title="Average Max Temperature" />
+        <Grid item xs={3}>
+          <VisualizationTitle text="Average Max Temperature" />
         </Grid>
-        <Grid item xs={5}>
+        <Grid item xs={1}>
+          <InfoTooltip text="Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location."/>
+        </Grid>
+        <Grid item xs={3}>
           <LocationSelect setLocation={setLocation} />
         </Grid>
         <Grid item xs={1}>
