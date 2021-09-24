@@ -3,7 +3,6 @@ import LocationSelect from './LocationSelect';
 import { Grid, Button, Typography } from '@material-ui/core';
 import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
-import VisualizationTitle from './VisualizationTitle'
 import YearPicker from './YearPicker';
 import moment from 'moment';
 import InfoTooltip from './InfoTooltip'
@@ -56,7 +55,7 @@ const MaxTempVisualization = () => {
 
       // fetch all requested data in order 
       // TODO make asynchronous
-      for(let i = 0; i < urlList.length; i++){
+      for (let i = 0; i < urlList.length; i++) {
         let url = urlList[i];
         console.log('Fetching data for ' + url);
         fetch(url).then(res => res.json()).then(recData => {
@@ -65,13 +64,13 @@ const MaxTempVisualization = () => {
             formattedDataList.push({ x: key, y: value });
           }
           apiResultList.push({
-            id:  recData['timeRange'],
+            id: recData['timeRange'],
             color: "hsl(175, 70%, 50%)",
-            data:  processData(recData['data'])
+            data: processData(recData['data'])
           });
-          
+
           // if its the last query, add the new results to the chart
-          if (i === urlList.length - 1){
+          if (i === urlList.length - 1) {
             console.log('Adding the data to the chart')
             console.log(apiResultList);
             setChartData(apiResultList);
@@ -95,17 +94,22 @@ const MaxTempVisualization = () => {
 
   return (
     <>
-      <Grid container spacing={3} direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={3}>
-          <VisualizationTitle text="Average Max Temperature" />
+      <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center">
+        <Grid item xs={4}>
+          <Typography noWrap variant='h4' align='center' fontWeight="fontWeightBold">
+            Max Temperature
+          </Typography>
         </Grid>
         <Grid item xs={1}>
-          <InfoTooltip text="Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location."/>
+          <InfoTooltip text="Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location." />
         </Grid>
-        <Grid item xs={3}>
+        {/* <Grid item xs={3}>
+          <VisualizationTitle text="Average Max Temperature"/>
+        </Grid> */}
+        <Grid item xs={4}>
           <LocationSelect setLocation={setLocation} />
         </Grid>
-        <Grid item xs={1}>
+        <Grid item xs={2}>
           <Button onClick={() => setRefreshChartData(!refreshChartData)} variant="contained" color="primary" size="large">Start</Button>
         </Grid>
 
@@ -135,7 +139,7 @@ const MaxTempVisualization = () => {
       </Grid>
       <Grid container direction="row" justify="left" alignItems="stretch">
       </Grid>
-      
+
       <div style={{ height: 500 }}>
         <LineChart data={chartData} />
       </div>
