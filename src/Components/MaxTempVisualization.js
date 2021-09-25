@@ -94,55 +94,49 @@ const MaxTempVisualization = () => {
 
   return (
     <>
-      <Grid container spacing={1} direction="row" justifyContent="space-between" alignItems="center">
-        <Grid item xs={4}>
-          <Typography noWrap variant='h4' align='center' fontWeight="fontWeightBold">
-            Max Temperature
-          </Typography>
+     <Grid container direction="row" justifyContent="space-between" alignItems="left">
+        <Grid item xs={10}>
+          <Typography noWrap variant='h4' align='left' fontWeight="fontWeightBold">
+            Peak Daily Temperature in {location} from {startDate} to {endDate}</Typography>
         </Grid>
-        <Grid item xs={1}>
-          <InfoTooltip text="Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location." />
+        <Grid item xs={2}>
+          <Button variant="contained" color="primary" size="large" onClick={() => setRefreshChartData(!refreshChartData)}>
+            Update Chart
+          </Button>
         </Grid>
-        {/* <Grid item xs={3}>
-          <VisualizationTitle text="Average Max Temperature"/>
-        </Grid> */}
-        <Grid item xs={4}>
+
+        <Grid item xs={12} align="left">
           <LocationSelect setLocation={setLocation} />
         </Grid>
+        
         <Grid item xs={2}>
-          <Button onClick={() => setRefreshChartData(!refreshChartData)} variant="contained" color="primary" size="large">Start</Button>
+          <Typography variant="h5">Main Time Period:</Typography>
         </Grid>
-
         <Grid item xs={2}>
-          <Typography variant="h5">Time Series</Typography>
-        </Grid>
-        <Grid item xs={3}>
           <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
-        </Grid>
-        <Grid item xs={4}>
-
         </Grid>
 
         <Grid item xs={2}>
-          <Typography noWrap variant="h5">Compare to</Typography>
+          <Typography noWrap variant="h5">Compare to year:</Typography>
         </Grid>
-        <Grid item xs={3}>
+        <Grid item xs={2}>
           <YearPicker handleDateChange={setOtherYear} />
         </Grid>
-        <Grid item xs={7}>
-
-        </Grid>
-
       </Grid>
+
+
       <Grid container direction="row" justify="left" alignItems="stretch">
       </Grid>
 
       <div style={{ height: 500 }}>
         <LineChart data={chartData} />
       </div>
+      <Typography paragraph>
+        Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location.
+      </Typography>
     </>
   );
 }
