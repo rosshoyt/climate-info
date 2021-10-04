@@ -8,6 +8,7 @@ import GSOMVisualization from './Components/GSOMVisualization';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
 import MomentUtils from '@date-io/moment';
+import PersistentDrawerLeft from './Components/PersistentDrawerLeft';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -26,17 +27,7 @@ function App() {
     <ThemeProvider theme={theme}>
       <Paper style={{ height: "100vh" }}>
         <div className="App">
-          <TitleAppBar title="ClimateInfo.US" darkMode={darkMode} setDarkMode={setDarkMode} />
-          <Container maxWidth="xl">
-            <Grid container direction="column">
-              <Box m={5} >
-                <MaxTempVisualization />
-              </Box>
-              <Box m={5} >
-                <GSOMVisualization />
-              </Box>
-            </Grid>
-          </Container>
+          <PersistentDrawerLeft title="ClimateInfo.US" />
         </div>
 
       </Paper>
