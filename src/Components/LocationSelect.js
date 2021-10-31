@@ -23,11 +23,14 @@ export default function LocationSelect({setLocation}) {
     "name": "Seattle, WA US"
   });
   
-  useEffect(async () => {
-    const result = await fetch('/api/locations/cities').then(res => res.json()).then(data => {
+  useEffect(() => {
+    fetchData();
+    async function fetchData() {
+      const result = await fetch('/api/locations/cities').then(res => res.json()).then(data => {
       //console.log(data.cities);
       setLocationOptions(data.cities);
-    });
+      });
+    }
   }, []);
 
 
