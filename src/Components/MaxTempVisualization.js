@@ -6,26 +6,10 @@ import DatePicker from './DatePicker'
 import YearPicker from './YearPicker';
 import moment from 'moment';
 import InfoTooltip from './InfoTooltip'
+import useStore from '../store'
 
 const MaxTempVisualization = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
-
-  const [chartData, setChartData] = useState([
-    {
-      id: "First",
-      color: "hsl(221, 70%, 50%)",
-      data: [
-        {
-          x: 0,
-          y: 0
-        },
-        {
-          x: 1,
-          y: 0
-        }
-      ]
-    }
-  ]);
 
   const [location, setLocation] = useState('CITY:US530018');
   const [startDate, setStartDate] = useState('2021-06-01')
@@ -34,16 +18,9 @@ const MaxTempVisualization = () => {
   // the other year to compare the time series with. TODO add ability to choose more than 1 year to compare with
   const [otherYear, setOtherYear] = useState('1980');
 
+  const setTimeseriesData = useStore(state => state.setTimeseriesData);
 
-  // Hook to fetch data from the API.
-  // Runs when refreshChartData state boolean is changed
-  // TODO make API calls async, or just call fetchData() from regular useEffect and the onClick handler 
-  useEffect(() => {
-    console.log('Updating chart from useEffect!');
-    fetchData();
-
-    // TODO make async
-    function fetchData() {
+  function getRequestURLs(){
       // prepare the urls TODO allow user to choose more time series 
       let url1 = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
       // format the other dates using url1
@@ -51,43 +28,43 @@ const MaxTempVisualization = () => {
       let newEndDate = moment(endDate).set('year', otherYear);
       let url2 = '/api/temperature/max/' + location + '/' + newStartDate.format("YYYY-MM-DD") + '/' + newEndDate.format("YYYY-MM-DD");
 
-      let urlList = [url1, url2], apiResultList = [];
+      return [url1, url2]
+  }
 
-      // fetch all requested data in order 
-      // TODO make asynchronous
-      for (let i = 0; i < urlList.length; i++) {
-        let url = urlList[i];
-        console.log('Fetching data for ' + url);
-        fetch(url).then(res => res.json()).then(recData => {
-          let formattedDataList = [];
-          for (const [key, value] of Object.entries(recData)) {
-            formattedDataList.push({ x: key, y: value });
-          }
-          apiResultList.push({
-            id: recData['timeRange'],
-            color: "hsl(175, 70%, 50%)",
-            data: processData(recData['data'])
+  // Fetches data for the chart
+  // TODO optimize so only fetches data on first mount, and when user changes parameters
+  useEffect(() => {
+    // TODO could move functionality to store
+    async function fetchTimeseriesData(urlList) {
+      const apiResultList = [];
+      for(const url of urlList) {
+          const response = await fetch(url); 
+          await response.json().then(recData => {
+              let formattedDataList = [];
+              for (const [key, value] of Object.entries(recData)) {
+                  formattedDataList.push({ x: moment(key).format('M-D'), y: value });
+              }
+              apiResultList.push({
+                  id: recData['timeRange'],
+                  color: "hsl(175, 70%, 50%)",
+                  data: processData(recData['data'])
+              });  
           });
+      };
 
-          // if its the last query, add the new results to the chart
-          if (i === urlList.length - 1) {
-            console.log('Adding the data to the chart')
-            console.log(apiResultList);
-            setChartData(apiResultList);
-          }
-        });
-      }
+      setTimeseriesData(apiResultList);
     }
-  }, [refreshChartData]);
 
-  // formats the data for Nivo line chart
+    fetchTimeseriesData(getRequestURLs());
+  }, []);
+
+  // formats a request's data for Nivo line chart
   function processData(data) {
     let list = [];
     for (const [key, value] of Object.entries(data)) {
       // x value is assumed to be a timestamp
       let entry = { x: moment(key).format('M-D'), y: value };
       list.push(entry);
-      //console.log(entry);
     }
     return list;
   }
@@ -132,7 +109,7 @@ const MaxTempVisualization = () => {
       </Grid>
 
       <div style={{ height: 500 }}>
-        <LineChart data={chartData} />
+        <LineChart />
       </div>
       <Typography paragraph>
         Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location.

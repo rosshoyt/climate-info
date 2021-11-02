@@ -1,9 +1,12 @@
 import { ResponsiveLine } from '@nivo/line';
 import React, { useEffect } from 'react';
 import moment from 'moment';
+import useStore from '../../store';
 
 
-const LineChart = ({ data }) => {
+const LineChart = () => {
+  const data = useStore(state => state.timeseriesData);
+  
   useEffect(() => {
     console.log('in use effect!')
     // can filter the x axis values, a la https://github.com/plouc/nivo/issues/524
