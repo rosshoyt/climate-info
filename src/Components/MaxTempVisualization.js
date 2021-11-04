@@ -56,7 +56,7 @@ const MaxTempVisualization = () => {
     }
 
     fetchTimeseriesData(getRequestURLs());
-  }, []);
+  }, [refreshChartData]);
 
   // formats a request's data for Nivo line chart
   function processData(data) {
