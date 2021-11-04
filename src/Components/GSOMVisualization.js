@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import LocationSelect from './LocationSelect';
 import VisualizationTitle from './VisualizationTitle';
 
 const GSOMVisualization = () => {
@@ -33,8 +34,12 @@ const GSOMVisualization = () => {
   return (
     <>
       <VisualizationTitle title="Global Summary of the Month API"/>
-      <h3>[Placeholder API usage]:The average temperature for Seattle, WA in June 2021 was {averageTemp}°F.</h3>
-      {/* <Grid container direction="row" justify="center" alignItems="stretch">
+
+        <LocationSelect setLocation={setLocation} />
+        
+
+      {/*<h3>[Placeholder API usage]:The average temperature for Seattle, WA in June 2021 was {averageTemp}°F.</h3>
+       <Grid container direction="row" justify="center" alignItems="stretch">
         <LocationSelect setLocation={setLocation} />
         <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
         <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
