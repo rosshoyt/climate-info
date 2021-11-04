@@ -15,13 +15,13 @@ const useStyles = makeStyles({
 });
 
 export default function LocationSelect({setLocation}) {
-  const [locations, setLocationOptions] = useState({
+  const [locations, setLocationOptions] = useState( [ {
     "datacoverage": 1,
     "id": "CITY:US530018",
     "maxdate": "2021-07-02",
     "mindate": "1891-01-01",
     "name": "Seattle, WA US"
-  });
+  } ] );
   
   useEffect(() => {
     fetchData();
