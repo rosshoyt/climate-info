@@ -38,17 +38,9 @@ def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=
     # send the GET request with auth token header
     response = requests.get(
         url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
-
-    results = response.json()["results"]
-
-    avgTemp = 0
-    for entry in results:
-        avgTemp += entry["value"]
-
-    avgTemp = avgTemp / len(results)
-    print("Average temp for Seattle in June 2020 was ", avgTemp)
-
-    return{'temperature': avgTemp}
+    
+    # pass response to client
+    return response.json()
 
 @app.route('/api/temperature/max/<location_id>/<start_date>/<end_date>')
 def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=None):
