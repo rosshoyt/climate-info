@@ -24,12 +24,11 @@ const GSOMVisualization = () => {
 
   function updateData() {
     console.log('GSOM Visualization fetching data... year1/2 = ', year1, year2)
-    // let url = '/api/gsom/' + dataType + '/' + location + '/' + year1 + '/' + endDate;
-    // console.log('Updating data, fetching ' + url);
-    // fetch(url).then(res => res.json()).then(recData => {
-    //   // set the example value for now  TODO update a graph or other visualization with GSOM data
-    //   setAverageTemp(recData.temperature);
-    // });
+    const url = '/api/gsom/' + dataType + '/' + location + '/' + year1 +'-01-01/' + year1 + '-12-31';
+    console.log('Updating data, fetching ' + url);
+    fetch(url).then(res => res.json()).then(recData => {
+      console.log(recData);
+    });
   }
 
   
