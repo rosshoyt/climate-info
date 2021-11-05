@@ -12,7 +12,7 @@ if os.path.exists('.env'):
     load_dotenv('.env')
 
 # API url TODO use flask.Config? https://flask.palletsprojects.com/en/2.0.x/api/#flask.Config
-URL_NOAA_NCDC_CDO = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
+URL_NOAA_API = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
 
 @app.route('/')
 def index():
@@ -22,7 +22,7 @@ def index():
 @app.route('/api/gsom/<datatype_id>/<location_id>/<start_date>/<end_date>')
 def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=None):
     # First, we'll setup the request URL
-    url = URL_NOAA_NCDC_CDO
+    url = URL_NOAA_API
     # Get average monthly temperature for Seattle
     url += "/data?"
     url += "datasetid=GSOM"
@@ -53,7 +53,7 @@ def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=
 @app.route('/api/temperature/max/<location_id>/<start_date>/<end_date>')
 def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=None):
     # First, we'll setup the request URL
-    url = URL_NOAA_NCDC_CDO
+    url = URL_NOAA_API
     # Get average monthly temperature for location during time range
     url += "/data?"
     url += "datasetid=GHCND"
@@ -113,7 +113,7 @@ def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=
 
 @app.route('/api/locations/cities')
 def get_cities():
-    url = URL_NOAA_NCDC_CDO
+    url = URL_NOAA_API
     url += "/locations?"
     url += "locationcategoryid=CITY"
     url += "&sortfield=name"
