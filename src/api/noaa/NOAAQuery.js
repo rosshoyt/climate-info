@@ -1,4 +1,5 @@
-export default class APIQuery {
+// TODO create separate class for internal API calls and external (NOAA) API calls
+export default class NOAAQuery {
     // TODO set URL values elsewhere, store passed parameters as object fields
     constructor(location_id, start_date, end_date){
         this.url = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
