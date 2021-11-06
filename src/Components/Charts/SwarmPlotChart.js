@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { ResponsiveSwarmPlot } from '@nivo/swarmplot'
 import swarm from '../../Data/nivo-default-data/swarm'
+
 // make sure parent container have a defined height when using
 // responsive component, otherwise height will be 0 and
 // no chart will be rendered.
@@ -9,8 +10,6 @@ import swarm from '../../Data/nivo-default-data/swarm'
 const SwarmPlotChart = ({ data=swarm /* see data tab */ }) => (
     <ResponsiveSwarmPlot
         data={data}
-        width={500}
-        height={400}
         groups={[ 'group A', 'group B', 'group C' ]}
         identity="id"
         value="price"
