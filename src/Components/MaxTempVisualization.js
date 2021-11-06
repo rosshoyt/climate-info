@@ -1,12 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import LocationSelect from './LocationSelect';
 import { Grid, Button, Typography } from '@material-ui/core';
-import LineChart from './Charts/LineChart';
 import DatePicker from './DatePicker'
 import YearPicker from './YearPicker';
 import moment from 'moment';
-import InfoTooltip from './InfoTooltip'
-import useStore from '../store'
+import ScatterPlotChart from './Charts/ScatterPlotChart';
+import NOAAQuery from '../api/noaa/NOAAQuery'
 
 const MaxTempVisualization = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
@@ -18,56 +17,75 @@ const MaxTempVisualization = () => {
   // the other year to compare the time series with. TODO add ability to choose more than 1 year to compare with
   const [otherYear, setOtherYear] = useState('1980');
 
-  const setTimeseriesData = useStore(state => state.setTimeseriesData);
+  const [chartData, setChartData] = useState([]);
+  // const setTimeseriesData = useStore(state => state.setTimeseriesData);
 
   function getRequestURLs(){
-      // prepare the urls TODO allow user to choose more time series 
-      let url1 = '/api/temperature/max/' + location + '/' + startDate + '/' + endDate;
-      // format the other dates using url1
-      let newStartDate = moment(startDate).set('year', otherYear);
-      let newEndDate = moment(endDate).set('year', otherYear);
-      let url2 = '/api/temperature/max/' + location + '/' + newStartDate.format("YYYY-MM-DD") + '/' + newEndDate.format("YYYY-MM-DD");
-
-      return [url1, url2]
+    let query1 = new NOAAQuery(location, startDate, endDate);
+    console.log(query1)
+    // format the other dates
+    let newStartDate = moment(startDate).set('year', otherYear);
+    let newEndDate = moment(endDate).set('year', otherYear);
+    
+    let query2 = new NOAAQuery(location, newStartDate.format("YYYY-MM-DD"), newEndDate.format("YYYY-MM-DD"));    
+    return [ query1, query2 ];
   }
 
   // Fetches data for the chart
   // TODO optimize so only fetches data on first mount, and when user changes parameters
   useEffect(() => {
     // TODO could move functionality to store
-    async function fetchTimeseriesData(urlList) {
+    async function fetchTimeseriesData(queryList) {
+      console.log(queryList)
       const apiResultList = [];
-      for(const url of urlList) {
+     
+      for(const query of queryList) {
+          const url = query.getURL();
+          console.log('Fetching url', url)
           const response = await fetch(url); 
           await response.json().then(recData => {
-              let formattedDataList = [];
-              for (const [key, value] of Object.entries(recData)) {
-                  formattedDataList.push({ x: moment(key).format('M-D'), y: value });
+              const data = recData['results'];
+              console.log(data);
+              
+              // TODO display errors. Data may not be available based on time selection, etc
+              if(data !== undefined) {
+                apiResultList.push({
+                    id: query.startDate + ' to ' + query.endDate,
+                    color: "hsl(175, 70%, 50%)",
+                    data: processTimeSeriesDataScatterPlot(data)
+                });  
               }
-              apiResultList.push({
-                  id: recData['timeRange'],
-                  color: "hsl(175, 70%, 50%)",
-                  data: processData(recData['data'])
-              });  
+              
           });
       };
-
-      setTimeseriesData(apiResultList);
+      console.log(apiResultList);
+      setChartData(apiResultList);
     }
-
+   
     fetchTimeseriesData(getRequestURLs());
   }, [refreshChartData]);
 
-  // formats a request's data for Nivo line chart
-  function processData(data) {
-    let list = [];
-    for (const [key, value] of Object.entries(data)) {
-      // x value is assumed to be a timestamp
-      let entry = { x: moment(key).format('M-D'), y: value };
-      list.push(entry);
-    }
-    return list;
+  function processTimeSeriesDataScatterPlot(data){
+    
+    return data.reduce((formattedDataList, datum) => {
+      const date = datum['date'];
+      const value = datum['value'];
+      const entry = { x: moment(date).format('M-D'), y: value };
+      //console.log(entry);
+      formattedDataList.push(entry);
+      return formattedDataList;
+    }, []);
   }
+  // // formats a request's data for Nivo line chart
+  // function processData(data) {
+  //   let list = [];
+  //   for (const [key, value] of Object.entries(data)) {
+  //     // x value is assumed to be a timestamp
+  //     let entry = { x: moment(key).format('M-D'), y: value };
+  //     list.push(entry);
+  //   }
+  //   return list;
+  // }
 
   return (
     <>
@@ -109,10 +127,10 @@ const MaxTempVisualization = () => {
       </Grid>
 
       <div style={{ height: 500 }}>
-        <LineChart />
+        <ScatterPlotChart data={chartData} />
       </div>
       <Typography paragraph>
-        Each day, the maximum temperature is taken from each weather station in the selected location. These maximum temperatures are averaged together, leaving the average maximum temperature for the selected location.
+        TODO: describe the graph here
       </Typography>
     </>
   );

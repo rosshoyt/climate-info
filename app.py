@@ -42,11 +42,10 @@ def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=
     # pass response to client
     return response.json()
 
-@app.route('/api/temperature/max/<location_id>/<start_date>/<end_date>')
+@app.route('/api/noaa/data/daily/<location_id>/<start_date>/<end_date>')
 def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=None):
-    # First, we'll setup the request URL
+    # Setup the request url
     url = URL_NOAA_API
-    # Get average monthly temperature for location during time range
     url += "/data?"
     url += "datasetid=GHCND"
     url += "&datatypeid=TMAX"
@@ -62,45 +61,9 @@ def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=
     jsonResp = {} # the json object we'll return our results, or error message with
     
     # send the GET request with auth token header
-    # TODO move NOAA API code to a separate class, add request method
     response = requests.get(url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
-
-    results = response.json().get('results', 0)
-
-    if results != 0:
-
-        # maps dates to TMAX data
-        dateAverages = {}
-        # maps dates to the number of TMAX data samples for the date, used to calculate average TMAX for day
-        dateNumEntries = {}
-
-        # sum the total max temperatures for each date and track the number of data samples per date
-        for entry in results:
-            date = entry["date"]
-
-            if date in dateAverages:
-                dateNumEntries[date] += 1
-                dateAverages[date] += entry["value"]
-            else:
-                dateNumEntries[date] = 1
-                dateAverages[date] = entry["value"]
-
-        # calculate the average TMAX and store in dateAverages
-        for date, numEntries in dateNumEntries.items():
-            if date in dateAverages:
-                dateAverages[date] = dateAverages[date] / numEntries
-
-        #print("Date Temp Totals", dateAverages)
-        #print("Num entries per date", dateNumEntries)
-
-        jsonResp['location'] = location_id
-        jsonResp['timeRange'] = start_date + ' - ' + end_date
-        jsonResp['data'] = dateAverages
-    else:
-        jsonResp['error'] = 'There was an issue querying the NOAA API'
-        
-    #print(jsonResp)
-    return jsonResp
+    
+    return response.json()
 
 
 @app.route('/api/locations/cities')

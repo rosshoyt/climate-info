@@ -11,12 +11,12 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => (
     <ResponsiveScatterPlot
         data={data}
         margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
-        xScale={{ type: 'linear', min: 0, max: 'auto' }}
+        xScale={{ type: 'point', min: 0, max: 'auto' }}
         xFormat=" >-.2f"
-        yScale={{ type: 'linear', min: 0, max: 'auto' }}
+        yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
         yFormat=">-.2f"
         blendMode="multiply"
-        nodeSize={5}
+        nodeSize={8}
         axisTop={null}
         axisRight={null}
         axisBottom={{
@@ -24,7 +24,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'weight',
+            legend: 'Date',
             legendPosition: 'middle',
             legendOffset: 46
         }}
@@ -33,7 +33,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => (
             tickSize: 5,
             tickPadding: 5,
             tickRotation: 0,
-            legend: 'size',
+            legend: 'Temperature (F)',
             legendPosition: 'middle',
             legendOffset: -60
         }}
