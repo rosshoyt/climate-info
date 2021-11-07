@@ -6,6 +6,7 @@ import YearPicker from './YearPicker';
 import moment from 'moment';
 import ScatterPlotChart from './Charts/ScatterPlotChart';
 import NOAAQuery from '../api/noaa/NOAAQuery'
+import YearList from './YearList';
 
 const ClimateDataExplorer = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
@@ -92,6 +93,7 @@ const ClimateDataExplorer = () => {
         <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
         <Typography noWrap variant="h5">Compare to year:</Typography>
         <YearPicker handleDateChange={setOtherYear} initialYear={otherYear} />
+        <YearList />
         <Button 
           variant="contained" 
           color="primary" 
