@@ -91,7 +91,7 @@ const ClimateDataExplorer = () => {
         <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
         <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
         <Typography noWrap variant="h5">Compare to year:</Typography>
-        <YearPicker handleDateChange={setOtherYear} />
+        <YearPicker handleDateChange={setOtherYear} initialYear={otherYear} />
         <Button 
           variant="contained" 
           color="primary" 
@@ -101,11 +101,11 @@ const ClimateDataExplorer = () => {
           Update Chart
         </Button>
         <Typography noWrap variant='h5' align='left' fontWeight="fontWeightBold">
-          Peak Daily Temperature in {location} from {startDate} to {endDate}:
+          Max Daily Temperatures in {location}:
         </Typography>
       </Grid>
      
-      <div style={{ height: 500 }}>
+      <div style={{ height: 700 }}>
         { isLoading ? (
           // TODO center progress spinner vertically
           // TODO update on each API call return; or, overlay spinner on graph while it has partial results
