@@ -19,7 +19,7 @@ import InboxIcon from '@material-ui/icons/MoveToInbox';
 import MailIcon from '@material-ui/icons/Mail';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import WhatshotIcon from '@material-ui/icons/Whatshot';
-import MaxTempVisualization from './MaxTempVisualization';
+import ClimateDataExplorer from './ClimateDataExplorer';
 
 import { Switch, Route, Link, BrowserRouter } from "react-router-dom";
 import GSOMVisualization from './GSOMVisualization';
@@ -156,7 +156,7 @@ export default function PersistentDrawerLeft({ title, children }) {
         <Switch>
             <Route exact path="/" render={() => <><Typography variant="h6" >Welcome! This website provides access to historical weather datasets provided by NOAA (National Oceanic and Atmospheric Administration. Select a dataset using the menu on the left!</Typography>
         <Typography variant="h7" >Site Developed by Ross Hoyt <a href="https://github.com/rosshoyt/">GitHub</a> <a href="https://www.rosshoyt.com/">RossHoyt.com</a></Typography></>} />
-            <Route path="/Daily-Temperature" render={() =>  <MaxTempVisualization />} />
+            <Route path="/Daily-Temperature" render={() =>  <ClimateDataExplorer />} />
             <Route path="/Monthly-Temperature" render={() => <GSOMVisualization />} />
           </Switch>
             

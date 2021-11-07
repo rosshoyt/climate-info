@@ -7,7 +7,7 @@ import moment from 'moment';
 import ScatterPlotChart from './Charts/ScatterPlotChart';
 import NOAAQuery from '../api/noaa/NOAAQuery'
 
-const MaxTempVisualization = () => {
+const ClimateDataExplorer = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
   const [isLoading, setIsLoading] = useState(false)
 
@@ -122,4 +122,4 @@ const MaxTempVisualization = () => {
   );
 }
 
-export default MaxTempVisualization;
+export default ClimateDataExplorer;

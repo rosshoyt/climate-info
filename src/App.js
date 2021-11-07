@@ -3,7 +3,7 @@ import './App.css';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import { Box, Grid, Container, Paper } from '@material-ui/core';
 import TitleAppBar from './Components/TitleAppBar';
-import MaxTempVisualization from './Components/MaxTempVisualization';
+import ClimateDataExplorer from './Components/ClimateDataExplorer';
 import GSOMVisualization from './Components/GSOMVisualization';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
