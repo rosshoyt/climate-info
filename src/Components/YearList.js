@@ -1,21 +1,38 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import useStore from "../store";
-import { Button } from '@material-ui/core';
+import { Button, Box } from '@material-ui/core';
 import AddIcon from '@material-ui/icons/Add';
-import DatePicker from './DatePicker';
+import { DatePicker } from "@material-ui/pickers";
+import { GithubPicker } from 'react-color'
 
 const YearListItems= () => {
   const store = useStore(state => state);
-
+  
   return (
     <>
       {store.years.map(year => (
-        <DatePicker
-        views={["year"]}
-        // label={label}
-        value={year.year}
-        onChange={(date) => store.updateYear(year.id, date)}
-        />
+        <>
+        <Box display="flex" justifyContent="center" >
+          <DatePicker
+            views={['year']}
+            // label={label}
+            value={year.year}
+            onChange={(date) => store.updateYear(year.id, date)}
+          />
+          <Box
+            onClick= {(event)=>store.updateYearColorSelectorOpen(year.id, !year.colorSelectorOpen)}
+            sx={{
+              width: 40,
+              height: 20,
+              bgcolor: year.color,
+            }}
+          />
+          
+        </Box>
+        { year.colorSelectorOpen ? (
+          <GithubPicker />
+        ) : <></>}
+      </>
       ))}
       <Button 
         varient="outlined" 
