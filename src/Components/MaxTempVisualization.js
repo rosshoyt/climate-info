@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import LocationSelect from './LocationSelect';
-import { Grid, Button, Typography } from '@material-ui/core';
+import { Grid, Button, Typography, CircularProgress } from '@material-ui/core';
 import DatePicker from './DatePicker'
 import YearPicker from './YearPicker';
 import moment from 'moment';
@@ -9,6 +9,7 @@ import NOAAQuery from '../api/noaa/NOAAQuery'
 
 const MaxTempVisualization = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
+  const [isLoading, setIsLoading] = useState(false)
 
   const [location, setLocation] = useState('CITY:US530018');
   const [startDate, setStartDate] = useState('2021-06-01')
@@ -34,6 +35,7 @@ const MaxTempVisualization = () => {
   // Fetches data for the chart
   // TODO optimize so only fetches data on first mount, and when user changes parameters
   useEffect(() => {
+    setIsLoading(true);
     // TODO could move functionality to store
     async function fetchTimeseriesData(queryList) {
       console.log(queryList)
@@ -60,6 +62,7 @@ const MaxTempVisualization = () => {
       };
       console.log(apiResultList);
       setChartData(apiResultList);
+      setIsLoading(false);
     }
    
     fetchTimeseriesData(getRequestURLs());
@@ -101,8 +104,16 @@ const MaxTempVisualization = () => {
           Peak Daily Temperature in {location} from {startDate} to {endDate}:
         </Typography>
       </Grid>
+     
       <div style={{ height: 500 }}>
-        <ScatterPlotChart data={chartData} />
+        { isLoading ? (
+          // TODO center progress spinner vertically
+          // TODO update on each API call return; or, overlay spinner on graph while it has partial results
+          <CircularProgress />
+        ) : (
+          <ScatterPlotChart data={chartData} />
+        )}
+       
       </div>
       <Typography paragraph>
         TODO: describe the graph here
