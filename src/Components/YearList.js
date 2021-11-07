@@ -1,9 +1,10 @@
 import React from 'react';
 import useStore from "../store";
 import { Button, Box } from '@material-ui/core';
-import AddIcon from '@material-ui/icons/Add';
+import AddIcon  from '@material-ui/icons/Add';
+import EditIcon  from '@material-ui/icons/Edit';
 import { DatePicker } from "@material-ui/pickers";
-import { GithubPicker } from 'react-color'
+import { TwitterPicker } from 'react-color'
 
 const YearListItems= () => {
   const store = useStore(state => state);
@@ -22,15 +23,16 @@ const YearListItems= () => {
           <Box
             onClick= {(event)=>store.updateYearColorSelectorOpen(year.id, !year.colorSelectorOpen)}
             sx={{
-              width: 40,
-              height: 20,
+              width: 100,
               bgcolor: year.color,
             }}
-          />
+          >
+            <EditIcon/>{year.color}
+          </Box>
           
         </Box>
         { year.colorSelectorOpen ? (
-          <GithubPicker />
+          <TwitterPicker />
         ) : <></>}
       </>
       ))}
