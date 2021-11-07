@@ -32,7 +32,7 @@ const YearListItems= () => {
           
         </Box>
         { year.colorSelectorOpen ? (
-          <TwitterPicker />
+          <TwitterPicker onChangeComplete={(c) => store.updateYearColor(year.id, c.hex)}/>
         ) : <></>}
       </>
       ))}

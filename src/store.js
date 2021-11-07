@@ -16,14 +16,17 @@ const updateYearDate = (years, id, date) =>
     year: year.id === id ? date : year.year,
   }));
 
+const updateYearColor = (years, id, newColor) =>
+years.map(year => ({
+  ...year,
+  color: year.id === id ? newColor : year.color,
+}));
 
 const updateYearColorSelectorOpen = (years, id, isOpen) =>
   years.map(year => ({
     ...year,
     colorSelectorOpen: year.id === id ? isOpen : year.colorSelectorOpen,
   }));
-
-// TODO: const updateYearColor
 
 
 const useStore = create((set) => ({
@@ -51,6 +54,12 @@ const useStore = create((set) => ({
       set((state) => ({
         ...state,
         years: updateYearDate(state.years, id, date),
+      }))
+    },
+    updateYearColor(id, newColor) {
+      set((state) => ({
+        ...state,
+        years: updateYearColor(state.years, id, newColor),
       }))
     },
     updateYearColorSelectorOpen(id, isOpen) {
