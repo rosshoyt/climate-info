@@ -14,6 +14,8 @@ const TimeRangeChart  = ({ data, handleDateClicked }) => {
       dayBorderWidth={2}
       dayBorderColor="#000000"
       daySpacing={4}
+      monthLegendPosition='after'
+      monthLegendOffset={175}
       onClick={(day,event)=>handleDateClicked(day, event)}
       // legends={[
       //     {
