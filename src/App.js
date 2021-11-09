@@ -1,10 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './App.css';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
-import { Box, Grid, Container, Paper } from '@material-ui/core';
-import TitleAppBar from './Components/TitleAppBar';
-import ClimateDataExplorer from './Components/ClimateDataExplorer';
-import GSOMVisualization from './Components/GSOMVisualization';
+
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
 import MomentUtils from '@date-io/moment';
@@ -25,12 +22,9 @@ function App() {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
     <ThemeProvider theme={theme}>
-      <Paper style={{ height: "100vh" }}>
-        <div className="App">
-          <PersistentDrawerLeft title="ClimateInfo.US" />
-        </div>
-
-      </Paper>
+      <div className="App">
+        <PersistentDrawerLeft title="ClimateInfo.US" />
+      </div>
     </ThemeProvider>
     </MuiPickersUtilsProvider>
   );
