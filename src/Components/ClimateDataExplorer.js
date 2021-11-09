@@ -7,6 +7,7 @@ import moment from 'moment';
 import ScatterPlotChart from './Charts/ScatterPlotChart';
 import NOAAQuery from '../api/noaa/NOAAQuery'
 import YearList from './YearList';
+import TimeRangeSelector from './TimeRangeSelector'
 
 const ClimateDataExplorer = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
@@ -89,6 +90,11 @@ const ClimateDataExplorer = () => {
         </Typography>
         <LocationSelect setLocation={setLocation} />
         <Typography variant="h5">Main Time Period:</Typography>
+      </Grid>
+        <div style={{ height: 300 }}>
+          <TimeRangeSelector />
+        </div>
+      <Grid container direction="column" justifyContent="space-between" alignItems="center">
         <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />
         <DatePicker label='End' defaultValue={endDate} setDate={setEndDate} />
         <Typography noWrap variant="h5">Compare to year:</Typography>
