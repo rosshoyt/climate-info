@@ -33,7 +33,7 @@ const useStore = create((set) => ({
     years: [
       {
         id:0,
-        year: new Date("01/01/2021"),
+        year: new Date("01/01/1980"),
         color: '#9900EF',
         colorSelectorOpen: false
       },
