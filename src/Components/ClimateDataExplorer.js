@@ -8,6 +8,7 @@ import ScatterPlotChart from './Charts/ScatterPlotChart';
 import NOAAQuery from '../api/noaa/NOAAQuery'
 import YearList from './YearList';
 import TimeRangeSelector from './TimeRangeSelector'
+import useStore from '../store';
 
 const ClimateDataExplorer = () => {
   const [refreshChartData, setRefreshChartData] = useState(false);
@@ -17,21 +18,22 @@ const ClimateDataExplorer = () => {
   const [startDate, setStartDate] = useState('2021-06-01')
   const [endDate, setEndDate] = useState('2021-06-30')
 
+  const [timerange, setTimerange] = useState(['06-01', '06-30']);
+
   // the other year to compare the time series with. TODO add ability to choose more than 1 year to compare with
   const [otherYear, setOtherYear] = useState('1980');
 
   const [chartData, setChartData] = useState([]);
   // const setTimeseriesData = useStore(state => state.setTimeseriesData);
 
-  function getRequestURLs(){
-    let query1 = new NOAAQuery(location, startDate, endDate);
-    console.log(query1)
-    // format the other dates
-    let newStartDate = moment(startDate).set('year', otherYear);
-    let newEndDate = moment(endDate).set('year', otherYear);
-    
-    let query2 = new NOAAQuery(location, newStartDate.format("YYYY-MM-DD"), newEndDate.format("YYYY-MM-DD"));    
-    return [ query1, query2 ];
+  const years = useStore(state => state.years);
+
+  function getAPIQueries(){
+    const queryList = [];
+    years.forEach(year => {
+      queryList.push(new NOAAQuery(location, year.year.getFullYear() + '-' + timerange[0], year.year.getFullYear() + '-' + timerange[1]));
+    });
+    return queryList;
   }
 
   // Fetches data for the chart
@@ -67,7 +69,7 @@ const ClimateDataExplorer = () => {
       setIsLoading(false);
     }
    
-    fetchTimeseriesData(getRequestURLs());
+    fetchTimeseriesData(getAPIQueries());
   }, [refreshChartData]);
 
   function processTimeSeriesDataScatterPlot(data){
@@ -91,7 +93,7 @@ const ClimateDataExplorer = () => {
         <LocationSelect setLocation={setLocation} />
         <Typography variant="h5">Main Time Period:</Typography>
       </Grid>
-        <div style={{ height: 300 }}>
+        <div style={{ height: 225 }}>
           <TimeRangeSelector />
         </div>
       <Grid container direction="column" justifyContent="space-between" alignItems="center">
