@@ -4,16 +4,16 @@ const addYear = (years) => [
   ...years,
   {
     id: Math.max(0, Math.max(...years.map(({ id }) => id))) + 1,
-    year: new Date("01/01/2021"),
+    year: 2000,
     color: '#0d47a1', // blue
     colorSelectorOpen: false
   },
 ];
 
-const updateYearDate = (years, id, date) =>
+const updateYearDate = (years, id, newYear) =>
   years.map(year => ({
     ...year,
-    year: year.id === id ? date : year.year,
+    year: year.id === id ? newYear : year.year,
   }));
 
 const updateYearColor = (years, id, newColor) =>
@@ -33,13 +33,13 @@ const useStore = create((set) => ({
     years: [
       {
         id:0,
-        year: new Date("01/01/1980"),
+        year: 1980,
         color: '#9900EF',
         colorSelectorOpen: false
       },
       {
         id: 1,
-        year: new Date("01/01/2021"),
+        year: 2021,
         color: '#008B02',
         colorSelectorOpen: false
       }
@@ -50,10 +50,10 @@ const useStore = create((set) => ({
         years: addYear(state.years)
       }))
     },
-    updateYear: (id, date) => {
+    updateYear: (id, newYear) => {
       set((state) => ({
         ...state,
-        years: updateYearDate(state.years, id, date),
+        years: updateYearDate(state.years, id, newYear),
       }))
     },
     updateYearColor(id, newColor) {

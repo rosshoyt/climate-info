@@ -17,8 +17,8 @@ const YearListItems= () => {
           <DatePicker
             views={['year']}
             // label={label}
-            value={year.year}
-            onChange={(date) => store.updateYear(year.id, date)}
+            value={ new Date(year.year, 1, 1) } // fill in dummy month/day vals with JS date
+            onChange={(date) => store.updateYear(year.id, date.year())} // TODO 'date' here is a moment object, for some reason...
           />
           <Box
             onClick= {(event)=>store.updateYearColorSelectorOpen(year.id, !year.colorSelectorOpen)}

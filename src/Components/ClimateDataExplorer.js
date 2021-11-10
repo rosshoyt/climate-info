@@ -31,7 +31,7 @@ const ClimateDataExplorer = () => {
   function getAPIQueries(){
     const queryList = [];
     years.forEach(year => {
-      queryList.push(new NOAAQuery(location, year.year.getFullYear() + '-' + dayRange[0], year.year.getFullYear() + '-' + dayRange[1]));
+      queryList.push(new NOAAQuery(location, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1]));
     });
     return queryList;
   }
