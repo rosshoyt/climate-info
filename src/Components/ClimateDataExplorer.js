@@ -18,7 +18,7 @@ const ClimateDataExplorer = () => {
   const [startDate, setStartDate] = useState('2021-06-01')
   const [endDate, setEndDate] = useState('2021-06-30')
 
-  const [timerange, setTimerange] = useState(['06-01', '06-30']);
+  const [dayRange, setDayRange] = useState(['06-01', '06-30']);
 
   // the other year to compare the time series with. TODO add ability to choose more than 1 year to compare with
   const [otherYear, setOtherYear] = useState('1980');
@@ -31,7 +31,7 @@ const ClimateDataExplorer = () => {
   function getAPIQueries(){
     const queryList = [];
     years.forEach(year => {
-      queryList.push(new NOAAQuery(location, year.year.getFullYear() + '-' + timerange[0], year.year.getFullYear() + '-' + timerange[1]));
+      queryList.push(new NOAAQuery(location, year.year.getFullYear() + '-' + dayRange[0], year.year.getFullYear() + '-' + dayRange[1]));
     });
     return queryList;
   }
@@ -94,7 +94,7 @@ const ClimateDataExplorer = () => {
         <Typography variant="h5">Main Time Period:</Typography>
       </Grid>
         <div style={{ height: 225 }}>
-          <TimeRangeSelector />
+          <TimeRangeSelector setDayRange={setDayRange}/>
         </div>
       <Grid container direction="column" justifyContent="space-between" alignItems="center">
         <DatePicker label='Start' defaultValue={startDate} setDate={setStartDate} />

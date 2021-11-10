@@ -23,10 +23,10 @@ function getDefaultTimeRangeData() {
   return array;
 }
 
-const TimeRangeSelector = () => {
+const TimeRangeSelector = ( { setDayRange }) => {
   const [isLoading, setIsLoading] = useState(false);
   
-  const [timeRangeData, setTimeRangeData] = useState(getDefaultTimeRangeData());
+  const [backingTimeRangeData, setBackingTimeRangeData] = useState(getDefaultTimeRangeData());
 
   useEffect(() => {
   }, [])
@@ -55,14 +55,20 @@ const TimeRangeSelector = () => {
 
   function dateClicked(day, event){
     if(isSelectingSecondDate){
-      setTimeRangeData(timeRangeData.map(dayValPair => ({
+      setBackingTimeRangeData(backingTimeRangeData.map(dayValPair => ({
         ...dayValPair,
         value: dateIsInRange(dayValPair.day, date1, day.day) ? 100 : dayValPair.value
       })));
+      
+      // convert selected days into MM-DD format
+      let d1 = moment(date1, 'YYYY-MM-DD').format('MM-DD');
+      let d2 = moment(day.day, 'YYYY-MM-DD').format('MM-DD');
+      // pass the selected dates back to parent
+      setDayRange([ d1, d2 ]);
     } else {      
       setDate1(day.day);
       //console.log('Testing Date1 val', date1);
-      setTimeRangeData(timeRangeData.map(dayValPair => ({
+      setBackingTimeRangeData(backingTimeRangeData.map(dayValPair => ({
         ...dayValPair,
         value: dayValPair.day === day.day ? 100 : 0
       })));
@@ -74,7 +80,7 @@ const TimeRangeSelector = () => {
      <>
       { isLoading ? (
         <CircularProgress />) : (
-          <TimeRangeChart data={timeRangeData} handleDateClicked={dateClicked}/>
+          <TimeRangeChart data={backingTimeRangeData} handleDateClicked={dateClicked}/>
     ) }
     </>
   );
