@@ -55,25 +55,16 @@ const TimeRangeSelector = () => {
 
   function dateClicked(day, event){
     if(isSelectingSecondDate){
-      console.log('Selected second date', day.day);
-
       setTimeRangeData(timeRangeData.map(dayValPair => ({
         ...dayValPair,
         value: dateIsInRange(dayValPair.day, date1, day.day) ? 100 : dayValPair.value
       })));
-      
-
-    } else {
-      // TODO clear any existing selections: setTimeRangeData(defData) doesn't work because of useState slow
-      // google await setState
-      //setTimeRangeData(getDefaultTimeRangeData());
-      
-      console.log('Selected first date');  
+    } else {      
       setDate1(day.day);
       //console.log('Testing Date1 val', date1);
       setTimeRangeData(timeRangeData.map(dayValPair => ({
         ...dayValPair,
-        value: dayValPair.day === day.day ? 100 : dayValPair.value
+        value: dayValPair.day === day.day ? 100 : 0
       })));
 
     }
