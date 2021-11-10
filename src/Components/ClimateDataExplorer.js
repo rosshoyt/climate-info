@@ -31,7 +31,7 @@ const ClimateDataExplorer = () => {
   function getAPIQueries(){
     const queryList = [];
     years.forEach(year => {
-      queryList.push(new NOAAQuery(location, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1]));
+      queryList.push(new NOAAQuery(location, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1], year.year));
     });
     return queryList;
   }
@@ -46,6 +46,7 @@ const ClimateDataExplorer = () => {
       const apiResultList = [];
      
       for(const query of queryList) {
+          
           const url = query.getURL();
           console.log('Fetching url', url)
           const response = await fetch(url); 
@@ -56,7 +57,7 @@ const ClimateDataExplorer = () => {
               // TODO display errors. Data may not be available based on time selection, etc
               if(data !== undefined) {
                 apiResultList.push({
-                    id: query.startDate + ' to ' + query.endDate,
+                    id: query.name,
                     color: "hsl(175, 70%, 50%)",
                     data: processTimeSeriesDataScatterPlot(data)
                 });  
