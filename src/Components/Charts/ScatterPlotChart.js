@@ -14,7 +14,6 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     function getColor(year) {
         return yearInfo.find(y => y.year === year).color;
     }
-
     return (
         <ResponsiveScatterPlot
             data={data}
@@ -22,13 +21,16 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
             colors={(node) => {
                 return getColor(node.serieId);
             }}
+            theme={{
+                fontSize: 16,
+            }}
             margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
             xScale={{ type: 'point', min: 0, max: 'auto' }}
             xFormat=" >-.2f"
             yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
             yFormat=">-.2f"
             blendMode="multiply"
-            nodeSize={8}
+            nodeSize={18}
             axisTop={null}
             axisRight={null}
             axisBottom={{
@@ -60,7 +62,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     itemHeight: 12,
                     itemsSpacing: 5,
                     itemDirection: 'left-to-right',
-                    symbolSize: 12,
+                    symbolSize: 20,
                     symbolShape: 'circle',
                     effects: [
                         {
