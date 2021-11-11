@@ -5,7 +5,8 @@ import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
 import MomentUtils from '@date-io/moment';
-import PersistentDrawerLeft from './Components/PersistentDrawerLeft';
+import ClimateDataExplorer from './Components/ClimateDataExplorer';
+import TitleAppBar from './Components/TitleAppBar';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -23,7 +24,8 @@ function App() {
     <MuiPickersUtilsProvider utils={MomentUtils}>
     <ThemeProvider theme={theme}>
       <div className="App">
-        <PersistentDrawerLeft title="ClimateInfo.US" />
+        <TitleAppBar title="ClimateInfo.US" />
+        <ClimateDataExplorer />
       </div>
     </ThemeProvider>
     </MuiPickersUtilsProvider>
