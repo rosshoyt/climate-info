@@ -30,6 +30,16 @@ const updateYearColorSelectorOpen = (years, id, isOpen) =>
 
 
 const useStore = create((set) => ({
+    // TODO
+    //querys: [{NOAAQuery, results}]
+    
+    apiResults: [],
+    setAPIResults(newResults){
+      set(state => ({
+        ...state,
+        apiResults: newResults
+      }))
+    },
     years: [
       {
         id:0,

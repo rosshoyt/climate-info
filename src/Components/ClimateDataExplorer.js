@@ -7,6 +7,7 @@ import YearList from './YearList';
 import TimeRangeSelector from './TimeRangeSelector'
 import NOAAQuery from '../api/noaa/NOAAQuery'
 import useStore from '../store';
+import DataTable from './DataTable';
 
 
 const ClimateDataExplorer = () => {
@@ -25,6 +26,7 @@ const ClimateDataExplorer = () => {
   const [isLoading, setIsLoading] = useState(false); // could move into chart component
 
   const years = useStore(state => state.years);
+  const setAPIResults = useStore(state => state.setAPIResults);
 
   function getAPIQueries(){
     const queryList = [];
@@ -41,13 +43,14 @@ const ClimateDataExplorer = () => {
     // TODO could move functionality to store
     async function fetchTimeseriesData(queryList) {
       const apiResultList = [];
-     
+      const rawData = []; // hold unprocessed query results (for adding to table)
       for(const query of queryList) {
           const url = query.getURL();
           console.log('Fetching url', url, 'from api');
           const response = await fetch(url); 
           await response.json().then(recData => {
               const data = recData['results'];
+              rawData.push(data);
               // TODO display errors in UI. Data may not be available based on time selection, etc
               if(data !== undefined) {
                 apiResultList.push({
@@ -58,11 +61,11 @@ const ClimateDataExplorer = () => {
               }
           });
       };
-
       setChartData(apiResultList);
+      setAPIResults(rawData);
       setIsLoading(false);
     }
-   
+    
     fetchTimeseriesData(getAPIQueries());
   }, [refreshChartData]);
 
@@ -118,6 +121,7 @@ const ClimateDataExplorer = () => {
       <Typography paragraph>
         Data via @NOAA Climate Data Online API. TODO describe graph based on selected params.
       </Typography>
+      <DataTable />
     </>
   );
 }
