@@ -3,10 +3,11 @@ import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import GitHubIcon from '@material-ui/icons/GitHub';
 import Switch from '@material-ui/core/Switch'
 import { Grid } from '@material-ui/core';
+import IconButton from '@material-ui/core/IconButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -27,18 +28,14 @@ export default function TitleAppBar({ title, darkMode, setDarkMode }) {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <Typography variant="h4" className={classes.title} align='left'>
-            {title}
+          <Typography variant="h5" className={classes.title} align='left'>
+            <WbSunnyIcon /> {title}
           </Typography>
-          <Typography component="div">
-            <Grid component="label" container alignItems="center" spacing={1}>
-              <Grid item>light</Grid>
-              <Grid item>
-                <Switch checked={darkMode} onChange={() => setDarkMode(!darkMode)} name="checkedC" />
-              </Grid>
-              <Grid item>dark</Grid>
-            </Grid>
-          </Typography>
+          <a href='https://github.com/rosshoyt/climate-info'>
+            <IconButton>
+              <GitHubIcon />
+            </IconButton>
+          </a>
         </Toolbar>
       </AppBar>
     </div>
