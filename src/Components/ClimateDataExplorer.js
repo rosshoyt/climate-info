@@ -6,12 +6,19 @@ import ScatterPlotChart from './Charts/ScatterPlotChart';
 import YearList from './YearList';
 import TimeRangeSelector from './TimeRangeSelector'
 import NOAAQuery from '../api/noaa/NOAAQuery'
-
 import useStore from '../store';
+
 
 const ClimateDataExplorer = () => {
   
-  const [location, setLocation] = useState('CITY:US530018');
+  const [location, setLocation] = useState({
+    "datacoverage": 1,
+    "id": "CITY:US530018",
+    "maxdate": "2021-07-02",
+    "mindate": "1891-01-01",
+    "name": "Seattle, WA US"
+  });
+
   const [dayRange, setDayRange] = useState(['06-01', '06-30']);
   const [chartData, setChartData] = useState([]);
   const [refreshChartData, setRefreshChartData] = useState(false);
@@ -22,7 +29,7 @@ const ClimateDataExplorer = () => {
   function getAPIQueries(){
     const queryList = [];
     years.forEach(year => {
-      queryList.push(new NOAAQuery(location, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1], year.year));
+      queryList.push(new NOAAQuery(location.id, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1], year.year));
     });
     return queryList;
   }
@@ -78,6 +85,7 @@ const ClimateDataExplorer = () => {
         <LocationSelect setLocation={setLocation} />
         <Typography variant="h5">Main Time Period:</Typography>
       </Grid>
+      
       <div style={{ height: 225 }}>
         <TimeRangeSelector setDayRange={setDayRange}/>
       </div>
@@ -93,7 +101,7 @@ const ClimateDataExplorer = () => {
           Update Chart
         </Button>
         <Typography noWrap variant='h5' align='left' fontWeight="fontWeightBold">
-          Max Daily Temperatures in {location}:
+          Max Daily Temperatures in {location.name}:
         </Typography>
       </Grid>
      

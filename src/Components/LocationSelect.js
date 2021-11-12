@@ -38,7 +38,7 @@ export default function LocationSelect({setLocation}) {
 
   return (
     <Autocomplete
-      onChange={(event, value) => setLocation(value.id)}
+      onChange={(event, value) => setLocation(value)}
       id="location-select"
       style={{ width: 300 }}
       options={locations}
