@@ -8,13 +8,45 @@ import { Box, Slider, Grid } from '@material-ui/core/';
 const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
 
     const [lineWidth, setLineWidth] = useState(10);
-
+    const [pointSize, setPointSize] = useState(5);
     const yearInfo = useStore(state => state.years);
     function getColor(year) {
         return yearInfo.find(y => y.year === year).color;
     }
     return (
-        <>
+        <>  
+            <Grid item xs={12} md={6}>
+                <Box sx={{ width: 300 }}>
+                    <Slider
+                    key={`slider-${0}`}
+                        defaultValue={ lineWidth }
+                        onChange={ (e, newValue) => setLineWidth(newValue) }
+                        getAriaValueText={ (value) => `${value}` }
+                        aria-labelledby=" "
+                        step={5}
+                        marks
+                        min={0}
+                        max={50}
+                        valueLabelDisplay="auto"
+                    />
+                </Box>
+            </Grid>
+            <Grid item xs={12} md={6}>
+                <Box sx={{ width: 300 }}>
+                    <Slider
+                    key={`slider-${1}`}
+                        defaultValue={ lineWidth }
+                        onChange={ (e, newValue) => setPointSize(newValue) }
+                        getAriaValueText={ (value) => `${value}` }
+                        aria-labelledby=" "
+                        step={3}
+                        marks
+                        min={0}
+                        max={30}
+                        valueLabelDisplay="auto"
+                    />
+                </Box>
+            </Grid>
             <ResponsiveScatterPlot
                 data={data}
                 //colors={{ datum: 'data.color' }}
@@ -24,13 +56,13 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                 theme={{
                     fontSize: 16,
                 }}
-                margin={{ top: 60, right: 140, bottom: 70, left: 90 }}
+                margin={{ top: 40, right: 100, bottom: 150, left: 70 }}
                 xScale={{ type: 'point', min: 0, max: 'auto' }}
                 xFormat=" >-.2f"
                 yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
                 yFormat=">-.2f"
                 blendMode="multiply"
-                nodeSize={18}
+                nodeSize={pointSize}
                 axisTop={null}
                 axisRight={null}
                 axisBottom={{
@@ -53,7 +85,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                 }}
                 legends={[
                     {
-                        anchor: 'bottom-right',
+                        anchor: 'top-right',
                         direction: 'column',
                         justify: false,
                         translateX: 130,
@@ -85,22 +117,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     "legends",
                 ]}
             />
-            <Grid item>
-                <Box sx={{ width: 300 }}>
-                    <Slider
-                    key={`slider-${1}`}
-                        defaultValue={ lineWidth }
-                        onChange={ (e, newValue) => setLineWidth(newValue) }
-                        getAriaValueText={ (value) => `${value}` }
-                        aria-labelledby=" "
-                        step={5}
-                        marks
-                        min={0}
-                        max={50}
-                        valueLabelDisplay="auto"
-                    />
-                </Box>
-            </Grid>
+            
         </>
     );
 

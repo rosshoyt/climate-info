@@ -43,14 +43,14 @@ const useStore = create((set) => ({
     years: [
       {
         id:0,
-        year: 1980,
+        year: 2021,
         color: '#9900EF',
         colorSelectorOpen: false
       },
       {
         id: 1,
-        year: 2021,
-        color: '#008B02',
+        year: 1980,
+        color: '#8ed1fc',
         colorSelectorOpen: false
       }
     ],
@@ -81,11 +81,3 @@ const useStore = create((set) => ({
 }));
 
 export default useStore;
-
-// class Year {
-//   constructor(){
-//     this.id = 0;
-//     this.year = 2010;
-//     this.color = 'RGB(3,60,100)';
-//   }
-// }

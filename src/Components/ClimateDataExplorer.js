@@ -81,17 +81,18 @@ const ClimateDataExplorer = () => {
 
   return (
     <>
-      <Grid container direction="column" justify="space-between" alignItems="center">
-        <Typography noWrap variant='h4' align='left' fontWeight="fontWeightBold">
-          Climate Data Explorer
-        </Typography>
-
+      <Grid container direction="column" justify="space-between" align='left'>
+        <Grid item xs={12}>
+          <Typography noWrap variant='h4' align='left'  fontWeight="fontWeightBold">
+            Climate Data Explorer
+          </Typography>
+        </Grid>
         <CollapsibleList>
           <LocationSelect title='Location' setLocation={setLocation} />
           <YearList title='Years to Compare:'/>
           <TimeRangeSelector title='Day Range' height={250} width={1000} setDayRange={setDayRange}/>
         </CollapsibleList>
-        
+        <Grid item xs={12}>
         <Button 
           variant="contained" 
           color="primary" 
@@ -100,25 +101,36 @@ const ClimateDataExplorer = () => {
         >
           Update Chart
         </Button>
+        </Grid>
+        <Grid item xs={12}></Grid>
         <Typography noWrap variant='h5' align='left' fontWeight="fontWeightBold">
           Max Daily Temperatures in {location.name}:
         </Typography>
       </Grid>
-     
-      <div style={{ height: 700 }}>
-        { isLoading ? (
-          // TODO center progress spinner vertically
-          // TODO update on each API call return; or, overlay spinner on graph while it has partial results
-          <CircularProgress />
-        ) : (
-          <ScatterPlotChart data={chartData} />
-        )}
-       
-      </div>
-      <Typography paragraph>
-        Data via @NOAA Climate Data Online API. TODO describe graph based on selected params.
-      </Typography>
-      <DataTable />
+
+      <Grid>
+        <Grid item xs={12}>
+        <div style={{ height: 800 }}>
+          { isLoading ? (
+            // TODO center progress spinner vertically
+            // TODO update on each API call return; or, overlay spinner on graph while it has partial results
+            <CircularProgress />
+          ) : (
+            <ScatterPlotChart data={chartData} />
+          )}
+        
+        </div>
+        </Grid>
+        
+        <Grid item xs={12}>
+          <Typography paragraph>
+            Data via @NOAA Climate Data Online API. TODO describe graph based on selected params.
+          </Typography>
+          </Grid>
+          <Grid item xs={12}>
+            <DataTable />
+          </Grid>
+      </Grid>
     </>
   );
 }
