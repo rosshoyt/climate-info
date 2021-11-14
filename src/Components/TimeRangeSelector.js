@@ -1,12 +1,10 @@
 import React, { useState, useEffect } from 'react';
-import { CircularProgress } from '@material-ui/core';
 import TimeRangeChart from './Charts/TimeRangeChart'
 import moment from "moment";
 
-
 // TODO figure out why this method being called more than at the start
 function getDefaultTimeRangeData() {
-  console.log('getting default timerange data')
+  // console.log('getting default timerange data')
   let array = [];
   const currentMoment = moment('2017-01-01', 'YYYY-MM-DD');
   const endMoment = moment('2018-01-01', 'YYYY-MM-DD');
@@ -23,7 +21,7 @@ function getDefaultTimeRangeData() {
   return array;
 }
 
-const TimeRangeSelector = ( { setDayRange }) => {
+const TimeRangeSelector = ( { height, width, setDayRange }) => {
   const [isLoading, setIsLoading] = useState(false);
   
   const [backingTimeRangeData, setBackingTimeRangeData] = useState(getDefaultTimeRangeData());
@@ -77,12 +75,7 @@ const TimeRangeSelector = ( { setDayRange }) => {
     setIsSelectingSecondDate(!isSelectingSecondDate);
   }
   return (
-     <>
-      { isLoading ? (
-        <CircularProgress />) : (
-          <TimeRangeChart data={backingTimeRangeData} handleDateClicked={dateClicked}/>
-    ) }
-    </>
+    <TimeRangeChart data={backingTimeRangeData} handleDateClicked={dateClicked} height={height} width={width}/>
   );
 }
 

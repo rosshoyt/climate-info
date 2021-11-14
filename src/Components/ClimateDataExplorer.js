@@ -8,7 +8,7 @@ import TimeRangeSelector from './TimeRangeSelector'
 import NOAAQuery from '../api/noaa/NOAAQuery'
 import useStore from '../store';
 import DataTable from './DataTable';
-
+import CollapsibleList from './CollapsibleList'
 
 const ClimateDataExplorer = () => {
   
@@ -81,20 +81,17 @@ const ClimateDataExplorer = () => {
 
   return (
     <>
-      <Grid container direction="column" justifyContent="space-between" alignItems="center">
+      <Grid container direction="column" justify="space-between" alignItems="center">
         <Typography noWrap variant='h4' align='left' fontWeight="fontWeightBold">
           Climate Data Explorer
         </Typography>
-        <LocationSelect setLocation={setLocation} />
-        <Typography variant="h5">Main Time Period:</Typography>
-      </Grid>
-      
-      <div style={{ height: 225 }}>
-        <TimeRangeSelector setDayRange={setDayRange}/>
-      </div>
-      <Grid container direction="column" justifyContent="space-between" alignItems="center">
-        <Typography noWrap variant="h5">Compare to years:</Typography>
-        <YearList />
+
+        <CollapsibleList>
+          <LocationSelect title='Location' setLocation={setLocation} />
+          <YearList title='Years to Compare:'/>
+          <TimeRangeSelector title='Day Range' height={250} width={1000} setDayRange={setDayRange}/>
+        </CollapsibleList>
+        
         <Button 
           variant="contained" 
           color="primary" 

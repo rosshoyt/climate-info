@@ -1,9 +1,11 @@
 import React from 'react';
-import { ResponsiveTimeRange } from '@nivo/calendar';
-const TimeRangeChart  = ({ data, handleDateClicked }) => {
+import { ResponsiveTimeRange, TimeRange } from '@nivo/calendar';
+const TimeRangeChart  = ({ data, handleDateClicked, height, width }) => {
 
   return (
-    <ResponsiveTimeRange
+    <TimeRange
+      height={height}
+      width={width}
       data={data}
       from="2018-01-01"
       to="2018-12-31"
