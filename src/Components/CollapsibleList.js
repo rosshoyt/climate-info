@@ -10,12 +10,6 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 
 // https://codesandbox.io/embed/sm-article-21-lt6le?fontsize=14&hidenavigation=1&theme=dark
 const useStyles = makeStyles((theme) => ({
-  root: {
-    width: '100%',
-    //justifyContent: 'right'
-    //maxWidth: 360,
-    //backgroundColor: theme.palette.background.paper,
-  },
   nested: {
     paddingLeft: theme.spacing(4),
   },
