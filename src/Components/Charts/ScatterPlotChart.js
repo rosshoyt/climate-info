@@ -1,16 +1,11 @@
 import React from 'react';
 import { ResponsiveScatterPlot } from '@nivo/scatterplot'
-import scatter from '../../Data/nivo-default-data/scatter'
+import scatter from '../../Data/nivo-default-data/scatter';
 import useStore from '../../store';
+import { line } from 'd3-shape';
 
-// make sure parent container have a defined height when using
-// responsive component, otherwise height will be 0 and
-// no chart will be rendered.
-// website examples showcase many properties,
-// you'll often use just a few of them.
 const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     const yearInfo = useStore(state => state.years);
-
     function getColor(year) {
         return yearInfo.find(y => y.year === year).color;
     }
@@ -74,7 +69,76 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     ]
                 }
             ]}
+            layers={[
+                "grid",
+                "axes",
+                Line,
+                "nodes",
+                "markers",
+                "mesh",
+                "annotations",
+                "legends",
+              ]}
         />
     );
+
+    function Line({ data, nodes, xScale, yScale}) {
+        // use the d3 line generator line()
+        const lineGenerator = line()
+            .x(d => xScale(d.x))
+            .y(d => yScale(d.y));
+        
+        // a list to hold each line ID and its list of points
+        const averagedLineData = [];
+    
+        // look at each time series (data.data)
+        data.forEach(({id, data }) => {
+            const tracking = {}
+            // look at each datum in the time series and track averages
+
+            data.forEach(({x, y}) => {
+                if(tracking.hasOwnProperty(x)){
+                    tracking[x].total += y;
+                    tracking[x].num++; 
+                } else {
+                    tracking[x] = {
+                        total: y,
+                        num: 1
+                    }
+                }
+            });
+            
+            // calculate the averages for this timeseries
+            const avgs = [];
+            Object.entries(tracking).forEach(([key, value])=> {
+                avgs.push({ x: key, y: value.total / value.num })
+            });
+            // add to list
+            averagedLineData.push({ id: id, data: avgs})
+        });
+    
+        return averagedLineData.map(({ id, data }, index) => {
+            return (<path
+                key={id}
+                d={lineGenerator(data)}
+                fill="none"
+                stroke={getColor(id)}
+                // TODO improve style
+                style={
+                index % 2 === 0
+                    ? {
+                        // simulate line will dash stroke when index is even
+                        strokeDasharray: "3, 6",
+                        strokeWidth: 3
+                    }
+                    : {
+                        // simulate line with solid stroke
+                        strokeWidth: 3
+                    }
+                }
+            />);
+        });
+        
+    };
 }
 export default ScatterPlotChart;
