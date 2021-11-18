@@ -12,7 +12,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function DataTypeSelector({setDataType}) {
+export default function DataTypeSelector({dataType, setDataType}) {
   const [dataTypes, setDataTypes] = useState( [ 
     "TMAX",
     "TMIN",
@@ -35,7 +35,7 @@ export default function DataTypeSelector({setDataType}) {
         <Select
           labelId="demo-simple-select-label"
           id="demo-simple-select"
-          value="TMAX" //{dataTypes[0]} fix
+          value={dataType} 
           onChange={handleChange}
         >
           {

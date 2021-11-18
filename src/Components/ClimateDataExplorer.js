@@ -9,6 +9,7 @@ import NOAAQuery from '../api/noaa/NOAAQuery'
 import useStore from '../store';
 import DataTable from './DataTable';
 import CollapsibleList from './CollapsibleList'
+import DataTypeSelector from './DataTypeSelector';
 
 const ClimateDataExplorer = () => {
   
@@ -24,6 +25,7 @@ const ClimateDataExplorer = () => {
   const [chartData, setChartData] = useState([]);
   const [refreshChartData, setRefreshChartData] = useState(false);
   const [isLoading, setIsLoading] = useState(false); // could move into chart component
+  const [dataType, setDataType] = useState("TMAX");
 
   const years = useStore(state => state.years);
   const setAPIResults = useStore(state => state.setAPIResults);
@@ -89,9 +91,10 @@ const ClimateDataExplorer = () => {
         </Grid>
         <Grid item justify="center">
           <CollapsibleList>
-            <LocationSelect title='Location' setLocation={setLocation} />
+            <LocationSelect title='Location:' setLocation={setLocation} />
+            <DataTypeSelector title='Data Type:' dataType={dataType} setDataType={setDataType}/>
             <YearList title='Years to Compare:'/>
-            <TimeRangeSelector title='Day Range' height={250} width={1000} setDayRange={setDayRange}/>
+            <TimeRangeSelector title='Date Range:' height={250} width={1000} setDayRange={setDayRange}/>
           </CollapsibleList>
         </Grid>
         <Grid item xs={12}>
