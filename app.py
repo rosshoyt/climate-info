@@ -42,13 +42,13 @@ def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=
     # pass response to client
     return response.json()
 
-@app.route('/api/noaa/data/daily/<location_id>/<start_date>/<end_date>')
-def get_average_daily_max_temp_city(location_id=None, start_date=None, end_date=None):
+@app.route('/api/noaa/data/daily/<data_type>/<location_id>/<start_date>/<end_date>')
+def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date=None, end_date=None):
     # Setup the request url
     url = URL_NOAA_API
     url += "/data?"
     url += "datasetid=GHCND"
-    url += "&datatypeid=TMAX"
+    url += "&datatypeid=" + data_type
     # Location code:
     url += "&locationid=" + location_id
     # Get results in Farenheight
