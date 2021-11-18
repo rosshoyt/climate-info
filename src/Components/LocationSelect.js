@@ -1,18 +1,6 @@
 /* eslint-disable no-use-before-define */
 import React, { useState, useEffect } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Autocomplete from '@material-ui/lab/Autocomplete';
-import { makeStyles } from '@material-ui/core/styles';
-
-const useStyles = makeStyles({
-  option: {
-    fontSize: 15,
-    '& > span': {
-      marginRight: 10,
-      fontSize: 18,
-    },
-  },
-});
+import AutocompleteSelector from './AutocompleteSelector';
 
 export default function LocationSelect({setLocation}) {
   const [locations, setLocationOptions] = useState( [ {
@@ -27,43 +15,18 @@ export default function LocationSelect({setLocation}) {
     fetchData();
     async function fetchData() {
       const result = await fetch('/api/locations/cities').then(res => res.json()).then(data => {
-      //console.log(data.cities);
-      setLocationOptions(data.cities);
+        //console.log(data.cities);
+        setLocationOptions(data.cities);
       });
     }
   }, []);
 
-
-  const classes = useStyles();
-
   return (
-    <Autocomplete
-      onChange={(event, value) => setLocation(value)}
-      id="location-select"
-      style={{ width: 300 }}
-      options={locations}
-      classes={{
-        option: classes.option,
-      }}
-      autoHighlight
-      getOptionLabel={(option) => option.name}
-      renderOption={(option) => (
-        <React.Fragment>
-          <span> {option.name}</span>
-          {option.id}
-        </React.Fragment>
-      )}
-      renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Enter a location (default: Seattle)" 
-          variant="outlined"
-          inputProps={{
-            ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
-          }}
-        />
-      )}
+    <AutocompleteSelector 
+    selectionOptions={locations} 
+    setSelection={setLocation}
+    id='location-selector'
+    label='Enter a location (default: Seattle)'
     />
   );
 }
