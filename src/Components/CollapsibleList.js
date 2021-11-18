@@ -11,8 +11,13 @@ import ExpandMore from '@material-ui/icons/ExpandMore';
 // https://codesandbox.io/embed/sm-article-21-lt6le?fontsize=14&hidenavigation=1&theme=dark
 const useStyles = makeStyles((theme) => ({
   nested: {
-    paddingLeft: theme.spacing(4),
+    // paddingLeft: theme.spacing(4),
+    alignItems: 'center',
+    justifyContent: 'center',
   },
+  root: {
+    textAlign: 'center',
+  }
 }));
 
 export default function CollapsibleList({ title, children }) {
@@ -41,7 +46,7 @@ export default function CollapsibleList({ title, children }) {
         }
         return(
           <>
-            <ListItem button onClick={handleClick}>
+            <ListItem button onClick={handleClick} className={classes.root}>
               {/*TODO DIsplay a custom list icon
                <ListItemIcon>
                 <InboxIcon />
@@ -50,8 +55,8 @@ export default function CollapsibleList({ title, children }) {
               {open[index] ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open[index]} timeout="auto" >
-              <List component="div" disablePadding>
-                <ListItem className={classes.nested}>
+              <List component="div" disablePadding className={classes.root}>
+                <ListItem className={classes.nested} >
                   {child}
                 </ListItem>
               </List>

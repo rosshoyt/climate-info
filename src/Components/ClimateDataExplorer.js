@@ -81,45 +81,45 @@ const ClimateDataExplorer = () => {
 
   return (
     <>
-      <Grid container direction="column" justify="space-between" align='left'>
+      <Grid container direction="column" justify="center">
         <Grid item xs={12}>
-          <Typography noWrap variant='h4' align='left'  fontWeight="fontWeightBold">
+          <Typography noWrap variant='h4' align='center'  fontWeight="fontWeightBold">
             Climate Data Explorer
           </Typography>
         </Grid>
-        <CollapsibleList>
-          <LocationSelect title='Location' setLocation={setLocation} />
-          <YearList title='Years to Compare:'/>
-          <TimeRangeSelector title='Day Range' height={250} width={1000} setDayRange={setDayRange}/>
-        </CollapsibleList>
-        <Grid item xs={12}>
-        <Button 
-          variant="contained" 
-          color="primary" 
-          size="large" 
-          onClick={() => setRefreshChartData(!refreshChartData)}
-        >
-          Update Chart
-        </Button>
+        <Grid item justify="center">
+          <CollapsibleList>
+            <LocationSelect title='Location' setLocation={setLocation} />
+            <YearList title='Years to Compare:'/>
+            <TimeRangeSelector title='Day Range' height={250} width={1000} setDayRange={setDayRange}/>
+          </CollapsibleList>
         </Grid>
-        <Grid item xs={12}></Grid>
-        <Typography noWrap variant='h5' align='left' fontWeight="fontWeightBold">
-          Max Daily Temperatures in {location.name}:
-        </Typography>
-      </Grid>
-
-      <Grid>
         <Grid item xs={12}>
-        <div style={{ height: 800 }}>
-          { isLoading ? (
-            // TODO center progress spinner vertically
-            // TODO update on each API call return; or, overlay spinner on graph while it has partial results
-            <CircularProgress />
-          ) : (
-            <ScatterPlotChart data={chartData} />
-          )}
-        
-        </div>
+          <Button 
+            variant="contained" 
+            color="primary" 
+            size="large" 
+            onClick={() => setRefreshChartData(!refreshChartData)}
+          >
+            Update Chart
+          </Button>
+        </Grid>
+        <Grid item xs={12}>
+          <Typography noWrap variant='h5' align='center' fontWeight="fontWeightBold">
+            Max Daily Temperatures in {location.name}:
+          </Typography>
+        </Grid>
+        <Grid item xs={12}>
+          <div style={{ height: 800 }}>
+            { isLoading ? (
+              // TODO center progress spinner vertically
+              // TODO update on each API call return; or, overlay spinner on graph while it has partial results
+              <CircularProgress />
+            ) : (
+              <ScatterPlotChart data={chartData} />
+            )}
+          
+          </div>
         </Grid>
         
         <Grid item xs={12}>
