@@ -58,7 +58,11 @@ export default function CollapsibleList({ title, children }) {
               { /* TODO format secondary text https://github.com/mui-org/material-ui/pull/20039 */ }
               <ListItemText 
                 disableTypography
-                primary={ <Typography type="body3" style={{ color: '#000000' }}>{ (index + 1) + '. ' + child.props.title + ':' } &nbsp; { child.props.currentValueText} </Typography>}
+                primary={ 
+                <>
+                  <Typography type="body3" display='inline' style={{ color: '#000000' }}>{ (index + 1) + '. ' + child.props.title + ':' } &nbsp; </Typography>
+                  <Typography type="body3" display='inline' style={{ color: '#808080' }}>{ child.props.currentValueText} </Typography>
+                </>}
               />
               
               {open[index] ? <ExpandLess /> : <ExpandMore />}
