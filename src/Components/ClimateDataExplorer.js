@@ -44,6 +44,8 @@ const ClimateDataExplorer = () => {
     setIsLoading(true);
     // TODO could move functionality to store
     async function fetchTimeseriesData(queryList) {
+      setChartData([])
+      setAPIResults([])
       const apiResultList = [];
       const rawData = []; // hold unprocessed query results (for adding to table)
       for(const query of queryList) {
@@ -113,16 +115,7 @@ const ClimateDataExplorer = () => {
           </Typography>
         </Grid>
         <Grid item xs={12}>
-          <div style={{ height: 800 }}>
-            { isLoading ? (
-              // TODO center progress spinner vertically
-              // TODO update on each API call return; or, overlay spinner on graph while it has partial results
-              <CircularProgress />
-            ) : (
-              <ScatterPlotChart data={chartData} />
-            )}
-          
-          </div>
+            <ScatterPlotChart data={chartData} />
         </Grid>
         
         <Grid item xs={12}>
