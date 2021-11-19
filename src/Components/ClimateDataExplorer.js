@@ -110,22 +110,24 @@ const ClimateDataExplorer = () => {
           </Button>
         </Grid>
         <Grid item xs={12}>
-          <Typography noWrap variant='h5' align='center' fontWeight="fontWeightBold">
-            Max Daily Temperatures in {location.name}:
+          <Typography variant='h4' align='center' fontWeight="fontWeightBold">
+            {dataType} from {dayRange.join(' to ')} in {location.name}:
+          </Typography>
+          <Typography variant='h4' align='center'>
+            {years.map(yearEntry => { return yearEntry.year }).join(', ')}
           </Typography>
         </Grid>
         <Grid item xs={12}>
             <ScatterPlotChart data={chartData} />
         </Grid>
-        
         <Grid item xs={12}>
-          <Typography paragraph>
-            Data via @NOAA Climate Data Online API. TODO describe graph based on selected params.
+          <Typography variant='h4' align="center">
+            Raw Weather Data:
           </Typography>
-          </Grid>
-          <Grid item xs={12}>
-            <DataTable />
-          </Grid>
+        </Grid>
+        <Grid item xs={12}>
+          <DataTable />
+        </Grid>
       </Grid>
     </>
   );
