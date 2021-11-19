@@ -1,5 +1,5 @@
 import React, { useState, Children } from 'react';
-import { makeStyles } from '@material-ui/core/styles';
+import { makeStyles, withStyles } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -7,7 +7,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import Collapse from '@material-ui/core/Collapse';
 import ExpandLess from '@material-ui/icons/ExpandLess';
 import ExpandMore from '@material-ui/icons/ExpandMore';
-
+import Typography from '@material-ui/core/Typography'
 // https://codesandbox.io/embed/sm-article-21-lt6le?fontsize=14&hidenavigation=1&theme=dark
 const useStyles = makeStyles((theme) => ({
   nested: {
@@ -16,8 +16,11 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
   },
   root: {
-    textAlign: 'center',
-  }
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',    
+  },
+
 }));
 
 export default function CollapsibleList({ title, children }) {
@@ -51,7 +54,13 @@ export default function CollapsibleList({ title, children }) {
                <ListItemIcon>
                 <InboxIcon />
               </ListItemIcon> */}
-              <ListItemText primary={ (index + 1) + '. ' + child.props.title} />
+              
+              { /* TODO format secondary text https://github.com/mui-org/material-ui/pull/20039 */ }
+              <ListItemText 
+                disableTypography
+                primary={ <Typography type="body3" style={{ color: '#000000' }}>{ (index + 1) + '. ' + child.props.title + ':' } &nbsp; { child.props.currentValueText} </Typography>}
+              />
+              
               {open[index] ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open[index]} timeout="auto" >
