@@ -1,40 +1,44 @@
 import React from 'react';
-import { ResponsiveTimeRange, TimeRange } from '@nivo/calendar';
-const TimeRangeChart  = ({ data, handleDateClicked, height, width }) => {
+import { ResponsiveTimeRange } from '@nivo/calendar';
+import useWindowDimensions from '../../Utils/WindowUtils';
+
+const TimeRangeChart  = ({ data, handleDateClicked}) => {
+  const { height, width } = useWindowDimensions();
 
   return (
-    <TimeRange
-      height={height}
-      width={width}
-      data={data}
-      from="2018-01-01"
-      to="2018-12-31"
-      domain={[1,150]}
-      colors={[ '#61cdbb', '#ededed']}//'#97e3d5', '#e8c1a0', '#f47560' ]}
-      //colors={[ '#61cdbb','#97e3d5', '#e8c1a0', '#f47560' ]}
-      //margin={{ top: 40, right: 40, bottom: 100, left: 40 }}
-      dayBorderWidth={2}
-      dayBorderColor="#000000"
-      daySpacing={4}
-      monthLegendPosition='after'
-      monthLegendOffset={175}
-      onClick={(day,event)=>handleDateClicked(day, event)}
-      // legends={[
-      //     {
-      //         anchor: 'bottom-right',
-      //         direction: 'row',
-      //         justify: false,
-      //         itemCount: 4,
-      //         itemWidth: 42,
-      //         itemHeight: 36,
-      //         itemsSpacing: 14,
-      //         itemDirection: 'right-to-left',
-      //         translateX: -60,
-      //         translateY: -60,
-      //         symbolSize: 20
-      //     }
-      // ]}
-    />
+    <div style={{height: width/6, width:"99%"}}>
+      <ResponsiveTimeRange
+        //height={height}
+        //width={width}
+        data={data}
+        from="2017-01-01"
+        to="2017-12-31"
+        domain={[1,150]}
+        colors={[ '#61cdbb', '#ededed']}
+        margin={{ top: 30, right: 40, bottom: 20, left: 40 }}
+        dayBorderWidth={2}
+        dayBorderColor="#000000"
+        daySpacing={4}
+        monthLegendPosition='before'
+        monthLegendOffset={20}
+        onClick={(day,event)=>handleDateClicked(day, event)}
+        // legends={[
+        //     {
+        //         anchor: 'bottom-right',
+        //         direction: 'row',
+        //         justify: false,
+        //         itemCount: 4,
+        //         itemWidth: 42,
+        //         itemHeight: 36,
+        //         itemsSpacing: 14,
+        //         itemDirection: 'right-to-left',
+        //         translateX: -60,
+        //         translateY: -60,
+        //         symbolSize: 20
+        //     }
+        // ]}
+      />
+    </div>
   );
 }
 

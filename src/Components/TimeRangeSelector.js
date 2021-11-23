@@ -21,9 +21,7 @@ function getDefaultTimeRangeData() {
   return array;
 }
 
-const TimeRangeSelector = ( { height, width, setDayRange }) => {
-  const [isLoading, setIsLoading] = useState(false);
-  
+const TimeRangeSelector = ( { setDayRange }) => {
   const [backingTimeRangeData, setBackingTimeRangeData] = useState(getDefaultTimeRangeData());
 
   useEffect(() => {
@@ -75,7 +73,10 @@ const TimeRangeSelector = ( { height, width, setDayRange }) => {
     setIsSelectingSecondDate(!isSelectingSecondDate);
   }
   return (
-    <TimeRangeChart data={backingTimeRangeData} handleDateClicked={dateClicked} height={height} width={width}/>
+    <TimeRangeChart 
+      data={backingTimeRangeData} 
+      handleDateClicked={dateClicked} 
+    />
   );
 }
 

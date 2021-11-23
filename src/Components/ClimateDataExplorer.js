@@ -96,7 +96,7 @@ const ClimateDataExplorer = () => {
             <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
             <DataTypeSelector title='Data Type' currentValueText={dataType} dataType={dataType} setDataType={setDataType}/>
             <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
-            <TimeRangeSelector title='Date Range' currentValueText={dayRange.join(' to ')} height={250} width={1000} setDayRange={setDayRange}/>
+            <TimeRangeSelector title='Date Range' currentValueText={dayRange.join(' to ')} setDayRange={setDayRange}/>
           </CollapsibleList>
         </Grid>
         <Grid item xs={12}>
