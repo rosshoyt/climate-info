@@ -7,6 +7,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 import MomentUtils from '@date-io/moment';
 import ClimateDataExplorer from './Components/ClimateDataExplorer';
 import TitleAppBar from './Components/TitleAppBar';
+import { blueGrey, orange } from '@material-ui/core/colors';
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -14,6 +15,8 @@ function App() {
   const theme = createTheme({
     palette: {
       type: darkMode ? "dark" : "light",
+      primary: blueGrey,
+      secondary: orange
     },
     paper: {
       textAlign: 'left'
@@ -22,14 +25,13 @@ function App() {
 
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
-    <ThemeProvider theme={theme}>
-      
-      <div className="App">
-        <CssBaseline />
-        <TitleAppBar title="ClimateInfo.US" darkMode={darkMode} setDarkMode={setDarkMode}/>
-        <ClimateDataExplorer />
-      </div>
-    </ThemeProvider>
+      <ThemeProvider theme={theme}>
+        <div className="App">
+          <CssBaseline />
+          <TitleAppBar title="ClimateInfo.US" darkMode={darkMode} setDarkMode={setDarkMode}/>
+          <ClimateDataExplorer />
+        </div>
+      </ThemeProvider>
     </MuiPickersUtilsProvider>
   );
 }
