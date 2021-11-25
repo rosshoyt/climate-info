@@ -1,5 +1,5 @@
 import React, { useState, Children } from 'react';
-import { makeStyles, withStyles } from '@material-ui/core/styles';
+import { makeStyles, useTheme } from '@material-ui/core/styles';
 import ListSubheader from '@material-ui/core/ListSubheader';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
@@ -26,8 +26,8 @@ const useStyles = makeStyles((theme) => ({
 export default function CollapsibleList({ title, children }) {
   const classes = useStyles();
   const [open, setOpen] = useState(Array.from({length: 20}, () => true));
-  // const [open, setOpen[] = useState([true]) // TODO
   const arrayChildren = Children.toArray(children)
+  const theme = useTheme();
 
   return (
     <List
@@ -60,7 +60,7 @@ export default function CollapsibleList({ title, children }) {
                 disableTypography
                 primary={ 
                 <>
-                  <Typography type="body3" display='inline' style={{ color: '#000000' }}>{ (index + 1) + '. ' + child.props.title + ':' } &nbsp; </Typography>
+                  <Typography type="body3" display='inline' style={{ color: theme.palette.type == "dark" ? '#ffffff' : '#000000' }}>{ (index + 1) + '. ' + child.props.title + ':' } &nbsp; </Typography>
                   <Typography type="body3" display='inline' style={{ color: '#808080' }}>{ child.props.currentValueText} </Typography>
                 </>}
               />
