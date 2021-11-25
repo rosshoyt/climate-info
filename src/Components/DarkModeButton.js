@@ -1,24 +1,27 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import IconButton from '@material-ui/core/IconButton';
 import Brightness4Icon from '@material-ui/icons/Brightness4';
 import Brightness7Icon from '@material-ui/icons/Brightness7';
 
 export default function DarkModeSwitch({ darkMode, setDarkMode}) {
+
+  useEffect(() => {
+    console.log('Repainting DarkModeSwitch, darkMode = ', darkMode);
+  }, [darkMode]);
+
   const handleClick = () => {
+    console.log('clicked, darkMode =', darkMode)
     setDarkMode(!darkMode);
   }
 
   return (
-    <>
-    { darkMode ? (
-        <IconButton onClick={handleClick}>
+    <IconButton onClick={handleClick}>
+      { darkMode ? (
           <Brightness4Icon />
-        </IconButton>
       ): (
-        <IconButton onClick={handleClick}>
+
           <Brightness7Icon />
-        </IconButton>
       )} 
-    </>
+    </IconButton>
   );
 }

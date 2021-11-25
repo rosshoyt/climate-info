@@ -5,9 +5,8 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import GitHubIcon from '@material-ui/icons/GitHub';
-import Switch from '@material-ui/core/Switch'
-import { Grid } from '@material-ui/core';
 import IconButton from '@material-ui/core/IconButton';
+import DarkModeButton from './DarkModeButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -31,6 +30,8 @@ export default function TitleAppBar({ title, darkMode, setDarkMode }) {
           <Typography variant="h5" className={classes.title} align='left'>
             <WbSunnyIcon /> {title}
           </Typography>
+
+          <DarkModeButton darkMode={darkMode} setDarkMode={setDarkMode} />
           <a href='https://github.com/rosshoyt/climate-info'>
             <IconButton>
               <GitHubIcon />

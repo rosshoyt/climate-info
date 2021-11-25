@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+import CssBaseline from '@material-ui/core/CssBaseline';
 import './App.css';
 import { ThemeProvider, createTheme } from '@material-ui/core/styles';
-
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
 import MomentUtils from '@date-io/moment';
@@ -23,8 +23,10 @@ function App() {
   return (
     <MuiPickersUtilsProvider utils={MomentUtils}>
     <ThemeProvider theme={theme}>
+      
       <div className="App">
-        <TitleAppBar title="ClimateInfo.US" />
+        <CssBaseline />
+        <TitleAppBar title="ClimateInfo.US" darkMode={darkMode} setDarkMode={setDarkMode}/>
         <ClimateDataExplorer />
       </div>
     </ThemeProvider>
