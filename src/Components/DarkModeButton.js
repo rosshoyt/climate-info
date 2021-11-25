@@ -17,10 +17,9 @@ export default function DarkModeSwitch({ darkMode, setDarkMode}) {
   return (
     <IconButton onClick={handleClick}>
       { darkMode ? (
-          <Brightness4Icon />
-      ): (
-
           <Brightness7Icon />
+      ): (
+          <Brightness4Icon />
       )} 
     </IconButton>
   );
