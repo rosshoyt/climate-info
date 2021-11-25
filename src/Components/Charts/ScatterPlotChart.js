@@ -4,12 +4,16 @@ import scatter from '../../Data/nivo-default-data/scatter';
 import useStore from '../../store';
 import { line, curveNatural } from 'd3-shape';
 import { Box, Slider, Grid, Typography, CircularProgress } from '@material-ui/core/';
+import { useTheme } from '@material-ui/core/styles';
 
 const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
+    const theme = useTheme(); // theme.spacing
 
     const [lineWidth, setLineWidth] = useState(10);
     const [pointSize, setPointSize] = useState(5);
+    
     const yearInfo = useStore(state => state.years);
+    
     function getColor(year) {
         return yearInfo.find(y => y.year === year).color;
     }
@@ -29,6 +33,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     }}
                     theme={{
                         fontSize: 16,
+                        textColor: theme.palette.type == "dark" ? '#ffffff' : '#000000'
                     }}
                     margin={{ top: 40, right: 100, bottom: 65, left: 70 }}
                     xScale={{ type: 'point', min: 0, max: 'auto' }}

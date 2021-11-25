@@ -1,15 +1,16 @@
 import React from 'react';
 import { ResponsiveTimeRange } from '@nivo/calendar';
+import { useTheme } from '@material-ui/core/styles';
 import useWindowDimensions from '../../Utils/WindowUtils';
 
 const TimeRangeChart  = ({ data, handleDateClicked}) => {
   const { height, width } = useWindowDimensions();
-
+  const theme = useTheme();
+ 
   return (
     <div style={{height: width/6, width:"99%"}}>
       <ResponsiveTimeRange
-        //height={height}
-        //width={width}
+        theme={{ textColor: theme.palette.type == "dark" ? '#ffffff' : '#000000' }}
         data={data}
         from="2017-01-01"
         to="2017-12-31"
