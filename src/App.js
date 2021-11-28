@@ -5,7 +5,7 @@ import { ThemeProvider, createTheme } from '@material-ui/core/styles';
 import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
 import MomentUtils from '@date-io/moment';
-import ClimateDataExplorer from './Components/ClimateDataExplorer';
+import ClimateDataExplorer from './Components/Pages/ClimateDataExplorer';
 import TitleAppBar from './Components/TitleAppBar';
 import { blueGrey, orange } from '@material-ui/core/colors';
 

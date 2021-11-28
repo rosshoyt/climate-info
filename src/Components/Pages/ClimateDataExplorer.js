@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react';
-import LocationSelect from './LocationSelect';
+import LocationSelect from '../LocationSelect';
 import { Grid, Button, Typography, CircularProgress } from '@material-ui/core';
 import moment from 'moment';
-import ScatterPlotChart from './Charts/ScatterPlotChart';
-import YearList from './YearList';
-import TimeRangeSelector from './TimeRangeSelector'
-import NOAAQuery from '../api/noaa/NOAAQuery'
-import useStore from '../store';
-import DataTable from './DataTable';
-import CollapsibleList from './CollapsibleList'
-import DataTypeSelector from './DataTypeSelector';
+import ScatterPlotChart from '../Charts/ScatterPlotChart';
+import YearList from '../YearList';
+import TimeRangeSelector from '../TimeRangeSelector'
+import NOAAQuery from '../../api/noaa/NOAAQuery'
+import useStore from '../../store';
+import DataTable from '../DataTable';
+import CollapsibleList from '../CollapsibleList'
+import DataTypeSelector from '../DataTypeSelector';
 
 const ClimateDataExplorer = () => {
   
@@ -24,7 +24,7 @@ const ClimateDataExplorer = () => {
   const [dayRange, setDayRange] = useState(['06-01', '06-30']);
   const [chartData, setChartData] = useState([]);
   const [refreshChartData, setRefreshChartData] = useState(false);
-  const [isLoading, setIsLoading] = useState(false); // could move into chart component
+  //const [isLoading, setIsLoading] = useState(false); // could move into chart component
   const [dataType, setDataType] = useState("TMAX");
 
   const years = useStore(state => state.years);
@@ -41,7 +41,7 @@ const ClimateDataExplorer = () => {
   // Fetches data for the chart
   // TODO optimize
   useEffect(() => {
-    setIsLoading(true);
+    // setIsLoading(true);
     // TODO could move functionality to store
     async function fetchTimeseriesData(queryList) {
       setChartData([])
@@ -67,7 +67,7 @@ const ClimateDataExplorer = () => {
       };
       setChartData(apiResultList);
       setAPIResults(rawData);
-      setIsLoading(false);
+      //setIsLoading(false);
     }
     
     fetchTimeseriesData(getAPIQueries());
