@@ -85,40 +85,37 @@ const ClimateDataExplorer = () => {
 
   return (
     <>
-      <Grid container direction="column" justify="center">
-        <Grid item xs={12}>
-          <Typography noWrap variant='h4' align='center'  fontWeight="fontWeightBold">
-            Climate Data Explorer
-          </Typography>
+      <Grid container direction="row" justify="center">
+        <Grid container direction="column" xs={12} lg={3}>
+          <Grid item justify="center" >
+            <ResponsiveListContainer>
+              <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
+              <DataTypeSelector title='Data Type' currentValueText={dataType} dataType={dataType} setDataType={setDataType}/>
+              <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
+              <TimeRangeSelector title='Date Range' currentValueText={dayRange.join(' to ')} setDayRange={setDayRange}/>
+            </ResponsiveListContainer>
+          </Grid>
+          <Grid item>
+            <Button 
+              variant="contained" 
+              color="primary" 
+              size="large" 
+              onClick={() => setRefreshChartData(!refreshChartData)}
+            >
+              Update Chart
+            </Button>
+          </Grid>
         </Grid>
-        <Grid item justify="center">
-          <ResponsiveListContainer>
-            <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
-            <DataTypeSelector title='Data Type' currentValueText={dataType} dataType={dataType} setDataType={setDataType}/>
-            <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
-            <TimeRangeSelector title='Date Range' currentValueText={dayRange.join(' to ')} setDayRange={setDayRange}/>
-          </ResponsiveListContainer>
-        </Grid>
-        <Grid item xs={12}>
-          <Button 
-            variant="contained" 
-            color="primary" 
-            size="large" 
-            onClick={() => setRefreshChartData(!refreshChartData)}
-          >
-            Update Chart
-          </Button>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant='h4' align='center' fontWeight="fontWeightBold">
-            {dataType} from {dayRange.join(' to ')} in {location.name}:
-          </Typography>
-          <Typography variant='h4' align='center'>
-            {years.map(yearEntry => { return yearEntry.year }).join(', ')}
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-            <ScatterPlotChart data={chartData} />
+        <Grid container direction="column" sm={12} lg={9}>
+          <Grid item >
+            <Typography variant='h4' align='center' fontWeight="fontWeightBold">
+              {dataType} from {dayRange.join(' to ')} in {location.name} in 
+              {years.map(yearEntry => { return yearEntry.year }).join(', ')}
+            </Typography>
+          </Grid>
+          <Grid item >
+              <ScatterPlotChart data={chartData} />
+          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Typography variant='h4' align="center">
