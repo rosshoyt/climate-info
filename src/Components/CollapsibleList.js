@@ -11,14 +11,14 @@ import Typography from '@material-ui/core/Typography'
 // https://codesandbox.io/embed/sm-article-21-lt6le?fontsize=14&hidenavigation=1&theme=dark
 const useStyles = makeStyles((theme) => ({
   nested: {
-    // paddingLeft: theme.spacing(4),
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'left',
+    justifyContent: 'left',
   },
   root: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    textAlign: 'center',    
+    paddingLeft: theme.spacing(1),
+    alignItems: 'left',
+    justifyContent: 'left',
+    textAlign: 'left',    
   },
 
 }));
@@ -50,22 +50,19 @@ export default function CollapsibleList({ title, children }) {
         return(
           <>
             <ListItem button onClick={handleClick} className={classes.root}>
-              {/*TODO DIsplay a custom list icon
-               <ListItemIcon>
-                <InboxIcon />
-              </ListItemIcon> */}
-              
-              { /* TODO format secondary text https://github.com/mui-org/material-ui/pull/20039 */ }
-              <ListItemText 
+              {open[index] ? <ExpandLess /> : <ExpandMore />}
+              {/* TODO Display a custom list icon ala
+               <ListItemIcon><InboxIcon /></ListItemIcon>
+              TODO format secondary text https://github.com/mui-org/material-ui/pull/20039 */ }
+              <ListItemText
+                style={{flexDirection: 'column' }}
                 disableTypography
                 primary={ 
                 <>
-                  <Typography type="body3" display='inline' style={{ color: theme.palette.type == "dark" ? '#ffffff' : '#000000' }}>{ (index + 1) + '. ' + child.props.title + ':' } &nbsp; </Typography>
+                  <Typography type="body3" display='inline' style={{ color: theme.palette.type == "dark" ? '#ffffff' : '#000000' }}>{ child.props.title + ':' } &nbsp; </Typography>
                   <Typography type="body3" display='inline' style={{ color: '#808080' }}>{ child.props.currentValueText} </Typography>
                 </>}
               />
-              
-              {open[index] ? <ExpandLess /> : <ExpandMore />}
             </ListItem>
             <Collapse in={open[index]} timeout="auto" >
               <List component="div" disablePadding className={classes.root}>
