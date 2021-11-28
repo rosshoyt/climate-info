@@ -8,8 +8,8 @@ import TimeRangeSelector from '../TimeRangeSelector'
 import NOAAQuery from '../../api/noaa/NOAAQuery'
 import useStore from '../../store';
 import DataTable from '../DataTable';
-import CollapsibleList from '../CollapsibleList'
 import DataTypeSelector from '../DataTypeSelector';
+import ResponsiveListContainer from '../ResponsiveListContainer';
 
 const ClimateDataExplorer = () => {
   
@@ -92,12 +92,12 @@ const ClimateDataExplorer = () => {
           </Typography>
         </Grid>
         <Grid item justify="center">
-          <CollapsibleList>
+          <ResponsiveListContainer>
             <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
             <DataTypeSelector title='Data Type' currentValueText={dataType} dataType={dataType} setDataType={setDataType}/>
             <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
             <TimeRangeSelector title='Date Range' currentValueText={dayRange.join(' to ')} setDayRange={setDayRange}/>
-          </CollapsibleList>
+          </ResponsiveListContainer>
         </Grid>
         <Grid item xs={12}>
           <Button 

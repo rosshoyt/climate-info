@@ -1,5 +1,5 @@
 import React, { Children } from 'react'
-import useWindowDimensions from '../../Utils/WindowUtils';
+import useWindowDimensions from '../Utils/WindowUtils';
 import CollapsibleList from './CollapsibleList';
 
 export default function ResponsiveListContainer({ children }) {
