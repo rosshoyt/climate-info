@@ -1,10 +1,16 @@
-# react-flask-heroku
-Simple bootstrapping code to get you started with a React frontend and Flask backend ready to deploy to Heroku.
+# ClimateInfo.US
+### Explore and visualize historical climate data from the NOAA Climate Data Online database.
+### Compare temperature, rain, and snowfall data from locations around the world across years!
+####
+<br>
 
-## Dependencies
+## Site info:
+### Website built with MaterialUI, React, and Flask, hosted on Heroku
+### Uses Nivo charts and Zustand state management libraries
+### Climate Data source: NOAA Climate Data Online API (https://www.ncdc.noaa.gov/cdo-web/)
+<br>
 
-python3, npm, Heroku CLI
-
+## Developers:
 ## Setup
 
 1. `pip3 install -r requirements.txt`
