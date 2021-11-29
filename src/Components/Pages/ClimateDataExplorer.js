@@ -10,6 +10,7 @@ import DataTable from '../DataTable';
 import DataTypeSelector from '../DataTypeSelector';
 import ResponsiveListContainer from '../ResponsiveListContainer';
 import DateRangeSlider from '../sliders/DateRangeSlider';
+import DataTypes from '../../api/noaa/DataTypes';
 
 const ClimateDataExplorer = () => {
   
@@ -86,11 +87,11 @@ const ClimateDataExplorer = () => {
   return (
     <>
       <Grid container direction="row" justify="center">
-        <Grid container direction="column" xs={12} lg={2}>
+        <Grid container direction="column" xs={12} lg={3}>
           <Grid item justify="center" >
             <ResponsiveListContainer>
               <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
-              <DataTypeSelector title='Data Type' currentValueText={dataType} dataType={dataType} setDataType={setDataType}/>
+              <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
               <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
               <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
             </ResponsiveListContainer>
@@ -106,10 +107,10 @@ const ClimateDataExplorer = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid container direction="column" sm={12} lg={10}>
+        <Grid container direction="column" sm={12} lg={9}>
           <Grid item >
             <Typography variant='h4' align='center' fontWeight="fontWeightBold">
-              {dataType} from {dayRange.join(' to ')} in {location.name} in 
+              {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;{location.name} in &nbsp;
               {years.map(yearEntry => { return yearEntry.year }).join(', ')}
             </Typography>
           </Grid>
