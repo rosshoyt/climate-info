@@ -2,7 +2,6 @@ import React from 'react';
 import { withStyles, makeStyles } from '@material-ui/core/styles';
 import Slider from '@material-ui/core/Slider';
 import Typography from '@material-ui/core/Typography';
-import Tooltip from '@material-ui/core/Tooltip';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -41,6 +40,9 @@ const CustomSlider = withStyles({
     },
   },
   active: {},
+  // valueLabel: {
+  //   left: 'calc(-50% + 4px)',
+  // },
   track: {
     height: 3,
   },
@@ -61,7 +63,7 @@ function ThumbComponent(props) {
   );
 }
 
-export default function RangeSlider( { label=false }) {
+export default function RangeSlider( { label=false, onChangeCommitted, startingValue }) {
   const classes = useStyles();
 
   return (
@@ -73,8 +75,18 @@ export default function RangeSlider( { label=false }) {
       )}
       <CustomSlider
         ThumbComponent={ThumbComponent}
-        getAriaLabel={(index) => (index === 0 ? 'Minimum price' : 'Maximum price')}
-        defaultValue={[20, 40]}
+        onChangeCommitted={onChangeCommitted}
+        defaultValue={startingValue}
+        max={365}
+        min={0}
+        // valueLabelDisplay="on"
+        // TODO implement custom slider label ala https://codesandbox.io/s/material-demo-y76cj?file=/demo.js:196-258
+        //aria-labelledby="range-slider"
+        // getAriaLabel={(index) => (index === 0 ? 'Minimum price' : 'Maximum price')}
+        //getAriaValueText={valueLabelFormat}
+        //aria-label="range-slider"
+        //valueLabelFormat={valuetext}
+        
     />
   </div>
   )

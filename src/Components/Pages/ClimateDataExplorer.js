@@ -4,12 +4,12 @@ import { Grid, Button, Typography, CircularProgress } from '@material-ui/core';
 import moment from 'moment';
 import ScatterPlotChart from '../Charts/ScatterPlotChart';
 import YearList from '../YearList';
-import TimeRangeSelector from '../TimeRangeSelector'
 import NOAAQuery from '../../api/noaa/NOAAQuery'
 import useStore from '../../store';
 import DataTable from '../DataTable';
 import DataTypeSelector from '../DataTypeSelector';
 import ResponsiveListContainer from '../ResponsiveListContainer';
+import DateRangeSlider from '../sliders/DateRangeSlider';
 
 const ClimateDataExplorer = () => {
   
@@ -86,16 +86,16 @@ const ClimateDataExplorer = () => {
   return (
     <>
       <Grid container direction="row" justify="center">
-        <Grid container direction="column" xs={12} lg={3}>
+        <Grid container direction="column" xs={12} lg={2}>
           <Grid item justify="center" >
             <ResponsiveListContainer>
               <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
               <DataTypeSelector title='Data Type' currentValueText={dataType} dataType={dataType} setDataType={setDataType}/>
+              <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
               <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
-              <TimeRangeSelector title='Date Range' currentValueText={dayRange.join(' to ')} setDayRange={setDayRange}/>
             </ResponsiveListContainer>
           </Grid>
-          <Grid item>
+          <Grid item align="left">
             <Button 
               variant="contained" 
               color="primary" 
@@ -106,7 +106,7 @@ const ClimateDataExplorer = () => {
             </Button>
           </Grid>
         </Grid>
-        <Grid container direction="column" sm={12} lg={9}>
+        <Grid container direction="column" sm={12} lg={10}>
           <Grid item >
             <Typography variant='h4' align='center' fontWeight="fontWeightBold">
               {dataType} from {dayRange.join(' to ')} in {location.name} in 

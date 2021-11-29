@@ -2,7 +2,7 @@ import React from 'react'
 import RangeSlider from './RangeSlider'
 import moment from 'moment';
 
-export default function DateRangeSlider({ setDayRange }) {
+export default function DateRangeSlider({ dayRange, setDayRange }) {
   
   function rangeChangeCommitted(event, value){
     const date1 = moment().dayOfYear(value[0])
@@ -16,11 +16,19 @@ export default function DateRangeSlider({ setDayRange }) {
   //   console.log('in valuelabelformat', value)
   //   return 'asd';
   // }
+  function convertStartingDayRange(){
+    const dayNums = [];
+    dayRange.forEach(date => {
+      dayNums.push(moment(date, 'MM-DD').dayOfYear());
+    });
+    // console.log('setting default vals', dayNums);
+    return dayNums;
+  }
 
   return (
     <RangeSlider
       onChangeCommitted={rangeChangeCommitted}
-      startingValue={[20, 40]}
+      startingValue={convertStartingDayRange}
     />
   )
 }
