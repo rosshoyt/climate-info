@@ -21,7 +21,7 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
-import { BrowserRouter, Route, Switch } from 'react-router-dom';
+import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 const drawerWidth = 240;
 
@@ -149,7 +149,7 @@ export default function ResponsiveMiniDrawer({ children }) {
           <Divider />
           <List>
             {Children.map(arrayChildren, (child, index) =>  (
-              <ListItem button key={child.props.name}>
+              <ListItem button key={child.props.name} component={Link} to={child.props.path}>
                 <ListItemIcon>{child.props.name === "Climate Data Explorer" ? <WbSunnyIcon /> : <FastfoodIcon />}</ListItemIcon>
                 <ListItemText primary={child.props.name} />
               </ListItem>
