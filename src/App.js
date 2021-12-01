@@ -34,8 +34,8 @@ function App() {
           <TitleAppBar title="ClimateInfo.US" darkMode={darkMode} setDarkMode={setDarkMode}/>
           */}
           <ResponsiveMiniDrawer>
-            <ClimateDataExplorer path="/" name="Climate Data Explorer"/>
-            <FoodFootprintExplorer path="/food-footprint" name="Food Footprint Explorer"/>
+            <ClimateDataExplorer path="/" name="Climate Data"/>
+            <FoodFootprintExplorer path="/food-footprint" name="Food Footprints"/>
           </ResponsiveMiniDrawer>
           
         </div>

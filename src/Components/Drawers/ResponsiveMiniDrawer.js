@@ -91,7 +91,7 @@ export default function ResponsiveMiniDrawer({ children }) {
   const arrayChildren = Children.toArray(children)
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(false);
+  const [open, setOpen] = React.useState(true);
 
   const handleDrawerOpen = () => {
     setOpen(true);
@@ -150,7 +150,7 @@ export default function ResponsiveMiniDrawer({ children }) {
           <List>
             {Children.map(arrayChildren, (child, index) =>  (
               <ListItem button key={child.props.name} component={Link} to={child.props.path}>
-                <ListItemIcon>{child.props.name === "Climate Data Explorer" ? <WbSunnyIcon /> : <FastfoodIcon />}</ListItemIcon>
+                <ListItemIcon>{child.props.name === "Climate Data" ? <WbSunnyIcon /> : <FastfoodIcon />}</ListItemIcon>
                 <ListItemText primary={child.props.name} />
               </ListItem>
             ))}
