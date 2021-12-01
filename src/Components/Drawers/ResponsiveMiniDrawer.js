@@ -19,8 +19,8 @@ import ChevronRightIcon from '@material-ui/icons/ChevronRight';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import WbSunnyIcon from '@material-ui/icons/WbSunny';
+import FastfoodIcon from '@material-ui/icons/Fastfood';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -148,24 +148,15 @@ export default function ResponsiveMiniDrawer({ children }) {
           </div>
           <Divider />
           <List>
-            {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
+            {Children.map(arrayChildren, (child, index) =>  (
+              <ListItem button key={child.props.name}>
+                <ListItemIcon>{child.props.name === "Climate Data Explorer" ? <WbSunnyIcon /> : <FastfoodIcon />}</ListItemIcon>
+                <ListItemText primary={child.props.name} />
               </ListItem>
             ))}
           </List>
-          <Divider />
-          <List>
-            {['All mail', 'Trash', 'Spam'].map((text, index) => (
-              <ListItem button key={text}>
-                <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItem>
-            ))}
-          </List>
+          {/* <Divider /> */}
         </Drawer>
-      
       <main className={classes.content}>
         <div className={classes.toolbar} />
         <Switch>
