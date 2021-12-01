@@ -6,8 +6,10 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers';
 // pick a date util library
 import MomentUtils from '@date-io/moment';
 import ClimateDataExplorer from './Components/Pages/ClimateDataExplorer';
+import FoodFootprintExplorer from './Components/Pages/FoodFootprintExplorer'
 import TitleAppBar from './Components/TitleAppBar';
 import { blueGrey, orange } from '@material-ui/core/colors';
+import ResponsiveMiniDrawer from './Components/Drawers/ResponsiveMiniDrawer'
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -28,8 +30,14 @@ function App() {
       <ThemeProvider theme={theme}>
         <div className="App">
           <CssBaseline />
+          {/* 
           <TitleAppBar title="ClimateInfo.US" darkMode={darkMode} setDarkMode={setDarkMode}/>
-          <ClimateDataExplorer />
+          */}
+          <ResponsiveMiniDrawer>
+            <ClimateDataExplorer path="/"/>
+            <FoodFootprintExplorer path="/food-footprint"/>
+          </ResponsiveMiniDrawer>
+          
         </div>
       </ThemeProvider>
     </MuiPickersUtilsProvider>
