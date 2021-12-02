@@ -1,11 +1,13 @@
-import { ResponsiveBar } from '@nivo/bar'
+import React from 'react';
+import { ResponsiveBar } from '@nivo/bar';
 
-const BarChart = ({ data }) => (
+const BarChart = ({ data, keys, indexBy }) => (
     <ResponsiveBar
         data={data}
-        keys={[ 'burger', 'sandwich', 'kebab', 'fries', 'donut' ]}
-        indexBy="country"
-        margin={{ top: 50, right: 130, bottom: 50, left: 60 }}
+        keys={keys}
+        indexBy={indexBy}
+        layout="horizontal"
+        margin={{ top: 50, right: 130, bottom: 50, left: 100 }}
         padding={0.3}
         valueScale={{ type: 'linear' }}
         indexScale={{ type: 'band', round: true }}
