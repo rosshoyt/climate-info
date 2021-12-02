@@ -11,10 +11,10 @@ export default function FoodFootprintExplorer() {
   return (
     <>
       <h1>
-        Food Footprint Explorer (Work In Progress)
+        Food Footprints
       </h1>
       <div style={{ height: 900, width: "99%"}}>
-        <BarChart data={Data.sort((a,b) => a[key] - b[key])} keys={[key]} indexBy={"Entity"} yAxisLabel={"GHG emissions per kilogram"}/>
+        <BarChart data={Data.sort((a,b) => a[key] - b[key])} keys={[key]} indexBy={"Entity"} bottomAxisLabel={key}/>
       </div>
     </>
   )
