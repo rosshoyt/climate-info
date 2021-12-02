@@ -14,6 +14,10 @@ if os.path.exists('.env'):
 # API url TODO use flask.Config? https://flask.palletsprojects.com/en/2.0.x/api/#flask.Config
 URL_NOAA_API = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
 
+@app.errorhandler(404)
+def not_found(e):
+    return app.send_static_file('index.html')
+
 @app.route('/')
 def index():
     return app.send_static_file('index.html')
