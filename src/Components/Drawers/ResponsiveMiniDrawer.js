@@ -21,6 +21,8 @@ import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import FastfoodIcon from '@material-ui/icons/Fastfood';
+import GitHubIcon from '@material-ui/icons/GitHub';
+import DarkModeButton from '../DarkModeButton';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
 
 const drawerWidth = 240;
@@ -28,8 +30,10 @@ const drawerWidth = 240;
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
+    //flexGrow: 1
   },
   appBar: {
+    //flexGrow: 1,
     zIndex: theme.zIndex.drawer + 1,
     transition: theme.transitions.create(['width', 'margin'], {
       easing: theme.transitions.easing.sharp,
@@ -81,13 +85,19 @@ const useStyles = makeStyles((theme) => ({
     // necessary for content to be below app bar
     ...theme.mixins.toolbar,
   },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
   content: {
     flexGrow: 1,
     padding: theme.spacing(3),
   },
+  title: {
+    flexGrow: 1,
+  },
 }));
 
-export default function ResponsiveMiniDrawer({ children }) {
+export default function ResponsiveMiniDrawer({ children, darkMode, setDarkMode }) {
   const arrayChildren = Children.toArray(children)
   const classes = useStyles();
   const theme = useTheme();
@@ -110,7 +120,7 @@ export default function ResponsiveMiniDrawer({ children }) {
           [classes.appBarShift]: open,
         })}
       >
-        <Toolbar>
+        <Toolbar >
           <IconButton
             color="inherit"
             aria-label="open drawer"
@@ -122,9 +132,15 @@ export default function ResponsiveMiniDrawer({ children }) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap>
-            Mini variant drawer
+          <Typography variant="h6" noWrap className={classes.title} align="left">
+            ClimateInfo.US
           </Typography>
+          <DarkModeButton darkMode={darkMode} setDarkMode={setDarkMode} />
+          <a href='https://github.com/rosshoyt/climate-info'>
+            <IconButton>
+              <GitHubIcon />
+            </IconButton>
+            </a>
         </Toolbar>
       </AppBar>
       <BrowserRouter>

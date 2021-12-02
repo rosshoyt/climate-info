@@ -29,7 +29,7 @@ function App() {
       <ThemeProvider theme={theme}>
         <div className="App">
           <CssBaseline />
-          <ResponsiveMiniDrawer>
+          <ResponsiveMiniDrawer darkMode={darkMode} setDarkMode={setDarkMode}>
             <ClimateDataExplorer path="/" name="Climate Data"/>
             <FoodFootprintExplorer path="/food-footprint" name="Food Footprints"/>
           </ResponsiveMiniDrawer>
