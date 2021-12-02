@@ -6,7 +6,7 @@ import Typography from '@material-ui/core/Typography';
 import WbSunnyIcon from '@material-ui/icons/WbSunny';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import IconButton from '@material-ui/core/IconButton';
-import DarkModeButton from './DarkModeButton';
+import DarkModeButton from '../DarkModeButton';
 
 const useStyles = makeStyles((theme) => ({
   root: {
