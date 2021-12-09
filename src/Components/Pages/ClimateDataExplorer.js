@@ -72,7 +72,7 @@ const ClimateDataExplorer = () => {
     }
     
     fetchTimeseriesData(getAPIQueries());
-  }, [refreshChartData]);
+  }, [refreshChartData, years]);
 
   function processTimeSeriesDataScatterPlot(data){
     return data.reduce((formattedDataList, datum) => {

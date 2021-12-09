@@ -12,10 +12,11 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     const [lineWidth, setLineWidth] = useState(10);
     const [pointSize, setPointSize] = useState(5);
     
-    const yearInfo = useStore(state => state.years);
+    const yearList = useStore(state => state.years);
     
     function getColor(year) {
-        return yearInfo.find(y => y.year === year).color;
+        var yearEntry = yearList.find(y => y.year === year);
+        return yearEntry === undefined ? 'green' : yearEntry.color; 
     }
     return (
         <>  
