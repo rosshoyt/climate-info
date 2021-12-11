@@ -14,8 +14,8 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     
     const yearList = useStore(state => state.timeseriesList);
     
-    function getColor(year) {
-        var yearEntry = yearList.find(y => y.year === year);
+    function getColor(id) {
+        var yearEntry = yearList.find(y => y.id === id);
         return yearEntry === undefined ? 'green' : yearEntry.color; 
     }
     return (

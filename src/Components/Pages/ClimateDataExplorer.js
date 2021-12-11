@@ -25,13 +25,16 @@ const ClimateDataExplorer = () => {
   });
 
   const [dayRange, setDayRange] = useState(['06-01', '06-30']);
-  const [chartData, setChartData] = useState([]);
+  //const [chartData, setChartData] = useState([]);
   const [refreshChartData, setRefreshChartData] = useState(false);
   //const [isLoading, setIsLoading] = useState(false); // could move into chart component
   const [dataType, setDataType] = useState("TMAX");
 
   const timeseriesList = useStore(state => state.timeseriesList);
   const setAPIResults = useStore(state => state.setAPIResults);
+  
+  const createUpdateChartDataTimeseries = useStore(state => state.createUpdateChartDataTimeseries);
+  const chartData = useStore(state => state.chartData)
 
   function getAPIQueries(){
     const queryList = [];
@@ -45,27 +48,31 @@ const ClimateDataExplorer = () => {
   const fetchNOAAQuery = (noaaQueryString) => axios.get(noaaQueryString).then((res) => res.data);
 
   useQueries(
-    timeseriesList.map(year => {
+    timeseriesList.map(timeseries => {
       return {
-        queryKey: [dataType, location.id, year.year, dayRange],
+        queryKey: [dataType, location.id, timeseries.year, dayRange],
+        refetchOnWindowFocus: false,
         queryFn: () => fetchNOAAQuery(
           '/api/noaa/data/daily/'
           + dataType + '/' 
           + location.id + '/' 
-          + year.year + '-' + dayRange[0] + '/' 
-          + year.year + '-' + dayRange[1]
+          + timeseries.year + '-' + dayRange[0] + '/' 
+          + timeseries.year + '-' + dayRange[1]
         ),
         onSettled: (data, error, variables, context) => {
-        
           if(data !== null) {
-            console.log('settled!', data, error)
-            setChartData(...chartData, 
-              {
-                id: year.year,
-                color: "hsl(175, 70%, 50%)", // TODO needed?
-                data: processTimeSeriesDataScatterPlot(data)
-              }
-            )
+            
+            // TODO move data processing to store
+            timeseries.data = {
+              id: timeseries.id, 
+              color: "hsl(175, 70%, 50%)", // TODO needed?
+              data: processTimeSeriesDataScatterPlot  (data['results'])
+            };
+            
+            console.log('settled!');
+            console.log('API Updated timeseries', timeseries);
+            
+            createUpdateChartDataTimeseries(timeseries);
             console.log('heloo')
           }
          
@@ -76,38 +83,7 @@ const ClimateDataExplorer = () => {
 
   // Fetches data for the chart
   // TODO optimize
-  useEffect(() => {
-    // setIsLoading(true);
-    // TODO could move functionality to store
-    async function fetchTimeseriesData(queryList) {
-      setChartData([])
-      setAPIResults([])
-      const apiResultList = [];
-      const rawData = []; // hold unprocessed query results (for adding to table)
-      for(const query of queryList) {
-          const url = query.getURL();
-          console.log('Fetching url', url, 'from api');
-          const response = await fetch(url); 
-          await response.json().then(recData => {
-              const data = recData['results'];
-              rawData.push(data);
-              // TODO display errors in UI. Data may not be available based on time selection, etc
-              if(data !== undefined) {
-                apiResultList.push({
-                    id: query.name,
-                    color: "hsl(175, 70%, 50%)", // TODO needed?
-                    data: processTimeSeriesDataScatterPlot(data)
-                });  
-              }
-          });
-      };
-      setChartData(apiResultList);
-      setAPIResults(rawData);
-      //setIsLoading(false);
-    }
-    
-    fetchTimeseriesData(getAPIQueries());
-    
+  useEffect(() => {    
   }, [refreshChartData, timeseriesList]);
 
   function processTimeSeriesDataScatterPlot(data){

@@ -1,6 +1,6 @@
 import create from 'zustand';
+import { Timeseries } from './model/Timeseries';
 
-// TODO rename timeseriesList
 const createTimeseries = (timeseriesList) => [
   ...timeseriesList,
   {
@@ -11,6 +11,23 @@ const createTimeseries = (timeseriesList) => [
   },
 ];
 
+const createUpdateChartDataTimeseries = (chartData, timeseries)  =>
+  chartData.find(tmsr => tmsr.id === timeseries.id) ? 
+    updateChartDataTimeseries(chartData, timeseries) :
+    createChartDataTimeseries(chartData, timeseries )  
+
+const createChartDataTimeseries = (chartData, newTimeseries) => [
+  ...chartData,
+  newTimeseries.data
+]
+
+const updateChartDataTimeseries = (chartData, id, data) => [
+  chartData.map(chartDataTimeseries => ({
+    ...chartDataTimeseries,
+    year: chartDataTimeseries.id === id ? data : chartDataTimeseries.data,
+  }))
+]
+
 const updateTimeseriesYear = (timeseriesList, id, newYear) =>
   timeseriesList.map(timeseries => ({
     ...timeseries,
@@ -18,10 +35,10 @@ const updateTimeseriesYear = (timeseriesList, id, newYear) =>
   }));
 
 const updateTimeseriesColor = (timeseriesList, id, newColor) =>
-timeseriesList.map(timeseries => ({
-  ...timeseries,
-  color: timeseries.id === id ? newColor : timeseries.color,
-}));
+  timeseriesList.map(timeseries => ({
+    ...timeseries,
+    color: timeseries.id === id ? newColor : timeseries.color,
+  }));
 
 const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
   timeseriesList.map(timeseries => ({
@@ -41,19 +58,19 @@ const useStore = create((set) => ({
         apiResults: newResults
       }))
     },
+    chartData: [],
+    createUpdateChartDataTimeseries(timeseries) {
+      console.log("in CreateUpdate Chart Data")
+    
+      set((state) => ({
+        ...state,
+        chartData: createUpdateChartDataTimeseries(state.chartData, timeseries)
+      }))
+    },
     timeseriesList: [
-      {
-        id:0,
-        year: 2021,
-        color: '#9900EF',
-        colorSelectorOpen: false
-      },
-      {
-        id: 1,
-        year: 1980,
-        color: '#8ed1fc',
-        colorSelectorOpen: false
-      }
+      new Timeseries(0, 2021,'#9900EF'),
+      new Timeseries(1, 1981,'#00d084'),
+      new Timeseries(2, 1941,'#0693e3')
     ],
     createTimeseries(){
       set(state => ({
@@ -67,6 +84,14 @@ const useStore = create((set) => ({
         timeseriesList: updateTimeseriesYear(state.timeseriesList, id, year),
       }))
     },
+    // createUpdateTimeseries: (id, year) => {
+    //   if(state.timeseriesList.)
+    //   set((state) => ({
+    //     ...state,
+    //     timeseriesList: updateTimeseriesYear(state.timeseriesList, id, year),
+    //   }))
+    // }
+
     updateTimeseriesColor(id, newColor) {
       set((state) => ({
         ...state,
