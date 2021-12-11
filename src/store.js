@@ -1,31 +1,32 @@
 import create from 'zustand';
 
-const addYear = (years) => [
-  ...years,
+// TODO rename timeseriesList
+const createTimeseries = (timeseriesList) => [
+  ...timeseriesList,
   {
-    id: Math.max(0, Math.max(...years.map(({ id }) => id))) + 1,
+    id: Math.max(0, Math.max(...timeseriesList.map(({ id }) => id))) + 1,
     year: 2000,
     color: '#0d47a1', // blue
     colorSelectorOpen: false
   },
 ];
 
-const updateYearDate = (years, id, newYear) =>
-  years.map(year => ({
-    ...year,
-    year: year.id === id ? newYear : year.year,
+const updateTimeseriesYear = (timeseriesList, id, newYear) =>
+  timeseriesList.map(timeseries => ({
+    ...timeseries,
+    year: timeseries.id === id ? newYear : timeseries.year,
   }));
 
-const updateYearColor = (years, id, newColor) =>
-years.map(year => ({
-  ...year,
-  color: year.id === id ? newColor : year.color,
+const updateTimeseriesColor = (timeseriesList, id, newColor) =>
+timeseriesList.map(timeseries => ({
+  ...timeseries,
+  color: timeseries.id === id ? newColor : timeseries.color,
 }));
 
-const updateYearColorSelectorOpen = (years, id, isOpen) =>
-  years.map(year => ({
-    ...year,
-    colorSelectorOpen: year.id === id ? isOpen : year.colorSelectorOpen,
+const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
+  timeseriesList.map(timeseries => ({
+    ...timeseries,
+    colorSelectorOpen: timeseries.id === id ? isOpen : timeseries.colorSelectorOpen,
   }));
 
 
@@ -40,7 +41,7 @@ const useStore = create((set) => ({
         apiResults: newResults
       }))
     },
-    years: [
+    timeseriesList: [
       {
         id:0,
         year: 2021,
@@ -54,28 +55,28 @@ const useStore = create((set) => ({
         colorSelectorOpen: false
       }
     ],
-    addYear(){
+    createTimeseries(){
       set(state => ({
         ...state,
-        years: addYear(state.years)
+        timeseriesList: createTimeseries(state.timeseriesList)
       }))
     },
-    updateYear: (id, newYear) => {
+    updateTimeseriesYear: (id, year) => {
       set((state) => ({
         ...state,
-        years: updateYearDate(state.years, id, newYear),
+        timeseriesList: updateTimeseriesYear(state.timeseriesList, id, year),
       }))
     },
-    updateYearColor(id, newColor) {
+    updateTimeseriesColor(id, newColor) {
       set((state) => ({
         ...state,
-        years: updateYearColor(state.years, id, newColor),
+        timeseriesList: updateTimeseriesColor(state.timeseriesList, id, newColor),
       }))
     },
-    updateYearColorSelectorOpen(id, isOpen) {
+    updateTimeseriesColorSelectorOpen(id, isOpen) {
       set((state) => ({
         ...state,
-        years: updateYearColorSelectorOpen(state.years, id, isOpen),
+        timeseriesList: updateTimeseriesColorSelectorOpen(state.timeseriesList, id, isOpen),
       }))
     }
 }));

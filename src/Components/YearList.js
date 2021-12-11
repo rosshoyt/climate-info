@@ -11,31 +11,31 @@ const YearListItems= () => {
   
   return (
     <List>
-      {store.years.map(year => (
+      {store.timeseriesList.map(timeseries => (
         <>
           <ListItem>
             <Box display="flex" justifyContent="center" >
               <DatePicker
                 views={['year']}
                 // label={label}
-                value={ new Date(year.year, 1, 1) } // fill in dummy month/day vals with JS date
-                onChange={(date) => store.updateYear(year.id, date.year())} // TODO 'date' here is a moment object, for some reason...
+                value={ new Date(timeseries.year, 1, 1) } // fill in dummy month/day vals with JS date
+                onChange={(date) => store.updateTimeseriesYear(timeseries.id, date.year())} // TODO 'date' here is a moment object, for some reason...
               />
               <Box
-                onClick= {(event)=>store.updateYearColorSelectorOpen(year.id, !year.colorSelectorOpen)}
+                onClick= {(event)=>store.updateTimeseriesColorSelectorOpen(timeseries.id, !timeseries.colorSelectorOpen)}
                 sx={{
                   width: 100,
-                  bgcolor: year.color,
+                  bgcolor: timeseries.color,
                 }}
               >
-                <EditIcon/>{year.color}
+                <EditIcon/>{timeseries.color}
               </Box>
               
             </Box>
           </ListItem>
-          { year.colorSelectorOpen ? (
+          { timeseries.colorSelectorOpen ? (
             <ListItem>
-              <TwitterPicker onChangeComplete={(c) => store.updateYearColor(year.id, c.hex)}/>
+              <TwitterPicker onChangeComplete={(c) => store.updateTimeseriesColor(timeseries.id, c.hex)}/>
             </ListItem>
           ) : <></>}
         </>
@@ -44,7 +44,7 @@ const YearListItems= () => {
         <Button 
           varient="outlined" 
           color="primary"
-          onClick={(evt) => store.addYear()}
+          onClick={(evt) => store.createTimeseries()}
           >
           <AddIcon />Add Year
         </Button>

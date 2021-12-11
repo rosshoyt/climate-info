@@ -30,12 +30,12 @@ const ClimateDataExplorer = () => {
   //const [isLoading, setIsLoading] = useState(false); // could move into chart component
   const [dataType, setDataType] = useState("TMAX");
 
-  const years = useStore(state => state.years);
+  const timeseriesList = useStore(state => state.timeseriesList);
   const setAPIResults = useStore(state => state.setAPIResults);
 
   function getAPIQueries(){
     const queryList = [];
-    years.forEach(year => {
+    timeseriesList.forEach(year => {
       queryList.push(new NOAAQuery(dataType, location.id, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1], year.year));
 
     });
@@ -45,7 +45,7 @@ const ClimateDataExplorer = () => {
   const fetchNOAAQuery = (noaaQueryString) => axios.get(noaaQueryString).then((res) => res.data);
 
   useQueries(
-    years.map(year => {
+    timeseriesList.map(year => {
       return {
         queryKey: [dataType, location.id, year.year, dayRange],
         queryFn: () => fetchNOAAQuery(
@@ -108,7 +108,7 @@ const ClimateDataExplorer = () => {
     
     fetchTimeseriesData(getAPIQueries());
     
-  }, [refreshChartData, years]);
+  }, [refreshChartData, timeseriesList]);
 
   function processTimeSeriesDataScatterPlot(data){
     return data.reduce((formattedDataList, datum) => {
@@ -129,7 +129,7 @@ const ClimateDataExplorer = () => {
               <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
               <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
               <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
-              <YearList title='Years' currentValueText={years.map(yearEntry => {return yearEntry.year }).join(', ')}/>
+              <YearList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
             </ResponsiveListContainer>
           </Grid>
           <Grid item align="left">
@@ -147,7 +147,7 @@ const ClimateDataExplorer = () => {
           <Grid item >
             <Typography variant='h4' align='center' fontWeight="fontWeightBold">
               {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;{location.name} in &nbsp;
-              {years.map(yearEntry => { return yearEntry.year }).join(', ')}
+              {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
             </Typography>
           </Grid>
           <Grid item >
