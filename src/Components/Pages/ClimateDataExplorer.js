@@ -11,6 +11,8 @@ import DataTypeSelector from '../DataTypeSelector';
 import ResponsiveListContainer from '../ResponsiveListContainer';
 import DateRangeSlider from '../sliders/DateRangeSlider';
 import DataTypes from '../../api/noaa/DataTypes';
+import axios from 'axios';
+import { useQueries } from 'react-query';
 
 const ClimateDataExplorer = () => {
   
@@ -35,9 +37,42 @@ const ClimateDataExplorer = () => {
     const queryList = [];
     years.forEach(year => {
       queryList.push(new NOAAQuery(dataType, location.id, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1], year.year));
+
     });
     return queryList;
   }
+
+  const fetchNOAAQuery = (noaaQueryString) => axios.get(noaaQueryString).then((res) => res.data);
+
+  useQueries(
+    years.map(year => {
+      return {
+        queryKey: [dataType, location.id, year.year, dayRange],
+        queryFn: () => fetchNOAAQuery(
+          '/api/noaa/data/daily/'
+          + dataType + '/' 
+          + location.id + '/' 
+          + year.year + '-' + dayRange[0] + '/' 
+          + year.year + '-' + dayRange[1]
+        ),
+        onSettled: (data, error, variables, context) => {
+        
+          if(data !== null) {
+            console.log('settled!', data, error)
+            setChartData(...chartData, 
+              {
+                id: year.year,
+                color: "hsl(175, 70%, 50%)", // TODO needed?
+                data: processTimeSeriesDataScatterPlot(data)
+              }
+            )
+            console.log('heloo')
+          }
+         
+        }
+      }
+    })
+  )
 
   // Fetches data for the chart
   // TODO optimize
@@ -72,6 +107,7 @@ const ClimateDataExplorer = () => {
     }
     
     fetchTimeseriesData(getAPIQueries());
+    
   }, [refreshChartData, years]);
 
   function processTimeSeriesDataScatterPlot(data){
