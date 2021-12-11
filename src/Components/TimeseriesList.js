@@ -6,8 +6,8 @@ import EditIcon  from '@material-ui/icons/Edit';
 import { DatePicker } from "@material-ui/pickers";
 import { TwitterPicker } from 'react-color'
 
-const YearListItems= () => {
-  const store = useStore(state => state);
+const TimeseriesItems= () => {
+  const store = useStore();
   
   return (
     <List>
@@ -53,12 +53,12 @@ const YearListItems= () => {
   );
 }
 
-function YearList() {
+function TimeseriesList() {
   return (
     <>
-      <YearListItems />
+      <TimeseriesItems />
     </>
   );
 }
 
-export default YearList;
+export default TimeseriesList;

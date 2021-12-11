@@ -3,7 +3,7 @@ import LocationSelect from '../LocationSelect';
 import { Grid, Button, Typography, CircularProgress } from '@material-ui/core';
 import moment from 'moment';
 import ScatterPlotChart from '../Charts/ScatterPlotChart';
-import YearList from '../YearList';
+import TimeseriesList from '../TimeseriesList';
 import NOAAQuery from '../../api/noaa/NOAAQuery'
 import useStore from '../../store';
 import DataTable from '../DataTable';
@@ -129,7 +129,7 @@ const ClimateDataExplorer = () => {
               <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
               <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
               <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
-              <YearList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
+              <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
             </ResponsiveListContainer>
           </Grid>
           <Grid item align="left">
