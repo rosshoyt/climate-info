@@ -21,7 +21,6 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     }
     return (
         <>  
-            <div style={{ height: height < 1080 ? 550 : 700 }}>
             { data.length === 0 ? (
               // TODO center progress spinner vertically
               // TODO update on each API call return; or, overlay spinner on graph while it has partial results
@@ -97,8 +96,8 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                         "annotations",
                         "legends",
                     ]}
-                />)}
-            </div>
+                />)
+            }
             <Grid container direction="row" justifyContent="center" alignItems="center" spacing={3}>
                 <Grid  xs={12} lg={6} container direction="row">    
                

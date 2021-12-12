@@ -14,9 +14,10 @@ import DateRangeSlider from '../sliders/DateRangeSlider';
 import DataTypes from '../../api/noaa/DataTypes';
 import axios from 'axios';
 import { useQueries } from 'react-query';
+import useWindowDimensions from '../../Utils/WindowUtils';
 
 const ClimateDataExplorer = () => {
-  
+  const { height, width } = useWindowDimensions();
   const [location, setLocation] = useState({
     "datacoverage": 1,
     "id": "CITY:US530018",
@@ -100,19 +101,24 @@ const ClimateDataExplorer = () => {
                {location.name}: {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;
                 Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
               </Typography>
-            <TabbedContainer>
-              <div tabName="Graph">
-                <Grid item xs={12}>
-                  <ScatterPlotChart data={chartData} />
-                </Grid>
-              </div>
-              <div tabName="Table">
-                <Grid item xs={12}>
-                  <DataTable />
-                </Grid>
-              </div>
-            </TabbedContainer>
-            
+              <div>
+                <TabbedContainer>
+                  <div tabName="Graph">
+                    <Grid item xs={12}>
+                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                        <ScatterPlotChart data={chartData} />
+                      </div>
+                    </Grid>
+                  </div>
+                  <div tabName="Table">
+                    <Grid item xs={12}>
+                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                        <DataTable />
+                      </ div>
+                    </Grid>
+                  </div>
+                </TabbedContainer>
+            </div>
           </Grid>
           
         </Grid>
