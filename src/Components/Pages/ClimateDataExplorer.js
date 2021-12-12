@@ -93,7 +93,18 @@ const ClimateDataExplorer = () => {
   return (
     <>
       <Grid container direction="row" justify="center">
-        <Grid container direction="column" xs={12} lg={3}>
+        <Grid container direction="column" sm={12} lg={9}>
+          <Grid item >
+            <Typography variant='h4' align='center' fontWeight="fontWeightBold">
+              {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;{location.name} in &nbsp;
+              {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
+            </Typography>
+          </Grid>
+          <Grid item >
+              <ScatterPlotChart data={chartData} />
+          </Grid>
+        </Grid>
+        <Grid container direction="column" sm={12} lg={3}>
           <Grid item justify="center" >
             <ResponsiveListContainer>
               <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
@@ -111,17 +122,6 @@ const ClimateDataExplorer = () => {
             >
               Update Chart
             </Button>
-          </Grid>
-        </Grid>
-        <Grid container direction="column" sm={12} lg={9}>
-          <Grid item >
-            <Typography variant='h4' align='center' fontWeight="fontWeightBold">
-              {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;{location.name} in &nbsp;
-              {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
-            </Typography>
-          </Grid>
-          <Grid item >
-              <ScatterPlotChart data={chartData} />
           </Grid>
         </Grid>
         <Grid item xs={12}>
