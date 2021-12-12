@@ -67,13 +67,9 @@ const ClimateDataExplorer = () => {
               id: timeseries.id, 
               color: "hsl(175, 70%, 50%)", // TODO needed?
               data: processTimeSeriesDataScatterPlot  (data['results'])
-            };
-            
-            console.log('settled!');
-            console.log('API Updated timeseries', timeseries);
-            
+            };            
             createUpdateChartDataTimeseries(timeseries);
-            console.log('heloo')
+
           }
          
         }
@@ -81,10 +77,8 @@ const ClimateDataExplorer = () => {
     })
   )
 
-  // Fetches data for the chart
-  // TODO optimize
   useEffect(() => {    
-  }, [refreshChartData, timeseriesList]);
+  }, [timeseriesList]);
 
   function processTimeSeriesDataScatterPlot(data){
     return data.reduce((formattedDataList, datum) => {

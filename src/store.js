@@ -28,10 +28,14 @@ const updateChartDataTimeseries = (chartData, id, data) => [
   }))
 ]
 
+const clearChartDataTimeseries = (chartData, id) =>
+  chartData.filter((timeseries) => timeseries.id !== id);
+
 const updateTimeseriesYear = (timeseriesList, id, newYear) =>
   timeseriesList.map(timeseries => ({
     ...timeseries,
     year: timeseries.id === id ? newYear : timeseries.year,
+    data: []
   }));
 
 const updateTimeseriesColor = (timeseriesList, id, newColor) =>
@@ -60,12 +64,13 @@ const useStore = create((set) => ({
     },
     chartData: [],
     createUpdateChartDataTimeseries(timeseries) {
-      console.log("in CreateUpdate Chart Data")
+      console.log("in CreateUpdate Chart Data to create/update timeseires", timeseries)
+      //console.log('chart data:,', this.chartData)
     
       set((state) => ({
         ...state,
         chartData: createUpdateChartDataTimeseries(state.chartData, timeseries)
-      }))
+      })) 
     },
     timeseriesList: [
       new Timeseries(0, 2021,'#9900EF'),
@@ -81,16 +86,11 @@ const useStore = create((set) => ({
     updateTimeseriesYear: (id, year) => {
       set((state) => ({
         ...state,
+        chartData: clearChartDataTimeseries(state.chartData, id),
         timeseriesList: updateTimeseriesYear(state.timeseriesList, id, year),
       }))
     },
-    // createUpdateTimeseries: (id, year) => {
-    //   if(state.timeseriesList.)
-    //   set((state) => ({
-    //     ...state,
-    //     timeseriesList: updateTimeseriesYear(state.timeseriesList, id, year),
-    //   }))
-    // }
+
 
     updateTimeseriesColor(id, newColor) {
       set((state) => ({
