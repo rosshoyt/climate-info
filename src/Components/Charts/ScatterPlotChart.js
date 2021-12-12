@@ -5,13 +5,14 @@ import useStore from '../../store';
 import { line, curveNatural } from 'd3-shape';
 import { Box, Slider, Grid, Typography, CircularProgress } from '@material-ui/core/';
 import { useTheme } from '@material-ui/core/styles';
+import useWindowDimensions from '../../Utils/WindowUtils';
 
 const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     const theme = useTheme(); // theme.spacing
-
+    const { height, width } = useWindowDimensions();
     const [lineWidth, setLineWidth] = useState(10);
     const [pointSize, setPointSize] = useState(5);
-    
+
     const yearList = useStore(state => state.timeseriesList);
     
     function getColor(id) {
@@ -20,7 +21,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     }
     return (
         <>  
-            <div style={{ height: 800 }}>
+            <div style={{ height: height < 1080 ? 550 : 700 }}>
             { data.length === 0 ? (
               // TODO center progress spinner vertically
               // TODO update on each API call return; or, overlay spinner on graph while it has partial results

@@ -8,6 +8,7 @@ import NOAAQuery from '../../api/noaa/NOAAQuery'
 import useStore from '../../store';
 import DataTable from '../DataTable';
 import DataTypeSelector from '../DataTypeSelector';
+import TabbedContainer from '../Tabs/TabbedContainer'
 import ResponsiveListContainer from '../ResponsiveListContainer';
 import DateRangeSlider from '../sliders/DateRangeSlider';
 import DataTypes from '../../api/noaa/DataTypes';
@@ -95,14 +96,25 @@ const ClimateDataExplorer = () => {
       <Grid container direction="row" justify="center">
         <Grid container direction="column" sm={12} lg={9}>
           <Grid item >
-            <Typography variant='h4' align='center' fontWeight="fontWeightBold">
-              {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;{location.name} in &nbsp;
-              {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
-            </Typography>
+              <Typography variant='h4' align='center' fontWeight="fontWeightBold">
+               {location.name}: {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;
+                Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
+              </Typography>
+            <TabbedContainer>
+              <div tabName="Graph">
+                <Grid item xs={12}>
+                  <ScatterPlotChart data={chartData} />
+                </Grid>
+              </div>
+              <div tabName="Table">
+                <Grid item xs={12}>
+                  <DataTable />
+                </Grid>
+              </div>
+            </TabbedContainer>
+            
           </Grid>
-          <Grid item >
-              <ScatterPlotChart data={chartData} />
-          </Grid>
+          
         </Grid>
         <Grid container direction="column" sm={12} lg={3}>
           <Grid item justify="center" >
@@ -113,14 +125,6 @@ const ClimateDataExplorer = () => {
               <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
             </ResponsiveListContainer>
           </Grid>
-        </Grid>
-        <Grid item xs={12}>
-          <Typography variant='h4' align="center">
-            Raw Weather Data:
-          </Typography>
-        </Grid>
-        <Grid item xs={12}>
-          <DataTable />
         </Grid>
       </Grid>
     </>
