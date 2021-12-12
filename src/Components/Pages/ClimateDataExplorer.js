@@ -113,16 +113,6 @@ const ClimateDataExplorer = () => {
               <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
             </ResponsiveListContainer>
           </Grid>
-          <Grid item align="left">
-            <Button 
-              variant="contained" 
-              color="primary" 
-              size="large" 
-              onClick={() => setRefreshChartData(!refreshChartData)}
-            >
-              Update Chart
-            </Button>
-          </Grid>
         </Grid>
         <Grid item xs={12}>
           <Typography variant='h4' align="center">
