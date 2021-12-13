@@ -15,20 +15,15 @@ export default function DataTable() {
     let newColumns = [];
     if(timeseriesList.length > 0){
       let timeseries = timeseriesList[0];
-      console.log('hellsdfj', timeseries);
       let data = timeseries['data']
-      console.log(data)
       if(data.length > 0){
-        let dataEntry = data[0];
-        console.log('dataentry', dataEntry)
-        
-        Object.keys(dataEntry).forEach(key => {
+        let dataEntry = data[0];        Object.keys(dataEntry).forEach(key => {
           if(!newColumns.includes(key)) {
             newColumns.push(
               {
                 field: key,
                 headerName: key,
-                width: 200,
+                width: 175,
               }
             );
           }
@@ -42,11 +37,8 @@ export default function DataTable() {
   // reads the data list of lists, creating a new single list of data with 
   // unique ids for each data entry
   function formatData(data){
-    console.log('formattingdata');
     let idSeed = 0;
-    
     let formattedData = [];
-
     data.forEach(timeseriesList => {
       timeseriesList['data'].forEach(entry => {
         entry['id'] = idSeed++;
