@@ -33,12 +33,17 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                         return getColor(node.serieId);
                     }}
                     theme={{
-                        fontSize: 16,
+                        fontSize: 18,
                         textColor: theme.palette.type == "dark" ? '#ffffff' : '#000000'
                     }}
                     margin={{ top: 40, right: 100, bottom: 65, left: 70 }}
-                    xScale={{ type: 'point', min: 0, max: 'auto' }}
-                    xFormat=" >-.2f"
+                    xScale={{ 
+                        type: 'time',  
+                        useUTC: false,
+                        format: '%m-%d',
+                        precision: 'day'
+                    }}
+                    xFormat="time:%m-%d"
                     yScale={{ type: 'linear', min: 'auto', max: 'auto' }}
                     yFormat=">-.2f"
                     blendMode="multiply"
@@ -46,6 +51,8 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     axisTop={null}
                     axisRight={null}
                     axisBottom={{
+                        format: '%b %d',
+                        tickValues: 'every 4 days',
                         orient: 'bottom',
                         tickSize: 5,
                         tickPadding: 5,
@@ -56,6 +63,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     }}
                     axisLeft={{
                         orient: 'left',
+                       
                         tickSize: 5,
                         tickPadding: 5,
                         tickRotation: 0,
