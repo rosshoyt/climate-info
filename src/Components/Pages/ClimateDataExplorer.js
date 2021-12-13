@@ -15,6 +15,7 @@ import DataTypes from '../../api/noaa/DataTypes';
 import axios from 'axios';
 import { useQueries } from 'react-query';
 import useWindowDimensions from '../../Utils/WindowUtils';
+import CDEGraphSettingsPanel from '../CDEGraphSettingsPanel';
 
 const ClimateDataExplorer = () => {
   const { height, width } = useWindowDimensions();
@@ -90,7 +91,7 @@ const ClimateDataExplorer = () => {
 
   return (
     <>
-      <Grid container direction="row" justify="center">
+      <Grid container direction="row" justifyContent="center">
         <Grid item>
           <Typography variant='h4' align='left' fontWeight="fontWeightBold">
             {location.name}: {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;
@@ -120,7 +121,7 @@ const ClimateDataExplorer = () => {
           </Grid>
           
         </Grid>
-        <Grid container direction="column" sm={12} lg={3}>
+        <Grid item container direction="column" sm={12} lg={3}>
           
           <TabbedContainer>
             <div tabName="Climate Data Settings">
@@ -131,6 +132,11 @@ const ClimateDataExplorer = () => {
                   <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
                   <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
                 </ResponsiveListContainer>
+              </Grid>
+            </div>
+            <div tabName="Graph Settings">
+              <Grid item justify="center" style={{ height: height < 1080 ? 550 : 700 }} >
+                <CDEGraphSettingsPanel/>
               </Grid>
             </div>
           </TabbedContainer>

@@ -6,12 +6,14 @@ import { line, curveNatural } from 'd3-shape';
 import { Box, Slider, Grid, Typography, CircularProgress } from '@material-ui/core/';
 import { useTheme } from '@material-ui/core/styles';
 import useWindowDimensions from '../../Utils/WindowUtils';
+import useCDEGraphSettingsStore from '../CDEGraphSettingsStore';
 
 const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
     const theme = useTheme(); // theme.spacing
     const { height, width } = useWindowDimensions();
-    const [lineWidth, setLineWidth] = useState(10);
-    const [pointSize, setPointSize] = useState(5);
+    
+    const lineWidth = useCDEGraphSettingsStore(state => state.lineWidth);
+    const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
 
     const yearList = useStore(state => state.timeseriesList);
     
@@ -106,49 +108,7 @@ const ScatterPlotChart = ({ data=scatter/* see data tab */ }) => {
                     ]}
                 />)
             }
-            <Grid container direction="row" justifyContent="center" alignItems="center" spacing={3}>
-                <Grid  xs={12} lg={6} container direction="row">    
-               
-                    <Grid item xs={12} lg={2}>
-                        <Typography gutterBottom>Line Size:</Typography>
-                    </Grid>
-                    <Grid item xs={12} lg={4}>
-                        <Slider 
-                        key={`slider-${0}`}
-                            defaultValue={ lineWidth }
-                            onChange={ (e, newValue) => setLineWidth(newValue) }
-                            getAriaValueText={ (value) => `${value}` }
-                            aria-labelledby=" asdf"
-                            step={5}
-                            marks
-                            min={0}
-                            max={50}
-                            valueLabelDisplay="auto"
-                        />
-                    </Grid>
-                </Grid>
             
-                <Grid  xs={12} lg={6} container direction="row"> 
-                    <Grid item xs={12} lg={2}>
-                        <Typography gutterBottom>Point Size:</Typography>
-                    </Grid>
-                    <Grid item xs={12} lg={4}>
-                        
-                        <Slider
-                        key={`slider-${1}`}
-                            defaultValue={ pointSize }
-                            onChange={ (e, newValue) => setPointSize(newValue) }
-                            getAriaValueText={ (value) => `${value}` }
-                            aria-labelledby="asdf "
-                            step={3}
-                            marks
-                            min={0}
-                            max={30}
-                            valueLabelDisplay="auto"
-                        />
-                    </Grid>
-                </Grid>
-            </Grid>
         </>
     );
 
