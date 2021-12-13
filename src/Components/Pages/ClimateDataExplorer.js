@@ -53,6 +53,7 @@ const ClimateDataExplorer = () => {
     timeseriesList.map(timeseries => {
       return {
         queryKey: [dataType, location.id, timeseries.year, dayRange],
+        staleTime: Number.MAX_SAFE_INTEGER,
         refetchOnWindowFocus: false,
         queryFn: () => fetchNOAAQuery(
           '/api/noaa/data/daily/'
