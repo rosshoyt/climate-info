@@ -24,6 +24,7 @@ import FastfoodIcon from '@material-ui/icons/Fastfood';
 import GitHubIcon from '@material-ui/icons/GitHub';
 import DarkModeButton from '../DarkModeButton';
 import { BrowserRouter, Route, Switch, Link } from 'react-router-dom';
+import useWindowDimensions from '../../Utils/WindowUtils';
 
 const drawerWidth = 240;
 
@@ -101,7 +102,10 @@ export default function ResponsiveMiniDrawer({ children, darkMode, setDarkMode }
   const arrayChildren = Children.toArray(children)
   const classes = useStyles();
   const theme = useTheme();
-  const [open, setOpen] = React.useState(true);
+  const { height, width } = useWindowDimensions();
+  const [open, setOpen] = React.useState(width > 1920 ? true : false);
+  
+
 
   const handleDrawerOpen = () => {
     setOpen(true);
