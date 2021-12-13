@@ -1,5 +1,6 @@
 import create from 'zustand';
 import { Timeseries } from './model/Timeseries';
+import { processScatterplotTimeseriesData } from './Data/converters/NivoDataConverters';
 
 const createTimeseries = (timeseriesList) => [
   ...timeseriesList,
@@ -11,14 +12,14 @@ const createTimeseries = (timeseriesList) => [
   },
 ];
 
-const createUpdateChartDataTimeseries = (chartData, timeseries)  =>
-  chartData.find(tmsr => tmsr.id === timeseries.id) ? 
-    updateChartDataTimeseries(chartData, timeseries) :
-    createChartDataTimeseries(chartData, timeseries )  
+const createUpdateChartDataTimeseries = (chartData, newData)  =>
+  chartData.find(tmsr => tmsr['id'] === newData['id']) ? 
+    updateChartDataTimeseries(chartData, newData['id'], newData) :
+    createChartDataTimeseries(chartData, newData )  
 
-const createChartDataTimeseries = (chartData, newTimeseries) => [
+const createChartDataTimeseries = (chartData, newData) => [
   ...chartData,
-  newTimeseries.data
+  newData
 ]
 
 const updateChartDataTimeseries = (chartData, id, data) => [
@@ -50,27 +51,35 @@ const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
     colorSelectorOpen: timeseries.id === id ? isOpen : timeseries.colorSelectorOpen,
   }));
 
-
-const useStore = create((set) => ({
-    // TODO
-    //querys: [{NOAAQuery, results}]
+const useStore = create((set, get) => ({
     
-    apiResults: [],
-    setAPIResults(newResults){
-      set(state => ({
-        ...state,
-        apiResults: newResults
-      }))
-    },
+    rawData: [],
+    // scatter plot data
     chartData: [],
-    createUpdateChartDataTimeseries(timeseries) {
-      console.log("in CreateUpdate Chart Data to create/update timeseires", timeseries)
-      //console.log('chart data:,', this.chartData)
     
+    createUpdateChartDataTimeseries(timeseries, newData) {
+      console.log("in CreateUpdate Chart Data to create/update timeseries", timeseries)
+      
+      var newChartData = {
+        id: timeseries.id, 
+        color: "hsl(175, 70%, 50%)", // TODO needed?
+        data: processScatterplotTimeseriesData(newData)
+      }
+
       set((state) => ({
         ...state,
-        chartData: createUpdateChartDataTimeseries(state.chartData, timeseries)
-      })) 
+        chartData: createUpdateChartDataTimeseries(
+          state.chartData, 
+          newChartData
+          ),
+          rawData: createUpdateChartDataTimeseries(
+            state.rawData, 
+            {
+              id: timeseries.id,
+              data: newData
+            }
+          )
+      }))     
     },
     timeseriesList: [
       new Timeseries(0, 2021,'#9900EF'),

@@ -62,18 +62,23 @@ const ClimateDataExplorer = () => {
           + timeseries.year + '-' + dayRange[1]
         ),
         onSettled: (data, error, variables, context) => {
-          if(data !== null) {
-            
-            // TODO move data processing to store
-            timeseries.data = {
-              id: timeseries.id, 
-              color: "hsl(175, 70%, 50%)", // TODO needed?
-              data: processTimeSeriesDataScatterPlot  (data['results'])
-            };            
-            createUpdateChartDataTimeseries(timeseries);
-
+          if(error !== null){
+            if(Object.keys(data).includes('message')){      
+              timeseries.errorMessage = 'error - ' + data['message'];
+            }
           }
-         
+          else if(data !== null) {
+            // TODO improve results processing. Sometimes may not get past Object.keys check
+            if(Object.keys(data).includes('results')){      
+              createUpdateChartDataTimeseries(timeseries, data['results']);
+              timeseries.errorMessage = undefined; // reset error message
+            } else{
+              console.log('no results on request for timeseires', timeseries);
+              if(Object.keys(data).includes('message')){      
+                timeseries.errorMessage = 'error - ' + data['message'];
+              }
+            }
+          }
         }
       }
     })
@@ -81,16 +86,6 @@ const ClimateDataExplorer = () => {
 
   useEffect(() => {    
   }, [timeseriesList]);
-
-  function processTimeSeriesDataScatterPlot(data){
-    return data.reduce((formattedDataList, datum) => {
-      const date = datum['date'];
-      const value = datum['value'];
-      const entry = { x: moment(date).format('MM-DD'), y: value };
-      formattedDataList.push(entry);
-      return formattedDataList;
-    }, []);
-  }
 
   return (
     <>
