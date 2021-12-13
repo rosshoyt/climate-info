@@ -91,23 +91,25 @@ const ClimateDataExplorer = () => {
   return (
     <>
       <Grid container direction="row" justify="center">
-        <Grid container direction="column" sm={12} lg={9}>
+        <Grid item>
+          <Typography variant='h4' align='left' fontWeight="fontWeightBold">
+            {location.name}: {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;
+              Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
+          </Typography>
+        </Grid>
+        <Grid item container direction="column" sm={12} lg={9}>
           <Grid item >
-              <Typography variant='h4' align='center' fontWeight="fontWeightBold">
-               {location.name}: {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;
-                Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
-              </Typography>
               <div>
                 <TabbedContainer>
                   <div tabName="Graph">
-                    <Grid item xs={12}>
+                    <Grid item>
                       <div style={{ height: height < 1080 ? 550 : 700 }}>
                         <ScatterPlotChart data={chartData} />
                       </div>
                     </Grid>
                   </div>
                   <div tabName="Table">
-                    <Grid item xs={12}>
+                    <Grid item>
                       <div style={{ height: height < 1080 ? 550 : 700 }}>
                         <DataTable />
                       </ div>
@@ -119,14 +121,19 @@ const ClimateDataExplorer = () => {
           
         </Grid>
         <Grid container direction="column" sm={12} lg={3}>
-          <Grid item justify="center" >
-            <ResponsiveListContainer>
-              <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
-              <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
-              <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
-              <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
-            </ResponsiveListContainer>
-          </Grid>
+          
+          <TabbedContainer>
+            <div tabName="Climate Data Settings">
+              <Grid item justify="center" style={{ height: height < 1080 ? 550 : 700 }} >
+                <ResponsiveListContainer>
+                  <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
+                  <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
+                  <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
+                  <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>
+                </ResponsiveListContainer>
+              </Grid>
+            </div>
+          </TabbedContainer>
         </Grid>
       </Grid>
     </>
