@@ -1,76 +1,66 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { DataGrid } from '@mui/x-data-grid';
 import useStore from '../store'
 
-// TODO generate columns from data?
-const columns = [
-  {
-    field: 'date',
-    headerName: 'Date',
-    width: 300,
-  },
-  
-  {
-    field: 'datatype',
-    headerName: 'Datatype',
-    width: 150,
-  },
-  {
-    field: 'station',
-    headerName: 'Station',
-    width: 300,
-  },
-  {
-    field: 'attributes',
-    headerName: 'Attributes',
-    width: 150,
-  },
-  {
-    field: 'value',
-    headerName: 'Value',
-    type: 'number',
-    width: 150,
-  },
-  { field: 'id', headerName: 'Id', width: 120 },
-  // {
-  //   field: 'attributes',
-  //   headerName: 'Attributes',
-  //   description: 'This column has a value getter and is not sortable.',
-  //   sortable: false,
-  //   width: 160,
-  //   valueGetter: (params) =>
-  //     `${params.getValue(params.id, 'firstName') || ''} ${
-  //       params.getValue(params.id, 'lastName') || ''
-  //     }`,
-  // },
-];
-
 export default function DataTable() {
 
-  const tableData = useStore(state => state.apiResults);
+  const timeseriesList = useStore(state => state.chartData);
   
   useEffect(() => {
-    // TODO optimize component to only remount when tableData changes
-    // console.log('in table useEffect');
-  });
+  }, []);
 
+  // reads the list of lists containing data and extracts keys from the first 
+  // entry of the first list.
+  function updateColumns(timeseriesList) {
+    let newColumns = [];
+    if(timeseriesList.length > 0){
+      let timeseries = timeseriesList[0];
+      console.log('hellsdfj', timeseries);
+      let data = timeseries['data']
+      console.log(data)
+      if(data.length > 0){
+        let dataEntry = data[0];
+        console.log('dataentry', dataEntry)
+        
+        Object.keys(dataEntry).forEach(key => {
+          if(!newColumns.includes(key)) {
+            newColumns.push(
+              {
+                field: key,
+                headerName: key,
+                width: 300,
+              }
+            );
+          }
+        });
+      }
+    }
+    return newColumns;
+  }
+
+
+  // reads the data list of lists, creating a new single list of data with 
+  // unique ids for each data entry
   function formatData(data){
-    //console.log('data:', data, 'type', typeof(data));
-    
+    console.log('formattingdata');
     let idSeed = 0;
-    let result = [].concat(...data)
-    result.forEach(entry => { 
-      entry.id = idSeed++; 
+    
+    let formattedData = [];
+
+    data.forEach(timeseriesList => {
+      timeseriesList['data'].forEach(entry => {
+        entry['id'] = idSeed++;
+        formattedData.push(entry);
+      })
     });
-    // console.log('result', result);
-    return result;
+    return formattedData;
   }
 
   return (
     <>
       <DataGrid
-        rows={ formatData(tableData) }
-        columns={columns}
+        rows={ formatData(timeseriesList) }
+        columns={updateColumns(timeseriesList)}
         pageSize={12}
         checkboxSelection
         disableSelectionOnClick
