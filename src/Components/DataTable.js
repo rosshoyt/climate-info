@@ -4,7 +4,7 @@ import useStore from '../store'
 
 export default function DataTable() {
 
-  const timeseriesList = useStore(state => state.chartData);
+  const timeseriesList = useStore(state => state.rawData);
   
   useEffect(() => {
   }, []);
@@ -28,7 +28,7 @@ export default function DataTable() {
               {
                 field: key,
                 headerName: key,
-                width: 300,
+                width: 200,
               }
             );
           }
