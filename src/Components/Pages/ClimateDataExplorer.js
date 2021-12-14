@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import LocationSelect from '../LocationSelect';
-import { Grid, Button, Typography, CircularProgress } from '@material-ui/core';
-import moment from 'moment';
+import { Grid, Typography, } from '@material-ui/core';
 import ScatterPlotChart from '../Charts/ScatterPlotChart';
 import TimeseriesList from '../TimeseriesList';
-import NOAAQuery from '../../api/noaa/NOAAQuery'
 import useStore from '../../store';
 import DataTable from '../DataTable';
 import DataTypeSelector from '../DataTypeSelector';
@@ -16,6 +14,8 @@ import axios from 'axios';
 import { useQueries } from 'react-query';
 import useWindowDimensions from '../../Utils/WindowUtils';
 import CDEGraphSettingsPanel from '../CDEGraphSettingsPanel';
+import CDEDownloaderPanel from '../CDEDownloaderPanel';
+import CDESourcesPanel from '../CDESourcesPanel';
 
 const ClimateDataExplorer = () => {
   const { height, width } = useWindowDimensions();
@@ -28,25 +28,12 @@ const ClimateDataExplorer = () => {
   });
 
   const [dayRange, setDayRange] = useState(['06-01', '06-30']);
-  //const [chartData, setChartData] = useState([]);
-  const [refreshChartData, setRefreshChartData] = useState(false);
-  //const [isLoading, setIsLoading] = useState(false); // could move into chart component
   const [dataType, setDataType] = useState("TMAX");
 
   const timeseriesList = useStore(state => state.timeseriesList);
-  const setAPIResults = useStore(state => state.setAPIResults);
-  
   const createUpdateChartDataTimeseries = useStore(state => state.createUpdateChartDataTimeseries);
   const chartData = useStore(state => state.chartData)
 
-  function getAPIQueries(){
-    const queryList = [];
-    timeseriesList.forEach(year => {
-      queryList.push(new NOAAQuery(dataType, location.id, year.year + '-' + dayRange[0], year.year + '-' + dayRange[1], year.year));
-
-    });
-    return queryList;
-  }
 
   const fetchNOAAQuery = (noaaQueryString) => axios.get(noaaQueryString).then((res) => res.data);
 
@@ -113,16 +100,29 @@ const ClimateDataExplorer = () => {
                     <Grid item>
                       <div style={{ height: height < 1080 ? 550 : 700 }}>
                         <DataTable />
-                      </ div>
+                      </div>
                     </Grid>
                   </div>
-                </TabbedContainer>
+                  <div tabName="Sources">
+                    <Grid item>
+                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                        <CDESourcesPanel />
+                      </div>
+                    </Grid>
+                  </div>
+                  <div tabName="Download">
+                    <Grid item>
+                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                        <CDEDownloaderPanel/>
+                      </div>
+                    </Grid>
+                  </div>
+                 
+              </TabbedContainer>
             </div>
           </Grid>
-          
         </Grid>
         <Grid item container direction="column" sm={12} lg={3}>
-          
           <TabbedContainer>
             <div tabName="Climate Data Settings">
               <Grid item justify="center" style={{ height: height < 1080 ? 550 : 700 }} >
