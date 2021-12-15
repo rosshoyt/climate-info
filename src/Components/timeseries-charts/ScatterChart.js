@@ -4,6 +4,7 @@ import _ from "underscore";
 import Moment from "moment";
 import { format } from "d3-format";
 
+
 // Pond
 import { TimeSeries, percentile } from "pondjs";
 
@@ -33,7 +34,7 @@ _.each(weatherJSON, readings => {
 //
 // Timeseries
 //
-
+console.log('ScatterChart points:', points)
 const series = new TimeSeries({
     name: "Gust",
     columns: ["time", "station1", "station2"],
@@ -45,11 +46,15 @@ const series = new TimeSeries({
 //
 
 export default function ScatterChartExample() {
-    const [hover, setHover] = useState(null)
-    const [highlight, setHighlight] = useState(null)
-    const [selection, setSelection] = useState(null)
-    const [tracker, setTracker] = useState(null)
-    const [timerange, setTimerange] = useState(series.range())
+    const [hover, setHover] = useState(null);
+    const [highlight, setHighlight] = useState(null);
+    const [selection, setSelection] = useState(null);
+    const [tracker, setTracker] = useState(null);
+    const [timerange, setTimerange] = useState(series.range());
+
+    //const chartData = useStore(state => state.chartData); // TODO integrate app weather data
+   
+
 
     const handleSelectionChanged = point => {
         setSelection(point);
@@ -58,8 +63,7 @@ export default function ScatterChartExample() {
     const handleMouseNear = point => {
         setHighlight(point);
     };
-    
-    //const highlight = this.state.highlight;
+
     const formatter = format(".2f");
     let text = `Speed: - mph, time: -:--`;
     let infoValues = [];
@@ -74,7 +78,7 @@ export default function ScatterChartExample() {
 
     const bandStyle = styler([{ key: "station1", color: "blue", width: 1, opacity: 0.5 }]);
 
-    /* const heat = [
+    const heat = [
         "#023858",
         "#045a8d",
         "#0570b0",
@@ -84,10 +88,13 @@ export default function ScatterChartExample() {
         "#d0d1e6",
         "#ece7f2",
         "#fff7fb"
-    ]; */
+    ]; 
 
     const perEventStyle = (column, event) => {
-        const color = "steelblue"; // heat[Math.floor((1 - event.get("station1") / 40) * 9)];
+
+        //console.log('event:', event, 'column', column)
+        //console.log('event.get(\"column\"', event.get("station1"))
+        const color = column == 'station1' ? 'green' : 'blue';//heat[Math.floor((1 - event.get(column) / 40) * 9)];
         return {
             normal: {
                 fill: color,
@@ -127,7 +134,6 @@ export default function ScatterChartExample() {
             <div className="row">
                 <div className="col-md-12">{text}</div>
             </div>
-            <hr />
             <div className="row">
                 <div className="col-md-12">
                     <Resizable>
@@ -171,7 +177,7 @@ export default function ScatterChartExample() {
                                     format=",.1f"
                                 />
                                 <Charts>
-                                    <BandChart
+                                    {/* <BandChart
                                         axis="wind-gust"
                                         series={series}
                                         style={bandStyle}
@@ -184,11 +190,11 @@ export default function ScatterChartExample() {
                                             }
                                         }}
                                         interpolation="curveBasis"
-                                    />
+                                    /> */}
                                     <ScatterChart
                                         axis="wind-gust"
                                         series={series}
-                                        columns={["station1"]} // {["station1", "station2"]}
+                                        columns={["station1", "station2"]}
                                         style={perEventStyle}
                                         // info={infoValues}
                                         // infoHeight={28}
