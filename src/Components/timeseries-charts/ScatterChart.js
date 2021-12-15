@@ -31,7 +31,11 @@ export default function ScatterChartExample() {
     const [timerange, setTimerange] = useState(null);
     const [columns, setColumns] = useState([]);  
 
+    const [colors, setColors] = useState([]);
+    
+
     const rawData = useStore(state => state.rawData); 
+    const tmsrsInfoList = useStore(state => state.timeseriesList);
 
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
@@ -140,7 +144,12 @@ export default function ScatterChartExample() {
                     points: newPoints
                 });
                 console.log('new points',newPoints)
+
+
+
                 // set the state variables
+                setColors(tmsrsInfoList.map(tmsrs => tmsrs.color))
+                
                 setColumns(cols);
                 setTimerange(ts.range());
                 // this must be set last, because chart starts to render once
@@ -148,7 +157,7 @@ export default function ScatterChartExample() {
                 setSeries(ts);
             }
         }
-    }, [rawData])
+    }, [rawData, tmsrsInfoList])
 
 
     const handleSelectionChanged = point => {
@@ -187,7 +196,7 @@ export default function ScatterChartExample() {
 
         //console.log('event:', event, 'column', column)
         //console.log('event.get(\"column\"', event.get("station1"))
-        const color = column == 'station1' ? 'blue' : 'green';//heat[Math.floor((1 - event.get(column) / 40) * 9)];
+        const color = colors[Number(column[0])];// === '1' ? 'green' : 'blue';//heat[Math.floor((1 - event.get(column) / 40) * 9)];
         return {
             normal: {
                 fill: color,
@@ -238,17 +247,17 @@ export default function ScatterChartExample() {
                                 timeRange={timerange}
                                 timeAxisStyle={timeAxisStyle}
                                 timeAxisTickCount={10}
-                                trackerPosition={tracker}
-                                trackerStyle={{
-                                    box: {
-                                        fill: "black",
-                                        color: "#DDD"
-                                    },
-                                    line: {
-                                        stroke: "red",
-                                        strokeDasharray: 2
-                                    }
-                                }}
+                                // trackerPosition={tracker}
+                                // trackerStyle={{
+                                //     box: {
+                                //         fill: "black",
+                                //         color: "#DDD"
+                                //     },
+                                //     line: {
+                                //         stroke: "red",
+                                //         strokeDasharray: 2
+                                //     }
+                                // }}
                                 maxTime={series.range().end()}
                                 minTime={series.range().begin()}
                                 enablePanZoom={true}
@@ -265,7 +274,7 @@ export default function ScatterChartExample() {
                                 >
                                     <YAxis
                                         id="Temperature (F)"
-                                        label="Temperature (F)"
+                                        label="Temperature (F)" 
                                         labelOffset={-5}
                                         min={0}
                                         max={140}//series.max("station1")}
