@@ -34,6 +34,7 @@
     "react-scripts": "^3.4.1",
     "react-timeseries-charts": "^0.16.1",
     "react-virtualized-auto-sizer": "^1.0.6",
+    "recharts": "^2.1.8",
     "web-vitals": "^2.1.0",
     "zustand": "^3.6.1"
   },
