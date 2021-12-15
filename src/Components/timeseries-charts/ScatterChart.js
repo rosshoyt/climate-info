@@ -1,7 +1,6 @@
 /* eslint max-len:0 */
 import React, { useState, useEffect } from "react";
 import _ from "underscore";
-import Moment from "moment";
 import { format } from "d3-format";
 import useStore from '../../store';
 import moment from "moment";
@@ -34,85 +33,121 @@ export default function ScatterChartExample() {
 
     const rawData = useStore(state => state.rawData); 
 
+    const getStationTmsrsId = (datum, tmsrsID) => {
+        return tmsrsID + '-' + datum.station;
+    }
+
     useEffect(() => {
         console.log('in scatterplot useeffect, rawData = ', rawData);
         // assume data was sorted (first by date, for same date, by stationID alphabetical)
+        
         let dateToReadingsListMap = new Map();
-        // let columns = [];
+        //let stationIDToReadingsListIndexMap = new Map();
+        // a list that tracks the column index a reading should go in using  (station+timeseriesID)
+        let stationTmsrsCombinedIdList = [] // basically, the columns array
         let maxNumReadingsPerDay = 0;
-        let numColumnsPerTimeseries = []
-        rawData.forEach(noaaTimeseries => {
-            noaaTimeseries.data.forEach(datum => {
-                const dayMonth = moment(datum.date).format('MM-DD');
+        if(rawData !== undefined){
+            rawData.forEach(noaaTimeseries => {
+                if(noaaTimeseries.data !== undefined){
+                   
+                    noaaTimeseries.data.forEach(datum => {
+                        const dayMonth = moment(datum.date).format('MM-DD');
+                        
+                        const stationTmsrsID = getStationTmsrsId(datum, noaaTimeseries.id);
+                        console.log(stationTmsrsID)
+                        
+                        let insertionIndex = stationTmsrsCombinedIdList.indexOf(stationTmsrsID);
+                        // haven't seen this station yet in this timeseries, add to list and get new insertion index
+                        if(insertionIndex == -1) {
+                            insertionIndex = stationTmsrsCombinedIdList.push(stationTmsrsID) - 1;
+                        }
+                        
+                        // check if this MM-DD is being tracked yet
+                        if(dateToReadingsListMap.has(dayMonth)){
+                            let readingsList = dateToReadingsListMap.get(dayMonth);
+                            if(readingsList.length > insertionIndex){
+                                // there is room in array, we can insert right away
+                                // (this should be replaceing a null value)
+                                readingsList[insertionIndex] = datum;
+                            } else if(readingsList.length === insertionIndex){
+                                // we need to push it at the end of the array
+                                readingsList.push(datum);
+                            } else {
+                                // we need to add a list of null values and then add the value to the end
+                                let padLength = insertionIndex + 1 - readingsList.length;
+                                let listPad = new Array(padLength).fill(null);
+                                
+                                let extendedReadingsList = readingsList.concat(listPad);
+                                extendedReadingsList[insertionIndex] = datum;
+                                dateToReadingsListMap.set(dayMonth, extendedReadingsList)
+                            }
+                        } else {
+                            if(insertionIndex === 0) {
+                                let readings = [datum];
+                                // add the new date
+                                dateToReadingsListMap.set(dayMonth, readings);
+                                //readingsListLength = 1;
+                            } else{
+                                // we need to add a list of null values and then add the value to the end
+                                let newReadingsList = new Array(insertionIndex + 1).fill(null);
+                                newReadingsList[insertionIndex] = datum;
+                                dateToReadingsListMap.set(dayMonth,newReadingsList)
+                            }
+                        }
+                    
+                    });
                 
-                let readingsListLength = 0; // track the most entries 
-                if(dateToReadingsListMap.has(dayMonth)){
-                    readingsListLength = dateToReadingsListMap.get(dayMonth).push(datum);
-                } else {
-                    let readings = [datum];
-                    dateToReadingsListMap.set(dayMonth, readings);
-                    readingsListLength = 1;
-                }
-                maxNumReadingsPerDay = Math.max(readingsListLength, maxNumReadingsPerDay);
-            });
-           
-            // normalize the lists so theyre the same length 
-            // TODO instead, should ensure (during first data processing) that each station stays in exact same column
-            dateToReadingsListMap.forEach((readingsList, date) => {
-                const difference = maxNumReadingsPerDay - readingsList.length;
-                console.log(difference)
-                if(difference > 0){
-                    // pad the array with null values
-                    for(let i = 0; i < difference; i++){
-                        readingsList.push(null);
-                    }
+                
                 }
             })
-            
-        })
 
-        if(rawData.length > 0){
-            console.log(dateToReadingsListMap);
-            // create dummy array of columns
 
-            // for(let i = 0; i < rawData.length; i++){
-            //     for(let j = 0; j < )
-            //     // create an ID string for each column
-            //     columns.push(i.toString() + '-' + i);
-            // }
-            let cols =  ["time"];
-            for(let i = 0; i < maxNumReadingsPerDay; i++){
-                cols.push(i.toString());
-            }
-            console.log(cols);
-            
-            const newPoints = []
+            if(rawData.length > 0){
+                console.log(dateToReadingsListMap);
+                // create dummy array of columns
 
-            dateToReadingsListMap.forEach((readingsList, date) => {
-                const time = moment(date + '-2017', 'MM-DD-YYYY')
-                newPoints.push([
-                    time.toDate().getTime(),
-                    ...readingsList.map(reading => reading === null ? null : reading.value)
-                ]);
-                // let readingsList = []
+                // for(let i = 0; i < rawData.length; i++){
+                //     for(let j = 0; j < )
+                //     // create an ID string for each column
+                //     columns.push(i.toString() + '-' + i);
+                // }
+                let cols = ["time"].concat(stationTmsrsCombinedIdList);
+                console.log('cols:', cols)
+
+                // for(let i = 0; i < maxNumReadingsPerDay; i++){
+                //     cols.push(i.toString());
+                // }
+                // console.log(cols);
                 
-                // newPoints.push([])
-            });
+                const newPoints = [];
+
+                dateToReadingsListMap.forEach((readingsList, date) => {
+                    const time = moment(date + '-2017', 'MM-DD-YYYY');
+                    // let randomVar = (Math.random() - 0.5) * 60_000 * 1000;
+                    newPoints.push([
+                        time.toDate().getTime(),
+                        ...readingsList.map(reading => reading === null ? null : reading.value)
+                    ]);
+                    // let readingsList = []
+                    
+                    // newPoints.push([])
+                });
 
 
-            const ts = new TimeSeries({
-                name: "TMAX", // TODO replace with current datatype
-                columns: cols,
-                points: newPoints
-            });
-            // set the state variables
-            setColumns(cols);
-            setTimerange(ts.range());
-            // this must be set last, because chart starts to render once
-            // series isn't null or undefined
-            setSeries(ts);
+                const ts = new TimeSeries({
+                    name: "TMAX", // TODO replace with current datatype
+                    columns: cols,
+                    points: newPoints
+                });
+                console.log('new points',newPoints)
+                // set the state variables
+                setColumns(cols);
+                setTimerange(ts.range());
+                // this must be set last, because chart starts to render once
+                // series isn't null or undefined
+                setSeries(ts);
+            }
         }
-        
     }, [rawData])
 
 
@@ -222,7 +257,7 @@ export default function ScatterChartExample() {
                                 onTrackerChanged={tracker => setTracker(tracker)}
                             >
                                 <ChartRow
-                                    height="150"
+                                    height="500"
                                     debug={false}
                                     trackerInfoWidth={125}
                                     trackerInfoHeight={30}
