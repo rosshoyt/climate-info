@@ -16,6 +16,7 @@ import useWindowDimensions from '../../Utils/WindowUtils';
 import CDEGraphSettingsPanel from '../CDEGraphSettingsPanel';
 import CDEDownloaderPanel from '../CDEDownloaderPanel';
 import CDESourcesPanel from '../CDESourcesPanel';
+import ScatterChartExample from '../timeseries-charts/ScatterChart';
 
 const ClimateDataExplorer = () => {
   const { height, width } = useWindowDimensions();
@@ -92,7 +93,7 @@ const ClimateDataExplorer = () => {
                   <div tabName="Graph">
                     <Grid item>
                       <div style={{ height: height < 1080 ? 550 : 700 }}>
-                        <ScatterPlotChart data={chartData} />
+                        <ScatterChartExample />
                       </div>
                     </Grid>
                   </div>
