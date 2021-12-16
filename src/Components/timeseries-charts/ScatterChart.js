@@ -37,6 +37,8 @@ export default function ScatterChartExample() {
     const rawData = useStore(state => state.rawData); 
     const tmsrsInfoList = useStore(state => state.timeseriesList);
 
+    const [regressionLines, setRegressionLines] = useState([])
+
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
     }
@@ -49,13 +51,24 @@ export default function ScatterChartExample() {
         //let stationIDToReadingsListIndexMap = new Map();
         // a list that tracks the column index a reading should go in using  (station+timeseriesID)
         let stationTmsrsCombinedIdList = [] // basically, the columns array
-        let maxNumReadingsPerDay = 0;
+        
+        let timeseriesDailyAveragesMap = new Map(); // array to hold the averages per day readings
         if(rawData !== undefined){
             rawData.forEach(noaaTimeseries => {
-                if(noaaTimeseries.data !== undefined){
-                   
+                
+                if(noaaTimeseries.data !== undefined){    
+                    // a map<date, list<entries>> to track the values per-day for this individual timeseries
+                    let tmsrsPerDateTempTotalsMap = new Map();
+                    
                     noaaTimeseries.data.forEach(datum => {
                         const dayMonth = moment(datum.date).format('MM-DD');
+                        
+                        // update the average tracking map
+                        if(tmsrsPerDateTempTotalsMap.has(dayMonth)){
+                            tmsrsPerDateTempTotalsMap.get(dayMonth).push(datum.value);
+                        }else {
+                            tmsrsPerDateTempTotalsMap.set(dayMonth, [datum.value]);
+                        }
                         
                         const stationTmsrsID = getStationTmsrsId(datum, noaaTimeseries.id);
                         console.log(stationTmsrsID)
@@ -100,9 +113,24 @@ export default function ScatterChartExample() {
                         }
                     
                     });
-                
-                
+                    
+                    console.log('tmsrsPerDateTemptotalsmap', tmsrsPerDateTempTotalsMap, 'type is', tmsrsPerDateTempTotalsMap);
+
+                 
+                    // convert the map values from list of readings to an average reading
+                    tmsrsPerDateTempTotalsMap.forEach(function(readingsList, date, map) {
+                        let accum = 0;
+                        readingsList.forEach(value => {
+                            accum += value;
+                        }); 
+                        map.set(date, accum / readingsList.length);
+                    });
+
+                    console.log('averages', tmsrsPerDateTempTotalsMap);
+                    timeseriesDailyAveragesMap.set(noaaTimeseries.id, tmsrsPerDateTempTotalsMap);
                 }
+                
+                
             })
 
 
@@ -132,20 +160,48 @@ export default function ScatterChartExample() {
                         time.toDate().getTime(),
                         ...readingsList.map(reading => reading === null ? null : reading.value)
                     ]);
-                    // let readingsList = []
                     
-                    // newPoints.push([])
                 });
-
-
                 const ts = new TimeSeries({
                     name: "TMAX", // TODO replace with current datatype
                     columns: cols,
                     points: newPoints
                 });
-                console.log('new points',newPoints)
+                console.log('new points', newPoints)
+                
+                console.log('creating linear timeseries from these dataz', timeseriesDailyAveragesMap);
 
-
+                let length = timeseriesDailyAveragesMap.size + 1;
+                let lineColumns = new Array(length);
+                lineColumns[0] = "time"
+                let linePointsMap = new Map()
+                let index = 1; // unix time will be index 1
+                timeseriesDailyAveragesMap.forEach((dailyAverageMap, id, theMap) => {
+                    lineColumns[index] = id;
+                    dailyAverageMap.forEach((value, date) => {
+                        if(linePointsMap.has(date)){
+                            linePointsMap.get(date)[index] = value;
+                        }else{
+                            let valuesArray = new Array(length);
+                            // set the first entry, the time
+                            valuesArray[0] = moment(date + '-2017', 'MM-DD-YYYY').toDate().getTime();
+                            valuesArray[index] = value;
+                            linePointsMap.set(date, valuesArray);
+                        }
+                    })
+                    index++;
+                });
+                
+                const linePoints = [...linePointsMap].map(([key, value]) => ( value ));
+                console.log('line columns',lineColumns)
+                console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
+                
+                const lineSeries = new TimeSeries({
+                    name: "averages",
+                    columns: lineColumns,
+                    points: linePoints//[[1234444, 94]]
+                })
+                
 
                 // set the state variables
                 setColors(tmsrsInfoList.map(tmsrs => tmsrs.color))
