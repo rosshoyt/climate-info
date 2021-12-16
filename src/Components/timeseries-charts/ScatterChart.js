@@ -45,9 +45,10 @@ export default function ScatterChartExample() {
     }
 
     // TODO
-    // const getColor = (tmsrsID) => {
-    //     return 
-    // }
+    const getColor = (tmsrsIDNumber) => {
+        // TODO optimize
+        return tmsrsInfoList.map(tmsrs => tmsrs.color)[tmsrsIDNumber]
+    }
 
     useEffect(() => {
         console.log('in scatterplot useeffect, rawData = ', rawData);
@@ -210,7 +211,7 @@ export default function ScatterChartExample() {
                 // console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
              
                 
-                const lnStyles = styler([...lnCols].map(([key, value]) => ({ key: key, color: 'green', width: 4 })))
+                const lnStyles = styler([...lnCols].map(([key, value]) => ({ key: key, color: getColor(Number(key)), width: 4 })))
                 console.log('line styles', lnStyles)
                 setLineStyles(lnStyles)
                 setLineSeries(new TimeSeries({
@@ -271,7 +272,9 @@ export default function ScatterChartExample() {
 
         //console.log('event:', event, 'column', column)
         //console.log('event.get(\"column\"', event.get("station1"))
-        const color = colors[Number(column[0])];// === '1' ? 'green' : 'blue';//heat[Math.floor((1 - event.get(column) / 40) * 9)];
+        
+        // get the color using the first character of the column string name (the timeseries ID number)
+        const color = getColor(Number(column[0])); // === '1' ? 'green' : 'blue';//heat[Math.floor((1 - event.get(column) / 40) * 9)];
         return {
             normal: {
                 fill: color,
