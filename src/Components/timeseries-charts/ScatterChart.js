@@ -24,14 +24,15 @@ export default function ScatterChartExample() {
     /// the main timeseries data
     const [series, setSeries] = useState(null);
 
+    const [minYValue, setMinYValue] = useState(0);
+    const [maxYValue, setMaxYValue] = useState(140);
+
     const [hover, setHover] = useState(null);
     const [highlight, setHighlight] = useState(null);
     const [selection, setSelection] = useState(null);
     const [tracker, setTracker] = useState(null);
     const [timerange, setTimerange] = useState(null);
-    const [columns, setColumns] = useState([]);  
-
-    const [colors, setColors] = useState([]);
+    const [columns, setColumns] = useState([]);
     
     const rawData = useStore(state => state.rawData); 
     const tmsrsInfoList = useStore(state => state.timeseriesList);
@@ -220,14 +221,24 @@ export default function ScatterChartExample() {
                     points: linePoints//[[1234444, 94]]
                 }));
                 setLineColumns(lnCols)
-                
-
-                setColors(tmsrsInfoList.map(tmsrs => tmsrs.color))
-                
-            
-                
+ 
                 setColumns(cols);
                 setTimerange(ts.range());
+
+                // calculate the max and min Y values for graph
+                // TODO refactor timeseries averaging to utilize the series.average() method
+                let newYMin = Number.MAX_SAFE_INTEGER, newYMax = Number.MIN_SAFE_INTEGER;
+                cols.forEach((col) => {
+                    if(col !== 'time'){
+                        newYMax = Math.max(ts.max(col), newYMax);
+                        newYMin = Math.min(ts.min(col), newYMin);
+                        console.log('After looking at col', col, 'newMax/newMin=', newYMax, newYMin)
+                    }
+                })
+                setMinYValue(newYMin)
+                setMaxYValue(newYMax)
+
+
                 // this must be set last, because chart starts to render once
                 // series isn't null or undefined
                 setSeries(ts);
@@ -354,8 +365,8 @@ export default function ScatterChartExample() {
                                         id="Temperature (F)"
                                         label="Temperature (F)" 
                                         labelOffset={-5}
-                                        min={0}
-                                        max={140}//series.max("station1")}
+                                        min={minYValue}
+                                        max={maxYValue}//series.max("station1")}
                                         style={YAxisStyle}
                                         width="70"
                                         type="linear"
@@ -388,7 +399,7 @@ export default function ScatterChartExample() {
                                                 series={lineSeries}
                                                 columns={lineColumns}
                                                 style={lineStyles}
-                                                //interpolation="curveBasis"
+                                                interpolation="curveBasis"
                                                 // highlight={}//this.state.highlight}
                                                 // onHighlightChange={highlight => }
                                                 //     this.setState({ highlight })
