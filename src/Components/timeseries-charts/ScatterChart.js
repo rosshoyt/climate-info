@@ -33,18 +33,25 @@ export default function ScatterChartExample() {
 
     const [colors, setColors] = useState([]);
     
-
     const rawData = useStore(state => state.rawData); 
     const tmsrsInfoList = useStore(state => state.timeseriesList);
 
-    const [regressionLines, setRegressionLines] = useState([])
+    const [lineSeries, setLineSeries] = useState(null);
+    const [lineStyles, setLineStyles] = useState(null);
+    const [lineColumns, setLineColumns] = useState(null);
 
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
     }
 
+    // TODO
+    // const getColor = (tmsrsID) => {
+    //     return 
+    // }
+
     useEffect(() => {
         console.log('in scatterplot useeffect, rawData = ', rawData);
+        
         // assume data was sorted (first by date, for same date, by stationID alphabetical)
         
         let dateToReadingsListMap = new Map();
@@ -169,15 +176,19 @@ export default function ScatterChartExample() {
                 });
                 console.log('new points', newPoints)
                 
+
+
+
+                
                 console.log('creating linear timeseries from these dataz', timeseriesDailyAveragesMap);
 
                 let length = timeseriesDailyAveragesMap.size + 1;
-                let lineColumns = new Array(length);
-                lineColumns[0] = "time"
+                let lineSeriesCols = new Array(length);
+                lineSeriesCols[0] = 'time';
                 let linePointsMap = new Map()
                 let index = 1; // unix time will be index 1
                 timeseriesDailyAveragesMap.forEach((dailyAverageMap, id, theMap) => {
-                    lineColumns[index] = id;
+                    lineSeriesCols[index] = id.toString();
                     dailyAverageMap.forEach((value, date) => {
                         if(linePointsMap.has(date)){
                             linePointsMap.get(date)[index] = value;
@@ -192,19 +203,27 @@ export default function ScatterChartExample() {
                     index++;
                 });
                 
+                const lnCols = lineSeriesCols.slice(1)
+                console.log('line series columns',lineSeriesCols, 'lnCols = ', lnCols)
+
                 const linePoints = [...linePointsMap].map(([key, value]) => ( value ));
-                console.log('line columns',lineColumns)
-                console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
+                // console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
+             
                 
-                const lineSeries = new TimeSeries({
+                const lnStyles = styler([...lnCols].map(([key, value]) => ({ key: key, color: 'green', width: 4 })))
+                console.log('line styles', lnStyles)
+                setLineStyles(lnStyles)
+                setLineSeries(new TimeSeries({
                     name: "averages",
-                    columns: lineColumns,
+                    columns: lineSeriesCols,
                     points: linePoints//[[1234444, 94]]
-                })
+                }));
+                setLineColumns(lnCols)
                 
 
-                // set the state variables
                 setColors(tmsrsInfoList.map(tmsrs => tmsrs.color))
+                
+            
                 
                 setColumns(cols);
                 setTimerange(ts.range());
@@ -360,7 +379,22 @@ export default function ScatterChartExample() {
                                             highlight={highlight}
                                             radius={ 2 } //(event, column) => column === "station1" ? 3 : 2 }
                                         />
-                                    
+                                        <LineChart
+                                                axis="Temperature (F)"
+                                                //breakLine={false}
+                                                series={lineSeries}
+                                                columns={lineColumns}
+                                                style={lineStyles}
+                                                //interpolation="curveBasis"
+                                                // highlight={}//this.state.highlight}
+                                                // onHighlightChange={highlight => }
+                                                //     this.setState({ highlight })
+                                                // }
+                                                // selection={this.state.selection}
+                                                // onSelectionChange={selection =>
+                                                //     this.setState({ selection })
+                                                // }
+                                            />
                                     </Charts>
                                 </ChartRow>
                             </ChartContainer>
