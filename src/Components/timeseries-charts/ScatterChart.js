@@ -2,8 +2,9 @@
 import React, { useState, useEffect } from "react";
 import _ from "underscore";
 import { format } from "d3-format";
-import useStore from '../../store';
 import moment from "moment";
+import useStore from '../../store';
+import useCDEGraphSettingsStore from "../CDEGraphSettingsStore";
 
 // Pond
 import { TimeSeries } from "pondjs";
@@ -41,6 +42,9 @@ export default function ScatterChartExample() {
     const [lineStyles, setLineStyles] = useState(null);
     const [lineColumns, setLineColumns] = useState(null);
 
+    //const [lineWidth, setLineWidth] = useState(5)
+    const lineWidth = useCDEGraphSettingsStore(state => state.lineWidth);
+    const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
     }
@@ -62,7 +66,7 @@ export default function ScatterChartExample() {
         let stationTmsrsCombinedIdList = [] // basically, the columns array
         
         let timeseriesDailyAveragesMap = new Map(); // array to hold the averages per day readings
-        if(rawData !== undefined){
+        if(rawData !== undefined && rawData.length > 0 ){
             rawData.forEach(noaaTimeseries => {
                 
                 if(noaaTimeseries.data !== undefined){    
@@ -143,108 +147,107 @@ export default function ScatterChartExample() {
             })
 
 
-            if(rawData.length > 0){
-                console.log(dateToReadingsListMap);
-                // create dummy array of columns
+        
+            console.log(dateToReadingsListMap);
+            // create dummy array of columns
 
-                // for(let i = 0; i < rawData.length; i++){
-                //     for(let j = 0; j < )
-                //     // create an ID string for each column
-                //     columns.push(i.toString() + '-' + i);
-                // }
-                let cols = ["time"].concat(stationTmsrsCombinedIdList);
-                console.log('cols:', cols)
+            // for(let i = 0; i < rawData.length; i++){
+            //     for(let j = 0; j < )
+            //     // create an ID string for each column
+            //     columns.push(i.toString() + '-' + i);
+            // }
+            let cols = ["time"].concat(stationTmsrsCombinedIdList);
+            console.log('cols:', cols)
 
-                // for(let i = 0; i < maxNumReadingsPerDay; i++){
-                //     cols.push(i.toString());
-                // }
-                // console.log(cols);
+            // for(let i = 0; i < maxNumReadingsPerDay; i++){
+            //     cols.push(i.toString());
+            // }
+            // console.log(cols);
+            
+            const newPoints = [];
+
+            dateToReadingsListMap.forEach((readingsList, date) => {
+                const time = moment(date + '-2017', 'MM-DD-YYYY');
+                // let randomVar = (Math.random() - 0.5) * 60_000 * 1000;
+                newPoints.push([
+                    time.toDate().getTime(),
+                    ...readingsList.map(reading => reading === null ? null : reading.value)
+                ]);
                 
-                const newPoints = [];
-
-                dateToReadingsListMap.forEach((readingsList, date) => {
-                    const time = moment(date + '-2017', 'MM-DD-YYYY');
-                    // let randomVar = (Math.random() - 0.5) * 60_000 * 1000;
-                    newPoints.push([
-                        time.toDate().getTime(),
-                        ...readingsList.map(reading => reading === null ? null : reading.value)
-                    ]);
-                    
-                });
-                const ts = new TimeSeries({
-                    name: "TMAX", // TODO replace with current datatype
-                    columns: cols,
-                    points: newPoints
-                });
-                console.log('new points', newPoints)
-                
+            });
+            const ts = new TimeSeries({
+                name: "TMAX", // TODO replace with current datatype
+                columns: cols,
+                points: newPoints
+            });
+            console.log('new points', newPoints)
+            
 
 
 
-                
-                console.log('creating linear timeseries from these dataz', timeseriesDailyAveragesMap);
+            
+            console.log('creating linear timeseries from these dataz', timeseriesDailyAveragesMap);
 
-                let length = timeseriesDailyAveragesMap.size + 1;
-                let lineSeriesCols = new Array(length);
-                lineSeriesCols[0] = 'time';
-                let linePointsMap = new Map()
-                let index = 1; // unix time will be index 1
-                timeseriesDailyAveragesMap.forEach((dailyAverageMap, id, theMap) => {
-                    lineSeriesCols[index] = id.toString();
-                    dailyAverageMap.forEach((value, date) => {
-                        if(linePointsMap.has(date)){
-                            linePointsMap.get(date)[index] = value;
-                        }else{
-                            let valuesArray = new Array(length);
-                            // set the first entry, the time
-                            valuesArray[0] = moment(date + '-2017', 'MM-DD-YYYY').toDate().getTime();
-                            valuesArray[index] = value;
-                            linePointsMap.set(date, valuesArray);
-                        }
-                    })
-                    index++;
-                });
-                
-                const lnCols = lineSeriesCols.slice(1)
-                console.log('line series columns',lineSeriesCols, 'lnCols = ', lnCols)
-
-                const linePoints = [...linePointsMap].map(([key, value]) => ( value ));
-                // console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
-             
-                
-                const lnStyles = styler([...lnCols].map(([key, value]) => ({ key: key, color: getColor(Number(key)), width: 4 })))
-                console.log('line styles', lnStyles)
-                setLineStyles(lnStyles)
-                setLineSeries(new TimeSeries({
-                    name: "averages",
-                    columns: lineSeriesCols,
-                    points: linePoints//[[1234444, 94]]
-                }));
-                setLineColumns(lnCols)
- 
-                setColumns(cols);
-                setTimerange(ts.range());
-
-                // calculate the max and min Y values for graph
-                // TODO refactor timeseries averaging to utilize the series.average() method
-                let newYMin = Number.MAX_SAFE_INTEGER, newYMax = Number.MIN_SAFE_INTEGER;
-                cols.forEach((col) => {
-                    if(col !== 'time'){
-                        newYMax = Math.max(ts.max(col), newYMax);
-                        newYMin = Math.min(ts.min(col), newYMin);
-                        console.log('After looking at col', col, 'newMax/newMin=', newYMax, newYMin)
+            let length = timeseriesDailyAveragesMap.size + 1;
+            let lineSeriesCols = new Array(length);
+            lineSeriesCols[0] = 'time';
+            let linePointsMap = new Map()
+            let index = 1; // unix time will be index 1
+            timeseriesDailyAveragesMap.forEach((dailyAverageMap, id, theMap) => {
+                lineSeriesCols[index] = id.toString();
+                dailyAverageMap.forEach((value, date) => {
+                    if(linePointsMap.has(date)){
+                        linePointsMap.get(date)[index] = value;
+                    }else{
+                        let valuesArray = new Array(length);
+                        // set the first entry, the time
+                        valuesArray[0] = moment(date + '-2017', 'MM-DD-YYYY').toDate().getTime();
+                        valuesArray[index] = value;
+                        linePointsMap.set(date, valuesArray);
                     }
                 })
-                setMinYValue(newYMin)
-                setMaxYValue(newYMax)
+                index++;
+            });
+            
+            const lnCols = lineSeriesCols.slice(1)
+            console.log('line series columns',lineSeriesCols, 'lnCols = ', lnCols)
+
+            const linePoints = [...linePointsMap].map(([key, value]) => ( value ));
+            // console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
+            
+            
+            //const lnStyles = styler([...lnCols].map(([key, value]) => ({ key: key, color: getColor(Number(key)), width: lineWidth })))
+            //console.log('line styles', lnStyles)
+            //setLineStyles(lnStyles)
+            setLineSeries(new TimeSeries({
+                name: "averages",
+                columns: lineSeriesCols,
+                points: linePoints//[[1234444, 94]]
+            }));
+            setLineColumns(lnCols)
+
+            setColumns(cols);
+            setTimerange(ts.range());
+
+            // calculate the max and min Y values for graph
+            // TODO refactor timeseries averaging to utilize the series.average() method
+            let newYMin = Number.MAX_SAFE_INTEGER, newYMax = Number.MIN_SAFE_INTEGER;
+            cols.forEach((col) => {
+                if(col !== 'time'){
+                    newYMax = Math.max(ts.max(col), newYMax);
+                    newYMin = Math.min(ts.min(col), newYMin);
+                    console.log('After looking at col', col, 'newMax/newMin=', newYMax, newYMin)
+                }
+            })
+            setMinYValue(newYMin)
+            setMaxYValue(newYMax)
 
 
-                // this must be set last, because chart starts to render once
-                // series isn't null or undefined
-                setSeries(ts);
-            }
+            // this must be set last, because chart starts to render once
+            // series isn't null or undefined
+            setSeries(ts);
         }
-    }, [rawData, tmsrsInfoList])
+    }, [rawData, tmsrsInfoList, lineWidth, pointSize ])
 
 
     const handleSelectionChanged = point => {
@@ -288,24 +291,35 @@ export default function ScatterChartExample() {
         const color = getColor(Number(column[0])); // === '1' ? 'green' : 'blue';//heat[Math.floor((1 - event.get(column) / 40) * 9)];
         return {
             normal: {
-                fill: color,
-                opacity: 1.0
+                // fill: color,
+                fill: "none",
+                stroke: color,
+                opacity: 0.7,
+                strokeWidth: pointSize
             },
             highlighted: {
-                fill: color,
-                stroke: "none",
+                //fill: "color",
+                //stroke: "none",
+                fill: "none",
+                stroke: color,
+                strokeWidth: pointSize * 2,
                 opacity: 1.0
             },
             selected: {
                 fill: "none",
-                stroke: "#2CB1CF",
-                strokeWidth: 3,
+                stroke: color,
+                strokeWidth: pointSize * 3,
                 opacity: 1.0
             },
             muted: {
-                stroke: "none",
-                opacity: 0.4,
-                fill: color
+                // stroke: "none",
+                // fill: color,
+                fill: "none",
+                stroke: color,
+                strokeWidth: pointSize * .75,
+                opacity: 0.6,
+                
+
             }
         };
     };
@@ -398,7 +412,7 @@ export default function ScatterChartExample() {
                                                 //breakLine={false}
                                                 series={lineSeries}
                                                 columns={lineColumns}
-                                                style={lineStyles}
+                                                style= { styler([...lineColumns].map(([key, value]) => ({ key: key, color: getColor(Number(key)), width: lineWidth, opacity: 1 })))}//{lineStyles}
                                                 interpolation="curveBasis"
                                                 // highlight={}//this.state.highlight}
                                                 // onHighlightChange={highlight => }
