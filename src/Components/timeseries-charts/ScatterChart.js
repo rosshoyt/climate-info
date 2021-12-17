@@ -10,7 +10,7 @@ import useCDEGraphSettingsStore from "../CDEGraphSettingsStore";
 import { TimeSeries } from "pondjs";
 
 // Imports from the charts library
-import { ChartContainer, ChartRow, Charts, YAxis, ScatterChart, LineChart, styler, BandChart, Resizable, } from "react-timeseries-charts";
+import { ChartContainer, ChartRow, Charts, YAxis, ScatterChart, LineChart, styler, BandChart, Resizable, Legend } from "react-timeseries-charts";
 
 import { CircularProgress } from "@material-ui/core";
 //
@@ -44,14 +44,23 @@ export default function ScatterChartExample() {
 
 
     const [fontFamily, setFontFamily] = useState('roboto');
-    const [axisLabelFontSize, setAxisLabelFontSize] = useState(20);
-    const [axisValueFontSize, setAxisValueFontSize] = useState(14);
+    const [axisLabelFontSize, setAxisLabelFontSize] = useState(17);
+    const [axisValueFontSize, setAxisValueFontSize] = useState(13);
+
+
+    const [legendCategories, setLegendCategories] = useState(null);
+    const [legendStyle, setLegendStyle] = useState(null);
+
 
     //const [lineWidth, setLineWidth] = useState(5)
     const lineWidth = useCDEGraphSettingsStore(state => state.lineWidth);
     const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
+    }
+
+    const getTimeseriesNameFromID = (tmsrsID) => {
+        return tmsrsInfoList.map(tmsrs => tmsrs.year)[tmsrsID];
     }
 
     // TODO
@@ -229,11 +238,7 @@ export default function ScatterChartExample() {
                 columns: lineSeriesCols,
                 points: linePoints//[[1234444, 94]]
             }));
-            setLineColumns(lnCols)
-
-            setColumns(cols);
-            setTimerange(ts.range());
-
+            
             // calculate the max and min Y values for graph
             // TODO refactor timeseries averaging to utilize the series.average() method
             let newYMin = Number.MAX_SAFE_INTEGER, newYMax = Number.MIN_SAFE_INTEGER;
@@ -244,6 +249,21 @@ export default function ScatterChartExample() {
                     console.log('After looking at col', col, 'newMax/newMin=', newYMax, newYMin)
                 }
             })
+            
+            setLineColumns(lnCols);
+            setColumns(cols);
+            setTimerange(ts.range());
+
+
+            let lgndCats = lnCols.map(d => ({ key: d, label: getTimeseriesNameFromID(Number(d)) }));
+            console.log('lgndCats', lgndCats);
+            let lgndStyle = styler(lnCols.map((c, i) => ({
+                key: c,
+                color: getColor(Number(i))
+            })));
+            setLegendCategories(lgndCats);
+            setLegendStyle(lgndStyle);
+            
             setMinYValue(newYMin)
             setMaxYValue(newYMax)
 
@@ -374,7 +394,7 @@ export default function ScatterChartExample() {
                                 onTrackerChanged={tracker => setTracker(tracker)}
                             >
                                 <ChartRow
-                                    height="700"
+                                    height="500"
                                     debug={false}
                                     trackerInfoWidth={125}
                                     trackerInfoHeight={30}
@@ -432,6 +452,9 @@ export default function ScatterChartExample() {
                                 </ChartRow>
                             </ChartContainer>
                         </Resizable>
+                    </div>
+                    <div>
+                        <Legend categories={legendCategories} style={legendStyle} type="dot" />
                     </div>
                 
                 </div>
