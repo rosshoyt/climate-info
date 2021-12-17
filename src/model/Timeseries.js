@@ -7,6 +7,6 @@ export class Timeseries {
     this.data = [];
     this.loading = false;
     this.errorMessage = undefined;
-    // query // TODO add reference to react query object?
+    this.queryString = undefined;
   }
 }
