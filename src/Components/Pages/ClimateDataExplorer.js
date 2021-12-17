@@ -32,9 +32,7 @@ const ClimateDataExplorer = () => {
   const [dataType, setDataType] = useState("TMAX");
 
   const timeseriesList = useStore(state => state.timeseriesList);
-  const createUpdateChartDataTimeseries = useStore(state => state.createUpdateChartDataTimeseries);
-  const chartData = useStore(state => state.chartData)
-
+  const createUpdateTimeseriesRawData = useStore(state => state.createUpdateTimeseriesRawData);
 
   const fetchNOAAQuery = (noaaQueryString) => axios.get(noaaQueryString).then((res) => res.data);
 
@@ -52,6 +50,7 @@ const ClimateDataExplorer = () => {
           + timeseries.year + '-' + dayRange[1]
         ),
         onSettled: (data, error, variables, context) => {
+          //console.log('Query settled. variables, context:',variables, context)
           if(error !== null){
             if(Object.keys(data).includes('message')){      
               timeseries.errorMessage = 'error - ' + data['message'];
@@ -60,7 +59,7 @@ const ClimateDataExplorer = () => {
           else if(data !== null) {
             // TODO improve results processing. Sometimes may not get past Object.keys check
             if(Object.keys(data).includes('results')){      
-              createUpdateChartDataTimeseries(timeseries, data['results']);
+              createUpdateTimeseriesRawData(timeseries, data['results']);
               timeseries.errorMessage = undefined; // reset error message
             } else{
               console.log('no results on request for timeseires', timeseries);
