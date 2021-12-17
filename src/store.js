@@ -51,13 +51,17 @@ const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
     colorSelectorOpen: timeseries.id === id ? isOpen : timeseries.colorSelectorOpen,
   }));
 
-const useStore = create((set, get) => ({
-  rawData: [],
-  
-  createUpdateTimeseriesRawData(timeseries, newData) {
-    console.log("in CreateUpdate Chart Data to create/update timeseries", timeseries)
-    
 
+
+const useStore = create((set, get) => ({
+  /**
+   * The main datastore
+   * List of objects in form { queryID, queryResults }  
+   */
+  rawData: [],
+  createUpdateTimeseriesRawData(timeseries, newData) {
+    //console.log("in CreateUpdate Chart Data to create/update timeseries", timeseries)
+    
     set((state) => ({
       ...state,
       rawData: createUpdateTimeseriesRawData(
@@ -65,6 +69,42 @@ const useStore = create((set, get) => ({
       )
     }))     
   },
+
+  // convert to class in NoaaLocation.js
+  location: {
+    "datacoverage": 1,
+    "id": "CITY:US530018",
+    "maxdate": "2021-07-02",
+    "mindate": "1891-01-01",
+    "name": "Seattle, WA US"
+  },
+  setLocation(location){
+    set(state => ({
+      ...state,
+      rawData: [],
+      location: location
+    }))
+  },
+
+  dayRange: ['06-01', '06-30'],
+  setDayRange(dayRange) {
+    set(state => ({
+      ...state,
+      rawData: [],
+      dayRange: dayRange
+    }))
+  },
+
+  dataType: "TMAX",
+  setDataType(dataType){
+    set(state => ({
+      ...state,
+      rawData: [],
+      dataType: dataType
+    }))
+  },
+
+
   timeseriesList: [
     new Timeseries(0, 2021,'#9900EF'),
     new Timeseries(1, 1981,'#00d084'),
@@ -76,6 +116,7 @@ const useStore = create((set, get) => ({
       timeseriesList: createTimeseries(state.timeseriesList)
     }))
   },
+
   updateTimeseriesYear: (id, year) => {
     set((state) => ({
       ...state,
@@ -83,6 +124,9 @@ const useStore = create((set, get) => ({
       timeseriesList: updateTimeseriesYear(state.timeseriesList, id, year),
     }))
   },
+
+
+  /* UI settings to Update (move to other store?) */
   updateTimeseriesColor(id, newColor) {
     set((state) => ({
       ...state,

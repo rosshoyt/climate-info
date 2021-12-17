@@ -18,8 +18,9 @@ const TimeseriesItems= () => {
               <DatePicker
                 views={['year']}
                 // label={label}
-                value={ new Date(timeseries.year, 1, 1) } // fill in dummy month/day vals with JS date
-                onChange={(date) => store.updateTimeseriesYear(timeseries.id, date.year())} // TODO 'date' here is a moment object, for some reason...
+
+                value={ new Date(timeseries.year, 1, 1) } // fill in dummy month/day vals with JS date TODO convert to moment (or change to JS date completely)
+                onChange={(date) => store.updateTimeseriesYear(timeseries.id, date.year())}
               />
               <Box
                 onClick= {(event)=>store.updateTimeseriesColorSelectorOpen(timeseries.id, !timeseries.colorSelectorOpen)}
