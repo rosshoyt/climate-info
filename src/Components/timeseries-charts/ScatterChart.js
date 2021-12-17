@@ -70,7 +70,7 @@ export default function ScatterChartExample() {
     }
 
     useEffect(() => {
-        console.log('in scatterplot useeffect, rawData = ', rawData);
+        console.log('Scatterplot useEffect, rawData =', rawData);
         
         // assume data was sorted (first by date, for same date, by stationID alphabetical)
         
@@ -98,7 +98,6 @@ export default function ScatterChartExample() {
                         }
                         
                         const stationTmsrsID = getStationTmsrsId(datum, noaaTimeseries.id);
-                        console.log(stationTmsrsID)
                         
                         let insertionIndex = stationTmsrsCombinedIdList.indexOf(stationTmsrsID);
                         // haven't seen this station yet in this timeseries, add to list and get new insertion index
@@ -126,6 +125,7 @@ export default function ScatterChartExample() {
                                 dateToReadingsListMap.set(dayMonth, extendedReadingsList)
                             }
                         } else {
+                            // this date isn't being tracked, add it to the map
                             if(insertionIndex === 0) {
                                 let readings = [datum];
                                 // add the new date
@@ -141,9 +141,6 @@ export default function ScatterChartExample() {
                     
                     });
                     
-                    console.log('tmsrsPerDateTemptotalsmap', tmsrsPerDateTempTotalsMap, 'type is', tmsrsPerDateTempTotalsMap);
-
-                 
                     // convert the map values from list of readings to an average reading
                     tmsrsPerDateTempTotalsMap.forEach(function(readingsList, date, map) {
                         let accum = 0;
@@ -153,7 +150,6 @@ export default function ScatterChartExample() {
                         map.set(date, accum / readingsList.length);
                     });
 
-                    console.log('averages', tmsrsPerDateTempTotalsMap);
                     timeseriesDailyAveragesMap.set(noaaTimeseries.id, tmsrsPerDateTempTotalsMap);
                 }
                 
@@ -161,23 +157,8 @@ export default function ScatterChartExample() {
             })
 
 
-        
-            console.log(dateToReadingsListMap);
-            // create dummy array of columns
-
-            // for(let i = 0; i < rawData.length; i++){
-            //     for(let j = 0; j < )
-            //     // create an ID string for each column
-            //     columns.push(i.toString() + '-' + i);
-            // }
             let cols = ["time"].concat(stationTmsrsCombinedIdList);
-            console.log('cols:', cols)
 
-            // for(let i = 0; i < maxNumReadingsPerDay; i++){
-            //     cols.push(i.toString());
-            // }
-            // console.log(cols);
-            
             const newPoints = [];
 
             dateToReadingsListMap.forEach((readingsList, date) => {
@@ -189,19 +170,19 @@ export default function ScatterChartExample() {
                 ]);
                 
             });
+
+            // sort the points in order
+            newPoints.sort((a, b) => a[0] - b[0]);
+
             const ts = new TimeSeries({
                 name: "TMAX", // TODO replace with current datatype
                 columns: cols,
                 points: newPoints
             });
-            console.log('new points', newPoints)
             
 
-
-
-            
-            console.log('creating linear timeseries from these dataz', timeseriesDailyAveragesMap);
-
+            // creating linear timeseries from these data 
+            // TODO just use the built in timeseries methods
             let length = timeseriesDailyAveragesMap.size + 1;
             let lineSeriesCols = new Array(length);
             lineSeriesCols[0] = 'time';
@@ -224,19 +205,14 @@ export default function ScatterChartExample() {
             });
             
             const lnCols = lineSeriesCols.slice(1)
-            console.log('line series columns',lineSeriesCols, 'lnCols = ', lnCols)
-
+            
             const linePoints = [...linePointsMap].map(([key, value]) => ( value ));
-            // console.log('working points array: newPoints,', newPoints, 'linePoints', linePoints)
-            
-            
-            //const lnStyles = styler([...lnCols].map(([key, value]) => ({ key: key, color: getColor(Number(key)), width: lineWidth })))
-            //console.log('line styles', lnStyles)
-            //setLineStyles(lnStyles)
+            linePoints.sort((a, b) => a[0] - b[0]);
+
             setLineSeries(new TimeSeries({
                 name: "averages",
                 columns: lineSeriesCols,
-                points: linePoints//[[1234444, 94]]
+                points: linePoints
             }));
             
             // calculate the max and min Y values for graph
@@ -246,7 +222,6 @@ export default function ScatterChartExample() {
                 if(col !== 'time'){
                     newYMax = Math.max(ts.max(col), newYMax);
                     newYMin = Math.min(ts.min(col), newYMin);
-                    console.log('After looking at col', col, 'newMax/newMin=', newYMax, newYMin)
                 }
             })
             
@@ -256,7 +231,6 @@ export default function ScatterChartExample() {
 
 
             let lgndCats = lnCols.map(d => ({ key: d, label: getTimeseriesNameFromID(Number(d)) }));
-            console.log('lgndCats', lgndCats);
             let lgndStyle = styler(lnCols.map((c, i) => ({
                 key: c,
                 color: getColor(Number(i))
@@ -456,7 +430,6 @@ export default function ScatterChartExample() {
                     <div>
                         <Legend categories={legendCategories} style={legendStyle} type="dot" />
                     </div>
-                
                 </div>
             )}</>
         </div>
