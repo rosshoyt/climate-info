@@ -42,6 +42,11 @@ export default function ScatterChartExample() {
     const [lineStyles, setLineStyles] = useState(null);
     const [lineColumns, setLineColumns] = useState(null);
 
+
+    const [fontFamily, setFontFamily] = useState('roboto');
+    const [axisLabelFontSize, setAxisLabelFontSize] = useState(20);
+    const [axisValueFontSize, setAxisValueFontSize] = useState(14);
+
     //const [lineWidth, setLineWidth] = useState(5)
     const lineWidth = useCDEGraphSettingsStore(state => state.lineWidth);
     const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
@@ -325,13 +330,13 @@ export default function ScatterChartExample() {
     };
 
     const timeAxisStyle = {
-        values: { valueColor: "Green", valueWeight: 200, valueSize: 12 }
+        values: { valueColor: "Green", valueWeight: 200, valueSize: 12, "font-size": axisValueFontSize }
     };
 
     const YAxisStyle = {
         axis: { axisColor: "#C0C0C0" },
-        label: { labelColor: "Blue", labelWeight: 100, labelSize: 12 },
-        values: { valueSize: 12 }
+        label: { labelColor: "Blue", labelWeight: 100, labelSize: 12, "font-size": axisLabelFontSize },
+        values: { valueSize: 12, "font-size": axisValueFontSize }
     };
 
     return (
@@ -369,7 +374,7 @@ export default function ScatterChartExample() {
                                 onTrackerChanged={tracker => setTracker(tracker)}
                             >
                                 <ChartRow
-                                    height="500"
+                                    height="700"
                                     debug={false}
                                     trackerInfoWidth={125}
                                     trackerInfoHeight={30}
@@ -378,11 +383,11 @@ export default function ScatterChartExample() {
                                     <YAxis
                                         id="Temperature (F)"
                                         label="Temperature (F)" 
-                                        labelOffset={-5}
+                                        labelOffset={-20}
                                         min={minYValue}
                                         max={maxYValue}//series.max("station1")}
                                         style={YAxisStyle}
-                                        width="70"
+                                        width="80"
                                         type="linear"
                                         format=",.1f"
                                     />
