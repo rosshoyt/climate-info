@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import LocationSelect from '../LocationSelect';
 import { Grid, Typography, } from '@material-ui/core';
-import ScatterPlotChart from '../Charts/ScatterPlotChart';
 import TimeseriesList from '../TimeseriesList';
 import useStore from '../../store';
 import DataTable from '../DataTable';
@@ -28,6 +27,8 @@ const ClimateDataExplorer = () => {
   const timeseriesList = useStore(state => state.timeseriesList);
   const location = useStore(state => state.location);
   const setLocation = useStore(state => state.setLocation);
+  const locationsList = useStore(state => state.locationsList);
+  const setLocationsList = useStore(state => state.setLocationsList);
   const createUpdateTimeseriesRawData = useStore(state => state.createUpdateTimeseriesRawData);
 
   
@@ -141,7 +142,7 @@ const ClimateDataExplorer = () => {
             <div tabName="Climate Data Settings">
               <Grid item justify="center" style={{ height: height < 1080 ? 550 : 700 }} >
                 <ResponsiveListContainer>
-                  <LocationSelect title='Location' currentValueText={location.name} setLocation={setLocation} />
+                  <LocationSelect title='Location' currentValueText={location.name} location={location} setLocation={setLocation} locationsList={locationsList} setLocationsList={setLocationsList} />
                   <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
                   <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
                   <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => {return yearEntry.year }).join(', ')}/>

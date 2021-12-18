@@ -52,6 +52,14 @@ const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
   }));
 
 
+// TODO move to a class, e.g. NoaaLocations.js
+const defaultLocation = {
+  "datacoverage": 1,
+  "id": "CITY:US530018",
+  "maxdate": "2021-07-02",
+  "mindate": "1891-01-01",
+  "name": "Seattle, WA US"
+}
 
 const useStore = create((set, get) => ({
   /**
@@ -71,18 +79,19 @@ const useStore = create((set, get) => ({
   },
 
   // convert to class in NoaaLocation.js
-  location: {
-    "datacoverage": 1,
-    "id": "CITY:US530018",
-    "maxdate": "2021-07-02",
-    "mindate": "1891-01-01",
-    "name": "Seattle, WA US"
-  },
+  location: defaultLocation,
   setLocation(location){
     set(state => ({
       ...state,
       rawData: [],
       location: location
+    }))
+  },
+  locationsList: [defaultLocation],
+  setLocationsList(locationsList){
+    set(state => ({
+      ...state,
+      locationsList: locationsList
     }))
   },
 
