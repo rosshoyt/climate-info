@@ -1,32 +1,25 @@
-/* eslint-disable no-use-before-define */
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import AutocompleteSelector from './AutocompleteSelector';
 
-export default function LocationSelect({setLocation}) {
-  const [locations, setLocationOptions] = useState( [ {
-    "datacoverage": 1,
-    "id": "CITY:US530018",
-    "maxdate": "2021-07-02",
-    "mindate": "1891-01-01",
-    "name": "Seattle, WA US"
-  } ] );
-  
+export default function LocationSelect({ location, setLocation, locationsList, setLocationsList}) {
+
   useEffect(() => {
     fetchData();
     async function fetchData() {
       const result = await fetch('/api/locations/cities').then(res => res.json()).then(data => {
         //console.log(data.cities);
-        setLocationOptions(data.cities);
+        setLocationsList(data.cities);
       });
     }
   }, []);
 
   return (
-    <AutocompleteSelector 
-    selectionOptions={locations} 
-    setSelection={setLocation}
-    id='location-selector'
-    label='Enter a location (default: Seattle)'
+    <AutocompleteSelector
+      // initialValue={location} // TODO implement
+      selectionOptions={locationsList} 
+      setSelection= { (newLocation) => { if (newLocation !== null) setLocation(newLocation) } }
+      id='location-selector'
+      label='Enter a location (default: Seattle)'
     />
   );
 }
