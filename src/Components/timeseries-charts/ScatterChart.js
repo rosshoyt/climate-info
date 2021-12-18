@@ -12,7 +12,7 @@ import { TimeSeries } from "pondjs";
 // Imports from the charts library
 import { ChartContainer, ChartRow, Charts, YAxis, ScatterChart, LineChart, styler, BandChart, Resizable, Legend } from "react-timeseries-charts";
 
-import { CircularProgress } from "@material-ui/core";
+import { CircularProgress, Typography } from "@material-ui/core";
 //
 // Read in the weather data and add some randomness and intensity for fun
 //
@@ -21,7 +21,7 @@ import { CircularProgress } from "@material-ui/core";
 // Render scatter chart
 //
 
-export default function ScatterChartExample() {
+export default function ScatterChartExample( { height }) {
     /// the main timeseries data
     const [series, setSeries] = useState(null);
 
@@ -51,13 +51,21 @@ export default function ScatterChartExample() {
     const [legendCategories, setLegendCategories] = useState(null);
     const [legendStyle, setLegendStyle] = useState(null);
 
+    const [graphSelection, setGraphSelection] = useState(null);
+    
 
     //const [lineWidth, setLineWidth] = useState(5)
     const lineWidth = useCDEGraphSettingsStore(state => state.lineWidth);
     const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
+
+    const dataType = useStore(state => state.dataType)
+
+    
+
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
     }
+    
 
     const getTimeseriesNameFromID = (tmsrsID) => {
         return tmsrsInfoList.map(tmsrs => tmsrs.year)[tmsrsID];
@@ -72,9 +80,8 @@ export default function ScatterChartExample() {
     useEffect(() => {
         console.log('Scatterplot useEffect, rawData =', rawData);
         
-        // assume data was sorted (first by date, for same date, by stationID alphabetical)
         
-        let dateToReadingsListMap = new Map();
+        let readingsByDate = new Map();
         //let stationIDToReadingsListIndexMap = new Map();
         // a list that tracks the column index a reading should go in using  (station+timeseriesID)
         let stationTmsrsCombinedIdList = [] // basically, the columns array
@@ -106,8 +113,8 @@ export default function ScatterChartExample() {
                         }
                         
                         // check if this MM-DD is being tracked yet
-                        if(dateToReadingsListMap.has(dayMonth)){
-                            let readingsList = dateToReadingsListMap.get(dayMonth);
+                        if(readingsByDate.has(dayMonth)){
+                            let readingsList = readingsByDate.get(dayMonth);
                             if(readingsList.length > insertionIndex){
                                 // there is room in array, we can insert right away
                                 // (this should be replaceing a null value)
@@ -122,25 +129,25 @@ export default function ScatterChartExample() {
                                 
                                 let extendedReadingsList = readingsList.concat(listPad);
                                 extendedReadingsList[insertionIndex] = datum;
-                                dateToReadingsListMap.set(dayMonth, extendedReadingsList)
+                                readingsByDate.set(dayMonth, extendedReadingsList)
                             }
                         } else {
                             // this date isn't being tracked, add it to the map
                             if(insertionIndex === 0) {
                                 let readings = [datum];
                                 // add the new date
-                                dateToReadingsListMap.set(dayMonth, readings);
+                                readingsByDate.set(dayMonth, readings);
                                 //readingsListLength = 1;
                             } else{
                                 // we need to add a list of null values and then add the value to the end
                                 let newReadingsList = new Array(insertionIndex + 1).fill(null);
                                 newReadingsList[insertionIndex] = datum;
-                                dateToReadingsListMap.set(dayMonth,newReadingsList)
+                                readingsByDate.set(dayMonth,newReadingsList)
                             }
                         }
                     
                     });
-                    
+
                     // convert the map values from list of readings to an average reading
                     tmsrsPerDateTempTotalsMap.forEach(function(readingsList, date, map) {
                         let accum = 0;
@@ -161,7 +168,7 @@ export default function ScatterChartExample() {
 
             const newPoints = [];
 
-            dateToReadingsListMap.forEach((readingsList, date) => {
+            readingsByDate.forEach((readingsList, date) => {
                 const time = moment(date + '-2017', 'MM-DD-YYYY');
                 // let randomVar = (Math.random() - 0.5) * 60_000 * 1000;
                 newPoints.push([
@@ -247,10 +254,9 @@ export default function ScatterChartExample() {
             setSeries(ts);
         }
     }, [rawData, tmsrsInfoList, lineWidth, pointSize ])
-
-
+    
     const handleSelectionChanged = point => {
-        setSelection(point);
+        setGraphSelection(point);
     };
 
     const handleMouseNear = point => {
@@ -344,6 +350,10 @@ export default function ScatterChartExample() {
             ) : (
                 <div className="row">
                     <div className="col-md-12">
+                        {/* <Typography>
+                        TODO add text of current selection (point or line)    
+                        </Typography>
+                         */}
                         <Resizable>
                             <ChartContainer
                                 timeRange={timerange}
@@ -368,7 +378,7 @@ export default function ScatterChartExample() {
                                 onTrackerChanged={tracker => setTracker(tracker)}
                             >
                                 <ChartRow
-                                    height="500"
+                                    height={height}
                                     debug={false}
                                     trackerInfoWidth={125}
                                     trackerInfoHeight={30}
@@ -391,6 +401,7 @@ export default function ScatterChartExample() {
                                             series={series}
                                             columns={columns}
                                             style={perEventStyle}
+                                            onSelectionChange={p => this.handlePointSelectionChanged(p)}
                                             // info={infoValues}
                                             // infoHeight={28}
                                             // infoWidth={110}

@@ -16,6 +16,7 @@ import CDEGraphSettingsPanel from '../CDEGraphSettingsPanel';
 import CDEDownloaderPanel from '../CDEDownloaderPanel';
 import CDESourcesPanel from '../CDESourcesPanel';
 import ScatterChartExample from '../timeseries-charts/ScatterChart';
+import { getReadableTimeString } from '../../Utils/TimeUtils';
 
 const ClimateDataExplorer = () => {
   const { height } = useWindowDimensions();
@@ -91,13 +92,20 @@ const ClimateDataExplorer = () => {
   useEffect(() => {    
   }, [timeseriesList]);
 
+
+  const getContainerHeight = () => {
+    return height * .73; 
+  }
+
   return (
     <>
       <Grid container direction="row" justifyContent="center">
         <Grid item>
           <Typography variant='h4' align='left' fontWeight="fontWeightBold">
-            {location.name}: {DataTypes[dataType]} from {dayRange.join(' to ')} in&nbsp;
-              Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
+            {location.name}: {DataTypes[dataType]} from {dayRange.map(mmDD => getReadableTimeString(mmDD)).join(' to ')}
+          </Typography>
+          <Typography variant='h6'>
+            Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
           </Typography>
         </Grid>
         <Grid item container direction="column" sm={12} lg={9}>
@@ -106,28 +114,28 @@ const ClimateDataExplorer = () => {
                 <TabbedContainer>
                   <div tabName="Graph">
                     <Grid item>
-                      <div style={{ height: height < 1080 ? 550 : 700 }}>
-                        <ScatterChartExample />
+                      <div style={{ height: getContainerHeight() }}>
+                        <ScatterChartExample height={.8 * getContainerHeight()} />
                       </div>
                     </Grid>
                   </div>
                   <div tabName="Table">
                     <Grid item>
-                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                      <div style={{ height: getContainerHeight() }}>
                         <DataTable />
                       </div>
                     </Grid>
                   </div>
                   <div tabName="Sources">
                     <Grid item>
-                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                      <div style={{ height: getContainerHeight() }}>
                         <CDESourcesPanel />
                       </div>
                     </Grid>
                   </div>
                   <div tabName="Download">
                     <Grid item>
-                      <div style={{ height: height < 1080 ? 550 : 700 }}>
+                      <div style={{ height: getContainerHeight() }}>
                         <CDEDownloaderPanel/>
                       </div>
                     </Grid>
@@ -140,7 +148,7 @@ const ClimateDataExplorer = () => {
         <Grid item container direction="column" sm={12} lg={3}>
           <TabbedContainer>
             <div tabName="Climate Data Settings">
-              <Grid item justify="center" style={{ height: height < 1080 ? 550 : 700 }} >
+              <Grid item justify="center" style={{ height: getContainerHeight() }} >
                 <ResponsiveListContainer>
                   <LocationSelect title='Location' currentValueText={location.name} location={location} setLocation={setLocation} locationsList={locationsList} setLocationsList={setLocationsList} />
                   <DataTypeSelector title='Data Type' currentValueText={dataType + ' (' + DataTypes[dataType] + ')'} dataType={dataType} setDataType={setDataType}/>
@@ -150,7 +158,7 @@ const ClimateDataExplorer = () => {
               </Grid>
             </div>
             <div tabName="Graph Settings">
-              <Grid item justify="center" style={{ height: height < 1080 ? 550 : 700 }} >
+              <Grid item justify="center" style={{ height: getContainerHeight() }} >
                 <CDEGraphSettingsPanel/>
               </Grid>
             </div>
