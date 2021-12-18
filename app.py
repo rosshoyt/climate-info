@@ -60,7 +60,7 @@ def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date
     # Set time range
     url += "&startdate=" + start_date
     url += "&enddate=" + end_date
-    url += "&limit=500"
+    url += "&limit=1000"
 
     jsonResp = {} # the json object we'll return our results, or error message with
     
@@ -72,19 +72,30 @@ def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date
 
 @app.route('/api/locations/cities')
 def get_cities():
-    url = URL_NOAA_API
-    url += "/locations?"
-    url += "locationcategoryid=CITY"
-    url += "&sortfield=name"
-    url += "&sortorder=desc"
-    # TODO get the rest of the available cities (~800 more) in second request
-    url += "&limit=1000"
+    
+    results_list = []
+    total_count = 1000
+    
+    while len(results_list) < total_count:
+        url = URL_NOAA_API
+        url += "/locations?"
+        url += "locationcategoryid=CITY"
+        url += "&sortfield=name"
+        url += "&sortorder=asc"
+        url += "&limit=1000"
+        url += "&offset=" + str(len(results_list))
 
-    # send the GET request with auth token header
-    # TODO move NOAA API code to a separate class, add request method
-    response = requests.get(
-        url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
+        # send the GET request with auth token header
+        # TODO move NOAA API code to a separate class, add request method
+        response = requests.get(
+            url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
 
-    results = response.json()["results"]
+        response_json = response.json()
+        
+        # update the total count of results
+        total_count = response_json["metadata"]["resultset"]["count"]
+        
+        # add the results to the list
+        results_list.extend(response_json["results"])
 
-    return {'cities': results}
+    return {'cities': results_list}
