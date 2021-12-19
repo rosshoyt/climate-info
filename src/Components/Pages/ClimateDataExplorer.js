@@ -39,7 +39,6 @@ const ClimateDataExplorer = () => {
     timeseriesList.map(timeseriesInfo => {
       
       // set the query string based on the current settings
-      
       timeseriesInfo.queryString = 
         '/api/noaa/data/daily/'
         + dataType + '/' 
@@ -59,15 +58,21 @@ const ClimateDataExplorer = () => {
         onSettled: (data, error, variables, context) => {
 
           if(error !== null){
-            if(Object.keys(data).includes('message')){      
-              timeseriesInfo.errorMessage = 'error - ' + data['message'];
+            console.log(error);
+            if(data === null || data === undefined) {
+              timeseriesInfo.errorMessage = error;
+              console.log("did not recieve response to query", timeseriesInfo.queryString)
+            }
+            else if(Object.keys(data).includes('message')){   
+              let errorMessage =  data['message'];
+              console.log("Server returned error", errorMessage,"on request for", timeseriesInfo.queryString)
+              timeseriesInfo.errorMessage = errorMessage;
+              // TODO add error code from react query onto timeseries error message?
             }
           }
-
-          else if(data !== null) {
+          else if(data !== null || data !== undefined) {
             // TODO improve results processing. Sometimes may not get past Object.keys check
             if(Object.keys(data).includes('results')){
-              
               if(data.results.length > 0){      
                 createUpdateTimeseriesRawData(timeseriesInfo, data.results, );
                 timeseriesInfo.errorMessage = undefined; // reset error message 
@@ -101,8 +106,8 @@ const ClimateDataExplorer = () => {
     <>
       <Grid container direction="row" justifyContent="center">
         <Grid item>
-          <Typography variant='h4' align='left' fontWeight="fontWeightBold">
-            {location.name}: {DataTypes[dataType]} from {dayRange.map(mmDD => getReadableTimeString(mmDD)).join(' to ')}
+          <Typography variant='h5' align='left' fontWeight="fontWeightBold">
+            {DataTypes[dataType]} in {location.name} from {dayRange.map(mmDD => getReadableTimeString(mmDD)).join(' to ')}
           </Typography>
           <Typography variant='h6'>
             Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
