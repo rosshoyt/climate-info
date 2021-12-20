@@ -31,6 +31,7 @@ export default function ScatterChartExample( { height }) {
     const [hover, setHover] = useState(null);
     const [highlight, setHighlight] = useState(null);
     const [selection, setSelection] = useState(null);
+    const [selectedPoint, setSelectedPoint] = useState(null);
     const [tracker, setTracker] = useState(null);
     const [timerange, setTimerange] = useState(null);
     const [columns, setColumns] = useState([]);
@@ -51,15 +52,12 @@ export default function ScatterChartExample( { height }) {
     const [legendCategories, setLegendCategories] = useState(null);
     const [legendStyle, setLegendStyle] = useState(null);
 
-    const [graphSelection, setGraphSelection] = useState(null);
     
-
-    //const [lineWidth, setLineWidth] = useState(5)
     const lineWidth = useCDEGraphSettingsStore(state => state.lineWidth);
     const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
 
     const dataType = useStore(state => state.dataType)
-
+    
     
 
     const getStationTmsrsId = (datum, tmsrsID) => {
@@ -67,7 +65,7 @@ export default function ScatterChartExample( { height }) {
     }
     
 
-    const getTimeseriesNameFromID = (tmsrsID) => {
+    const getTimeseriesYearFromID = (tmsrsID) => {
         return tmsrsInfoList.map(tmsrs => tmsrs.year)[tmsrsID];
     }
 
@@ -75,6 +73,32 @@ export default function ScatterChartExample( { height }) {
     const getColor = (tmsrsIDNumber) => {
         // TODO optimize
         return tmsrsInfoList.map(tmsrs => tmsrs.color)[tmsrsIDNumber]
+    }
+
+    const getYear = (tmsrsIDNumber) => {
+        return tmsrsInfoList.map(tmsrs => tmsrs.id)[tmsrsIDNumber]
+    }
+
+    const handleSelectedPointChanged = point => {
+        console.log('Graph selection:', point)
+        setSelection(point);
+        setSelectedPoint(point);
+    };
+
+    // const handleMouseNear = point => {
+    //     setHighlight(point);
+    // };
+
+    const formatInfoTextForPoint = (point) => {
+        if(point !== null){
+            let timeText = "Date: " + moment(point.event.timestamp()).set('year', getTimeseriesYearFromID(Number(point.column[0]))).format("MMMM DD, YYYY");            //let m = moment(point.event.timestamp());
+            let stationText = "Station: " + new RegExp('(?<=-).*').exec(point.column);
+            let readingText = " Value: " + point.event.get(point.column)
+            return "(Selected Point) " + timeText + ", " + stationText + ", " + readingText
+        }
+        else{
+            return "";
+        }
     }
 
     useEffect(() => {
@@ -237,7 +261,7 @@ export default function ScatterChartExample( { height }) {
             setTimerange(ts.range());
 
 
-            let lgndCats = lnCols.map(d => ({ key: d, label: getTimeseriesNameFromID(Number(d)) }));
+            let lgndCats = lnCols.map(d => ({ key: d, label: getTimeseriesYearFromID(Number(d)) }));
             let lgndStyle = styler(lnCols.map((c, i) => ({
                 key: c,
                 color: getColor(Number(i))
@@ -255,14 +279,7 @@ export default function ScatterChartExample( { height }) {
         }
     }, [rawData, tmsrsInfoList, lineWidth, pointSize ])
     
-    const handleSelectionChanged = point => {
-        setGraphSelection(point);
-    };
-
-    const handleMouseNear = point => {
-        setHighlight(point);
-    };
-
+   
     const formatter = format(".2f");
     let text = `Speed: - mph, time: -:--`;
     let infoValues = [];
@@ -297,7 +314,7 @@ export default function ScatterChartExample( { height }) {
         return {
             normal: {
                 // fill: color,
-                fill: "none",
+                fill: "color",
                 stroke: color,
                 opacity: 0.7,
                 strokeWidth: pointSize
@@ -311,7 +328,7 @@ export default function ScatterChartExample( { height }) {
                 opacity: 1.0
             },
             selected: {
-                fill: "none",
+                fill: "color",
                 stroke: color,
                 strokeWidth: pointSize * 3,
                 opacity: 1.0
@@ -341,14 +358,18 @@ export default function ScatterChartExample( { height }) {
 
     return (
         <div>
-            <div className="row">
-                {/* <div className="col-md-12">{text}</div> */}
-            </div>
+            <>
+                
+                              
+            </>
             <>
             { series === null || series === undefined ? (
                 <CircularProgress/>
             ) : (
                 <div className="row">
+                    <Typography  gutterBottom align="right">
+                      {formatInfoTextForPoint(selectedPoint)}
+                    </Typography>  
                     <div className="col-md-12">
                         {/* <Typography>
                         TODO add text of current selection (point or line)    
@@ -373,7 +394,7 @@ export default function ScatterChartExample( { height }) {
                                 maxTime={series.range().end()}
                                 minTime={series.range().begin()}
                                 enablePanZoom={true}
-                                onBackgroundClick={() => setSelection(selection)}
+                                //onBackgroundClick={() => setSelection(selection)}
                                 onTimeRangeChanged={timerange => setTimerange(timerange)}
                                 onTrackerChanged={tracker => setTracker(tracker)}
                             >
@@ -401,7 +422,7 @@ export default function ScatterChartExample( { height }) {
                                             series={series}
                                             columns={columns}
                                             style={perEventStyle}
-                                            onSelectionChange={p => this.handlePointSelectionChanged(p)}
+                                           
                                             // info={infoValues}
                                             // infoHeight={28}
                                             // infoWidth={110}
@@ -412,8 +433,8 @@ export default function ScatterChartExample( { height }) {
                                             // }}}
                                             format=".1f"
                                             selected={selection}
-                                            onSelectionChange={p => handleSelectionChanged(p)}
-                                            onMouseNear={p => handleMouseNear(p)}
+                                            onSelectionChange={p => handleSelectedPointChanged(p)}
+                                            //onMouseNear={p => handleMouseNear(p)}
                                             highlight={highlight}
                                             radius={ 2 } //(event, column) => column === "station1" ? 3 : 2 }
                                         />
