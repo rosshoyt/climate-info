@@ -1,7 +1,7 @@
 import ReactMapGL, { Marker, Popup } from "react-map-gl";
 import React, { useEffect, useState } from "react";
-import { withSize } from 'react-sizeme'
-import './mapbox.css'
+import { withSize } from 'react-sizeme';
+import './mapbox.css';
 import { useQuery } from "react-query";
 import axios from "axios";
 import useStore from "../store";
@@ -18,33 +18,24 @@ function MapboxComponent({ size }) {
     width: size.width,
     height: size.height
   });
+
+  const location = useStore(state => state.location);
   
-  //const [stationsList, setLocationsList] = useState([]);
+  const selectedStation = useStore(state => state.selectedStation);
+  const setSelectedStation = useStore(state => state.setSelectedStation);
 
-  const location = useStore(state => state.location)
-  //const setLocation = useStore(state => state.setLocation)
-  
-  const selectedStation = useStore(state => state.selectedStation)
-  const setSelectedStation = useStore(state => state.setSelectedStation)
-
-  const stationsList = useStore(state => state.stationsList)
-  const setStationsList = useStore(state => state.setStationsList)
-
-  //const withSizeHOC = withSize()
+  const stationsList = useStore(state => state.stationsList);
+  const setStationsList = useStore(state => state.setStationsList);
 
   useEffect(() => {
     // listen for escape (to exit the current map selection)
-    console.log('height/widht', size.height, size.width)
+    console.log('height/widht', size.height, size.width);
     const listener = (e) => {
       if (e.key === "Escape") {
         setSelectedStation(null);
       }
     };
     window.addEventListener("keydown", listener);
-    // load station data
-    // fetch("api/locations/get/stations/" + selectedLocation)
-    //   .then((res) => res.json())
-    //   .then((data) => setLocationsList(data["results"]));
 
     return () => {
       window.removeEventListener("keydown", listener);
@@ -61,8 +52,8 @@ function MapboxComponent({ size }) {
   
     queryFn: () => {
       let url = 'api/locations/get/stations/' + location.id;
-      console.log('fetching url', url )
-      return axios.get(url).then((res) => res.data)
+      console.log('fetching url', url );
+      return axios.get(url).then((res) => res.data);
     },
 
     onSettled: (data, error, variables, context) => {
@@ -73,29 +64,20 @@ function MapboxComponent({ size }) {
         }
         else if(Object.keys(data).includes('message')){   
           let errorMessage =  data['message'];
-          console.log("Server returned error", errorMessage,"on request for stations")
-          // TODO add error code from react query onto timeseries error message?
+          console.log("Server returned error", errorMessage,"on request for stations");
         }
       }
       else if(data !== null || data !== undefined) {
         // TODO improve results processing. Sometimes may not get past Object.keys check
         if(Object.keys(data).includes('stations')){
           if(data.stations.length > 0){     
-            console.log('got stations', data.stations)
+            console.log('got stations', data.stations);
             setStationsList(data.stations);
           } else{
-            console.log('stations list was 0 length')
+            console.log('stations list was 0 length');
             //deleteTimeseriesRawData(timeseriesInfo)
           }
         }
-
-        // else {
-        //   console.log('No results in response to stations query');
-        //   if(Object.keys(data).includes('message')){      
-        //     console.log('error message:', data['message'])
-        //     //timeseriesInfo.errorMessage = 'error - ' + data['message'];
-        //   }
-        // }
       }
     }
   })
@@ -108,13 +90,14 @@ function MapboxComponent({ size }) {
         onViewportChange={(viewport) => {
           setViewport(viewport);
         }}
+        mapStyle="mapbox://styles/rosshoyt/ckxcnobzr2em217pez5k3uo54"
       >
         {stationsList.map((location) => (
           <Marker
             key={location.id}
             latitude={location.latitude}
             longitude={location.longitude}
-            mapStyle="mapbox://styles/rosshoyt/ckxchveng0e2615mvgavza25k" //"mapbox://styles/rosshoyt/ckxcnobzr2em217pez5k3uo54"
+            
             offsetTop={-20}
             offsetLeft={-15}
           >
