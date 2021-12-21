@@ -5,9 +5,11 @@ import './mapbox.css'
 import { useQuery } from "react-query";
 import axios from "axios";
 import useStore from "../store";
+import mapboxgl from 'mapbox-gl';
 
-// default MapBox  public token
-//let accessToken = "pk.eyJ1Ijoicm9zc2hveXQiLCJhIjoiY2t4Y2Jzcmw0NDA1ZjJwcDk0cjFqMXJvYiJ9.d0Tc4UAhJ7HdV83xpqUm0w";
+// Fix env variable loading in production (fix via https://github.com/visgl/react-map-gl/issues/1266#issuecomment-753686953)
+// eslint-disable-next-line import/no-webpack-loader-syntax
+mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 function MapboxComponent({ size }) {
   const [viewport, setViewport] = useState({
