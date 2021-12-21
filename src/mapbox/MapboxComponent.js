@@ -24,7 +24,7 @@ function MapboxComponent({ size }) {
   const location = useStore(state => state.location)
   //const setLocation = useStore(state => state.setLocation)
   
-  const selectedStation = useStore(state => state.station)
+  const selectedStation = useStore(state => state.selectedStation)
   const setSelectedStation = useStore(state => state.setSelectedStation)
 
   const stationsList = useStore(state => state.stationsList)
