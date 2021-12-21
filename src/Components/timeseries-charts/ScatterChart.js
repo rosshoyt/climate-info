@@ -38,6 +38,7 @@ export default function ScatterChartExample( { height }) {
     
     const rawData = useStore(state => state.rawData); 
     const tmsrsInfoList = useStore(state => state.timeseriesList);
+    const setSelectedStationFromStationID = useStore(state => state.setSelectedStationFromStationID);
 
     const [lineSeries, setLineSeries] = useState(null);
     const [lineStyles, setLineStyles] = useState(null);
@@ -63,6 +64,10 @@ export default function ScatterChartExample( { height }) {
     const getStationTmsrsId = (datum, tmsrsID) => {
         return tmsrsID + '-' + datum.station;
     }
+
+    const parseStationIDFromColumnID = (column) => {
+        return new RegExp('(?<=-).*').exec(column)
+    }
     
 
     const getTimeseriesYearFromID = (tmsrsID) => {
@@ -83,6 +88,7 @@ export default function ScatterChartExample( { height }) {
         console.log('Graph selection:', point)
         setSelection(point);
         setSelectedPoint(point);
+        setSelectedStationFromStationID(parseStationIDFromColumnID(point.column));
     };
 
     // const handleMouseNear = point => {
@@ -92,7 +98,7 @@ export default function ScatterChartExample( { height }) {
     const formatInfoTextForPoint = (point) => {
         if(point !== null){
             let timeText = "Date: " + moment(point.event.timestamp()).set('year', getTimeseriesYearFromID(Number(point.column[0]))).format("MMMM DD, YYYY");            //let m = moment(point.event.timestamp());
-            let stationText = "Station: " + new RegExp('(?<=-).*').exec(point.column);
+            let stationText = "Station: " + parseStationIDFromColumnID(point.column);
             let readingText = " Value: " + point.event.get(point.column)
             return "(Selected Point) " + timeText + ", " + stationText + ", " + readingText
         }

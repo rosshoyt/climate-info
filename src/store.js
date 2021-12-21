@@ -52,6 +52,19 @@ const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
   }));
 
 
+const findStationWithID = (stationsList, stationID) => {
+  // let station = stationsList.find(station => station['id'] === stationID)
+  let station = null;
+
+  stationsList.forEach(s => {
+    //console.log(s)
+    if(s['id'] == stationID)
+      station = s;
+  });
+  console.log('found station ', station)
+  return station
+}
+
 // TODO move to a class, e.g. NoaaLocations.js
 const defaultLocation = {
   "datacoverage": 1,
@@ -97,9 +110,16 @@ const useStore = create((set, get) => ({
   setSelectedStation(station){
     set(state => ({
       ...state,
-      station: station
+      selectedStation: station
     }))
   },
+  setSelectedStationFromStationID(stationID){
+    set(state => ({
+      ...state,
+      selectedStation: findStationWithID(state.stationsList, stationID)
+    }))   
+  },
+
   stationsList: [],
   setStationsList(stationsList){
     set(state => ({
@@ -129,8 +149,7 @@ const useStore = create((set, get) => ({
 
   timeseriesList: [
     new Timeseries(0, 2021,'#9900EF'),
-    new Timeseries(1, 1981,'#00d084'),
-    new Timeseries(2, 1941,'#0693e3')
+    new Timeseries(1, 1941,'#0693e3')
   ],
   createTimeseries(){
     set(state => ({
