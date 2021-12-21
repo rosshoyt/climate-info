@@ -70,14 +70,22 @@ export default function ScatterChartExample( { height }) {
     }
     
 
-    const getTimeseriesYearFromID = (tmsrsID) => {
-        return tmsrsInfoList.map(tmsrs => tmsrs.year)[tmsrsID];
+    const getTimeseriesYearFromID = (tmsrsIDNumber) => {
+        // TODO optimize
+       
+        let tmsrs = tmsrsInfoList.find(tmsrs => tmsrs.id === tmsrsIDNumber)
+        if(tmsrs!== undefined)
+            return tmsrs.year;
+        else return -1;
     }
 
     // TODO
     const getColor = (tmsrsIDNumber) => {
         // TODO optimize
-        return tmsrsInfoList.map(tmsrs => tmsrs.color)[tmsrsIDNumber]
+        let tmsrs = tmsrsInfoList.find(tmsrs => tmsrs.id === tmsrsIDNumber)
+        if(tmsrs!== undefined)
+            return tmsrs.color;
+        else return '#fffffff'
     }
 
     const getYear = (tmsrsIDNumber) => {
@@ -266,12 +274,13 @@ export default function ScatterChartExample( { height }) {
             setColumns(cols);
             setTimerange(ts.range());
 
-
+            
             let lgndCats = lnCols.map(d => ({ key: d, label: getTimeseriesYearFromID(Number(d)) }));
             let lgndStyle = styler(lnCols.map((c, i) => ({
                 key: c,
-                color: getColor(Number(i))
+                color: getColor(Number(c))
             })));
+            
             setLegendCategories(lgndCats);
             setLegendStyle(lgndStyle);
             
