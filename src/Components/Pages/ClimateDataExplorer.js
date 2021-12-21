@@ -17,6 +17,7 @@ import CDEDownloaderPanel from '../CDEDownloaderPanel';
 import CDESourcesPanel from '../CDESourcesPanel';
 import ScatterChartExample from '../timeseries-charts/ScatterChart';
 import { getReadableTimeString } from '../../Utils/TimeUtils';
+import MapboxComponent from '../../mapbox/MapboxComponent';
 
 const ClimateDataExplorer = () => {
   const { height } = useWindowDimensions();
@@ -152,6 +153,11 @@ const ClimateDataExplorer = () => {
         </Grid>
         <Grid item container direction="column" sm={12} lg={3}>
           <TabbedContainer>
+            <div tabName="Map View">
+              <Grid item justify="center" style={{ height: getContainerHeight() }} >
+                <MapboxComponent />
+              </Grid>
+            </div>
             <div tabName="Climate Data Settings">
               <Grid item justify="center" style={{ height: getContainerHeight() }} >
                 <ResponsiveListContainer>
