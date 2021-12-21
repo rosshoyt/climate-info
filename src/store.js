@@ -68,8 +68,6 @@ const useStore = create((set, get) => ({
    */
   rawData: [],
   createUpdateTimeseriesRawData(timeseries, newData) {
-    //console.log("in CreateUpdate Chart Data to create/update timeseries", timeseries)
-    
     set((state) => ({
       ...state,
       rawData: createUpdateTimeseriesRawData(
@@ -92,6 +90,21 @@ const useStore = create((set, get) => ({
     set(state => ({
       ...state,
       locationsList: locationsList
+    }))
+  },
+
+  selectedStation: null,
+  setSelectedStation(station){
+    set(state => ({
+      ...state,
+      station: station
+    }))
+  },
+  stationsList: [],
+  setStationsList(stationsList){
+    set(state => ({
+      ...state,
+      stationsList: stationsList
     }))
   },
 
