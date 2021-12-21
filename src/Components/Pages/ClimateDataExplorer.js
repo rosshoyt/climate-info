@@ -114,7 +114,7 @@ const ClimateDataExplorer = () => {
             Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
           </Typography>
         </Grid>
-        <Grid item container direction="column" sm={12} lg={9}>
+        <Grid item container direction="column" sm={12} lg={8}>
           <Grid item >
               <div>
                 <TabbedContainer>
@@ -151,7 +151,7 @@ const ClimateDataExplorer = () => {
             </div>
           </Grid>
         </Grid>
-        <Grid item container direction="column" sm={12} lg={3}>
+        <Grid item container direction="column" sm={12} lg={4}>
           <TabbedContainer>
             <div tabName="Map View">
               <Grid item justify="center" style={{ height: getContainerHeight() }} >
