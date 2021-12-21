@@ -14,6 +14,12 @@ if os.path.exists('.env'):
 # API url TODO use flask.Config? https://flask.palletsprojects.com/en/2.0.x/api/#flask.Config
 URL_NOAA_API = "https://www.ncdc.noaa.gov/cdo-web/api/v2"
 
+
+# shared method to send requests using NOAA CDO token
+def sendNoaaCdoRequest(url):
+  return requests.get(
+    url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
+
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
@@ -22,29 +28,6 @@ def not_found(e):
 def index():
     return app.send_static_file('index.html')
 
-# API route for accessing NOAA NCDC CDO GSOM (Global summary of the month) climate data
-@app.route('/api/gsom/<datatype_id>/<location_id>/<start_date>/<end_date>')
-def get_gsom_data(datatype_id=None, location_id=None, start_date=None, end_date=None):
-    # First, we'll setup the request URL
-    url = URL_NOAA_API
-    # Get average monthly temperature for Seattle
-    url += "/data?"
-    url += "datasetid=GSOM"
-    url += "&datatypeid=" + datatype_id
-    # Seattle city code:
-    url += "&locationid=" + location_id
-    # Get results in Farenheight
-    url += "&units=standard"
-    # Use June 2020
-    url += "&startdate=" + start_date
-    url += "&enddate=" + end_date
-
-    # send the GET request with auth token header
-    response = requests.get(
-        url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
-    
-    # pass response to client
-    return response.json()
 
 @app.route('/api/noaa/data/daily/<data_type>/<location_id>/<start_date>/<end_date>')
 def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date=None, end_date=None):
@@ -65,14 +48,41 @@ def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date
     jsonResp = {} # the json object we'll return our results, or error message with
     
     # send the GET request with auth token header
-    response = requests.get(url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
+    response = sendNoaaCdoRequest(url)
     
     return response.json()
 
+@app.route('/api/locations/get/stations/<location_id>')
+def get_stations_in_location(location_id=None):
+    
+    # print('getting the stations for location', location_id)
+    results_list = []
+    total_count = 1000
+    
+    while len(results_list) < total_count:
+        url = url = URL_NOAA_API
+        url += "/stations?"
+        url += "locationid=" + location_id
+        #url += "&sortfield=name"
+        #url += "&sortorder=asc"
+        url += "&limit=1000"
+        url += "&offset=" + str(len(results_list))
+
+        response = sendNoaaCdoRequest(url)
+
+        response_json = response.json()
+
+        # update the total count of results
+        total_count = response_json["metadata"]["resultset"]["count"]
+        
+        # add the results to the list
+        results_list.extend(response_json["results"])
+
+    return {'stations': results_list}
 
 @app.route('/api/locations/cities')
 def get_cities():
-    
+    # print('getting cities')
     results_list = []
     total_count = 1000
     
@@ -87,11 +97,11 @@ def get_cities():
 
         # send the GET request with auth token header
         # TODO move NOAA API code to a separate class, add request method
-        response = requests.get(
-            url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
+        response = sendNoaaCdoRequest(url)
 
         response_json = response.json()
         
+        # TODO handle errors (send error result json through to client)
         # update the total count of results
         total_count = response_json["metadata"]["resultset"]["count"]
         
