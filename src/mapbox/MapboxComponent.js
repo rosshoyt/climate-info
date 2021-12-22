@@ -1,4 +1,4 @@
-import ReactMapGL, { Marker, Popup } from "react-map-gl";
+import ReactMapGL, { Marker, Popup, WebMercatorViewport } from "react-map-gl";
 import React, { useEffect, useState } from "react";
 import { withSize } from 'react-sizeme';
 import './mapbox.css';
@@ -12,6 +12,7 @@ import mapboxgl from 'mapbox-gl';
 mapboxgl.workerClass = require('worker-loader!mapbox-gl/dist/mapbox-gl-csp-worker').default;
 
 function MapboxComponent({ size }) {
+
   const [viewport, setViewport] = useState({
     latitude: 47.608013,
     longitude: -122.335167,
@@ -27,9 +28,25 @@ function MapboxComponent({ size }) {
   const stationsList = useStore(state => state.stationsList);
   const setStationsList = useStore(state => state.setStationsList);
 
+  const getStationsBoundingBox = () => {
+    if(stationsList.length > 0) {
+      let minLat = Number.MAX_SAFE_INTEGER, minLong = Number.MAX_SAFE_INTEGER;
+      let maxLat = Number.MIN_SAFE_INTEGER, maxLong = Number.MIN_SAFE_INTEGER;
+      stationsList.forEach((station, index) => {
+        console.log('max/mins', minLat, minLong, maxLat, maxLong)
+        console.log(station)
+        minLat = Math.min(station.latitude, minLat);
+        minLong = Math.min(station.longitude, minLong);
+        maxLat = Math.max(station.latitude, maxLat);
+        maxLong = Math.max(station.longitude, maxLong);
+      });
+      let boundingBox = [[maxLong, minLat],[minLong, maxLat]];
+      return boundingBox
+    }
+  }
+
   useEffect(() => {
     // listen for escape (to exit the current map selection)
-    console.log('height/widht', size.height, size.width);
     const listener = (e) => {
       if (e.key === "Escape") {
         setSelectedStation(null);
@@ -37,10 +54,20 @@ function MapboxComponent({ size }) {
     };
     window.addEventListener("keydown", listener);
 
+    if(stationsList.length > 0){
+      let view = new WebMercatorViewport({height: size.height, width: size.width})
+        .fitBounds(getStationsBoundingBox(), {
+          padding: 20,
+        })
+      setViewport(view)
+      console.log('set new viewport', view)
+    }
+
     return () => {
       window.removeEventListener("keydown", listener);
     };
-  }, []);
+
+  }, [stationsList]);
 
   useQuery({
     
@@ -75,7 +102,6 @@ function MapboxComponent({ size }) {
             setStationsList(data.stations);
           } else{
             console.log('stations list was 0 length');
-            //deleteTimeseriesRawData(timeseriesInfo)
           }
         }
       }
@@ -123,7 +149,7 @@ function MapboxComponent({ size }) {
             <h4>{selectedStation.name}</h4>
             <div>
               Latitude/Longitude: ({selectedStation.latitude},{" "}
-              {selectedStation.latitude}
+              {selectedStation.longitude})
             </div>
             <div>
               Elevation: {selectedStation.elevation}{" "}
