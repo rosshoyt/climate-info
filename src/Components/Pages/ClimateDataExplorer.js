@@ -106,11 +106,11 @@ const ClimateDataExplorer = () => {
   return (
     <>
       <Grid container direction="row" justifyContent="center">
-        <Grid item>
+        <Grid item lg={12}>
           <Typography variant='h5' align='left' fontWeight="fontWeightBold">
             {DataTypes[dataType]} in {location.name} from {dayRange.map(mmDD => getReadableTimeString(mmDD)).join(' to ')}
           </Typography>
-          <Typography variant='h6'>
+          <Typography variant='h6' align='left'>
             Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
           </Typography>
         </Grid>
