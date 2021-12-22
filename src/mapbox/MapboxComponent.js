@@ -123,9 +123,8 @@ function MapboxComponent({ size }) {
             key={location.id}
             latitude={location.latitude}
             longitude={location.longitude}
-            
-            offsetTop={-20}
-            offsetLeft={-15}
+            offsetTop={-16}
+            offsetLeft={-11}
           >
             <button
               className="marker-btn"
@@ -134,7 +133,7 @@ function MapboxComponent({ size }) {
                 setSelectedStation(location);
               }}
             >
-              <img src="location-icon.png" alt="location icon" />
+              <img src="mapbox-marker-icon-20px-blue.png" alt="location icon" />
             </button>
           </Marker>
         ))}
