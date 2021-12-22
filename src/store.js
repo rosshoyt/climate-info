@@ -53,7 +53,8 @@ const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
 
 
 const findStationWithID = (stationsList, stationID) => {
-  // let station = stationsList.find(station => station['id'] === stationID)
+  // TODO convert to array.find()
+  // e.g let station = stationsList.find(station => station['id'] === stationID)
   let station = null;
 
   stationsList.forEach(s => {
@@ -63,6 +64,19 @@ const findStationWithID = (stationsList, stationID) => {
   });
   console.log('found station ', station)
   return station
+}
+
+const getActiveStationsSet = (rawData) => {
+  let activeStations = new Set()
+  rawData.forEach(timeseries => {
+    //console.log(timeseries)
+    timeseries.data.forEach(element => {
+      //console.log(element)
+      activeStations.add(element.station)
+    });
+  })
+  console.log('active stations', activeStations)
+  return activeStations
 }
 
 // TODO move to a class, e.g. NoaaLocations.js
@@ -81,12 +95,19 @@ const useStore = create((set, get) => ({
    */
   rawData: [],
   createUpdateTimeseriesRawData(timeseries, newData) {
+    // console.log('newdata', newData)
     set((state) => ({
       ...state,
       rawData: createUpdateTimeseriesRawData(
-        state.rawData, { id: timeseries.id, data: newData }
-      )
-    }))     
+        state.rawData, { 
+          id: timeseries.id, 
+          data: newData, 
+          //stations: new Set(newData.map(entry => entry.station))
+        }
+      ),
+      // also update the map of stations that are used in the raw timeseries data
+      activeStationIDsSet: getActiveStationsSet(state.rawData)
+    }));
   },
 
   // convert to class in NoaaLocation.js
@@ -128,6 +149,8 @@ const useStore = create((set, get) => ({
     }))
   },
 
+  activeStationIDsSet: new Set(),
+
   dayRange: ['06-01', '06-30'],
   setDayRange(dayRange) {
     set(state => ({
@@ -149,7 +172,7 @@ const useStore = create((set, get) => ({
 
   timeseriesList: [
     new Timeseries(0, 2021,'#9900EF'),
-    new Timeseries(1, 1941,'#0693e3')
+    new Timeseries(1, 1971,'#0693e3')
   ],
   createTimeseries(){
     set(state => ({

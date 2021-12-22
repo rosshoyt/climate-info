@@ -28,22 +28,35 @@ function MapboxComponent({ size }) {
   const stationsList = useStore(state => state.stationsList);
   const setStationsList = useStore(state => state.setStationsList);
 
+  const activeStationIDsSet = useStore(state => state.activeStationIDsSet);
+
   const getStationsBoundingBox = () => {
     if(stationsList.length > 0) {
       let minLat = Number.MAX_SAFE_INTEGER, minLong = Number.MAX_SAFE_INTEGER;
       let maxLat = Number.MIN_SAFE_INTEGER, maxLong = Number.MIN_SAFE_INTEGER;
+      // TODO only iterate over active stations
       stationsList.forEach((station, index) => {
-        console.log('max/mins', minLat, minLong, maxLat, maxLong)
-        console.log(station)
-        minLat = Math.min(station.latitude, minLat);
-        minLong = Math.min(station.longitude, minLong);
-        maxLat = Math.max(station.latitude, maxLat);
-        maxLong = Math.max(station.longitude, maxLong);
+        if(activeStationIDsSet.has(station.id)) {
+          minLat = Math.min(station.latitude, minLat);
+          minLong = Math.min(station.longitude, minLong);
+          maxLat = Math.max(station.latitude, maxLat);
+          maxLong = Math.max(station.longitude, maxLong);
+        }
       });
       let boundingBox = [[maxLong, minLat],[minLong, maxLat]];
       return boundingBox
     }
   }
+  
+  // const checkStationIsActive = (station) => {
+  //   if(activeStationsSet.has(station)) {
+  //     console.log(station, 'is active!')
+  //     return true;
+  //   }
+    
+  //   console.log(station, 'is not active!')
+  //   return false;
+  // }
 
   useEffect(() => {
     // listen for escape (to exit the current map selection)
@@ -118,11 +131,13 @@ function MapboxComponent({ size }) {
         }}
         mapStyle="mapbox://styles/rosshoyt/ckxcnobzr2em217pez5k3uo54"
       >
-        {stationsList.map((location) => (
+        {stationsList.map((station) => (
+          activeStationIDsSet.has(station.id) ? 
+           (
           <Marker
-            key={location.id}
-            latitude={location.latitude}
-            longitude={location.longitude}
+            key={station.id}
+            latitude={station.latitude}
+            longitude={station.longitude}
             offsetTop={-16}
             offsetLeft={-11}
           >
@@ -130,13 +145,14 @@ function MapboxComponent({ size }) {
               className="marker-btn"
               onClick={(e) => {
                 e.preventDefault();
-                setSelectedStation(location);
+                setSelectedStation(station);
               }}
             >
               <img src="mapbox-marker-icon-20px-blue.png" alt="location icon" />
             </button>
           </Marker>
-        ))}
+        ) :  (<></>))
+        )}
         {selectedStation ? (
           <Popup
             latitude={selectedStation.latitude}
