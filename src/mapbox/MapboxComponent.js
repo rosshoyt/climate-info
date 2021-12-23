@@ -20,17 +20,17 @@ function MapboxComponent({ size }) {
     height: size.height
   });
 
-  const location = useStore(state => state.location);
+  // const location = useStore(state => state.location);
   
   const selectedStation = useStore(state => state.selectedStation);
   const setSelectedStation = useStore(state => state.setSelectedStation);
 
   const stationsList = useStore(state => state.stationsList);
-  const setStationsList = useStore(state => state.setStationsList);
 
   const activeStationIDsSet = useStore(state => state.activeStationIDsSet);
 
   const getStationsBoundingBox = () => {
+    console.log('getting bounding box for ', stationsList, activeStationIDsSet)
     if(stationsList.length > 0) {
       let minLat = Number.MAX_SAFE_INTEGER, minLong = Number.MAX_SAFE_INTEGER;
       let maxLat = Number.MIN_SAFE_INTEGER, maxLong = Number.MIN_SAFE_INTEGER;
@@ -43,21 +43,13 @@ function MapboxComponent({ size }) {
           maxLong = Math.max(station.longitude, maxLong);
         }
       });
+
       let boundingBox = [[maxLong, minLat],[minLong, maxLat]];
+      console.log('bounding box', boundingBox)
       return boundingBox
     }
   }
   
-  // const checkStationIsActive = (station) => {
-  //   if(activeStationsSet.has(station)) {
-  //     console.log(station, 'is active!')
-  //     return true;
-  //   }
-    
-  //   console.log(station, 'is not active!')
-  //   return false;
-  // }
-
   useEffect(() => {
     // listen for escape (to exit the current map selection)
     const listener = (e) => {
@@ -67,7 +59,7 @@ function MapboxComponent({ size }) {
     };
     window.addEventListener("keydown", listener);
 
-    if(stationsList.length > 0){
+    if(stationsList.length > 0 && activeStationIDsSet.size > 0){
       let view = new WebMercatorViewport({height: size.height, width: size.width})
         .fitBounds(getStationsBoundingBox(), {
           padding: 20,
@@ -80,46 +72,7 @@ function MapboxComponent({ size }) {
       window.removeEventListener("keydown", listener);
     };
 
-  }, [stationsList]);
-
-  useQuery({
-    
-    queryKey: [location.id],
-      
-    staleTime: Number.MAX_SAFE_INTEGER,
-  
-    refetchOnWindowFocus: false,
-  
-    queryFn: () => {
-      let url = 'api/locations/get/stations/' + location.id;
-      console.log('fetching url', url );
-      return axios.get(url).then((res) => res.data);
-    },
-
-    onSettled: (data, error, variables, context) => {
-      if(error !== null){
-        console.log(error);
-        if(data === null || data === undefined) {
-          console.log("did not recieve response to stations query")
-        }
-        else if(Object.keys(data).includes('message')){   
-          let errorMessage =  data['message'];
-          console.log("Server returned error", errorMessage,"on request for stations");
-        }
-      }
-      else if(data !== null || data !== undefined) {
-        // TODO improve results processing. Sometimes may not get past Object.keys check
-        if(Object.keys(data).includes('stations')){
-          if(data.stations.length > 0){     
-            console.log('got stations', data.stations);
-            setStationsList(data.stations);
-          } else{
-            console.log('stations list was 0 length');
-          }
-        }
-      }
-    }
-  })
+  }, [stationsList, activeStationIDsSet]);
 
   return (
     <div>

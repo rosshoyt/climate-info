@@ -67,6 +67,7 @@ const findStationWithID = (stationsList, stationID) => {
 }
 
 const getActiveStationsSet = (rawData) => {
+  console.log('getting stations from data', rawData)
   let activeStations = new Set()
   rawData.forEach(timeseries => {
     //console.log(timeseries)

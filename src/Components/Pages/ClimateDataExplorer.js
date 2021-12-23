@@ -10,7 +10,7 @@ import ResponsiveListContainer from '../ResponsiveListContainer';
 import DateRangeSlider from '../sliders/DateRangeSlider';
 import DataTypes from '../../api/noaa/DataTypes';
 import axios from 'axios';
-import { useQueries } from 'react-query';
+import { useQuery, useQueries } from 'react-query';
 import useWindowDimensions from '../../Utils/WindowUtils';
 import CDEGraphSettingsPanel from '../CDEGraphSettingsPanel';
 import CDEDownloaderPanel from '../CDEDownloaderPanel';
@@ -31,6 +31,7 @@ const ClimateDataExplorer = () => {
   const setLocation = useStore(state => state.setLocation);
   const locationsList = useStore(state => state.locationsList);
   const setLocationsList = useStore(state => state.setLocationsList);
+  const setStationsList = useStore(state => state.setStationsList);
   const createUpdateTimeseriesRawData = useStore(state => state.createUpdateTimeseriesRawData);
 
   
@@ -94,6 +95,46 @@ const ClimateDataExplorer = () => {
       }
     })
   )
+
+  useQuery({
+    
+    queryKey: [location.id],
+      
+    staleTime: Number.MAX_SAFE_INTEGER,
+  
+    refetchOnWindowFocus: false,
+  
+    queryFn: () => {
+      let url = 'api/locations/get/stations/' + location.id;
+      console.log('fetching url', url );
+      // TODO use fetchNoaaQuery
+      return axios.get(url).then((res) => res.data);
+    },
+
+    onSettled: (data, error, variables, context) => {
+      if(error !== null){
+        console.log(error);
+        if(data === null || data === undefined) {
+          console.log("did not recieve response to stations query")
+        }
+        else if(Object.keys(data).includes('message')){   
+          let errorMessage =  data['message'];
+          console.log("Server returned error", errorMessage,"on request for stations");
+        }
+      }
+      else if(data !== null || data !== undefined) {
+        // TODO improve results processing. Sometimes may not get past Object.keys check
+        if(Object.keys(data).includes('stations')){
+          if(data.stations.length > 0){     
+            console.log('got stations', data.stations);
+            setStationsList(data.stations);
+          } else{
+            console.log('stations list was 0 length');
+          }
+        }
+      }
+    }
+  })
 
   useEffect(() => {    
   }, [timeseriesList]);
