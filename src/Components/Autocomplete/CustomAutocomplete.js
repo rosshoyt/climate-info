@@ -1,11 +1,10 @@
 /* eslint-disable no-use-before-define */
 import React from "react";
-import { useTheme, alpha, makeStyles } from "@material-ui/core/styles";
+import { alpha, makeStyles } from "@material-ui/core/styles";
 import CloseIcon from "@material-ui/icons/Close";
 import DoneIcon from "@material-ui/icons/Done";
 import Autocomplete from "@material-ui/lab/Autocomplete";
 import InputBase from "@material-ui/core/InputBase";
-import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -114,61 +113,66 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-export default function CustomAutocomplete({selection, setSelection, selectionOptions }) {
+export default function CustomAutocomplete({ onClose, selectedOption, setSelectedOption, selectionOptions }) {
   const classes = useStyles();
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const theme = useTheme();
-
-  const handleClick = (event) => {
-    //setPendingValue(value);
-    // TODO setSelection()
-    setAnchorEl(event.currentTarget);
-  };
 
   const handleClose = (event, reason) => {
+    console.log('in handle close');
     if (reason === "toggleInput") {
+      console.log('toggling input');
       return;
     }
-    // setValue(pendingValue);
-    // TODO setSelection()
+
     if (anchorEl) {
+      console.log('focusing anchorEl');
       anchorEl.focus();
     }
     setAnchorEl(null);
   };
 
   const open = Boolean(anchorEl);
-  const id = open ? "github-label" : undefined;
 
   return (
-    <>
-        <div className={classes.header}>Apply labels to this pull request</div>
+    <React.Fragment>
         <Autocomplete
           open
           onClose={handleClose}
-          multiple
+          // multiple // Only 1 selection needed
           classes={{
             paper: classes.paper,
             option: classes.option,
             popperDisablePortal: classes.popperDisablePortal
           }}
-          value={selection.name}
+          // value= // (Dont need to show a value in the text input area)
           onChange={(event, newValue) => {
-            if(newValue !== null) setSelection(newValue);
+            console.log('in onChange, value=', newValue)
+            setSelectedOption(newValue);
+            onClose();
           }}
           disableCloseOnSelect
           disablePortal
           renderTags={() => null}
-          noOptionsText="No labels"
-          renderOption={(option) => (
+          noOptionsText="No results"
+          renderOption={(option, { selected }) => (
             <React.Fragment>
-              {/* <DoneIcon
+              <DoneIcon
                 className={classes.iconSelected}
-                style={{ visibility: option.name === selection.name ? "visible" : "hidden" }}
+                style={{ visibility: option.id === selectedOption.id ? "visible" : "hidden" }}
+              />
+              {/* TODO allow custom icon (emoji flag, etc) for each option <span
+                className={classes.color}
+                style={{ backgroundColor: option.color }}
               /> */}
               <div className={classes.text}>
                 {option.name}
+                <br />
+                {option.id}
               </div>
+              <CloseIcon
+                className={classes.close}
+                style={{ visibility: selected ? "visible" : "hidden" }}
+              />
             </React.Fragment>
           )}
           options={selectionOptions}
@@ -182,6 +186,6 @@ export default function CustomAutocomplete({selection, setSelection, selectionOp
             />
           )}
         />
-      </>
+    </React.Fragment>
   );
 }
