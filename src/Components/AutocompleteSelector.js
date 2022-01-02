@@ -3,8 +3,13 @@ import React, { useState, useEffect } from 'react';
 import TextField from '@material-ui/core/TextField';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { makeStyles } from '@material-ui/core/styles';
+import { withSize } from 'react-sizeme';
 
 const useStyles = makeStyles({
+  root: {
+    border: 0
+  },
+  //border: 0,
   option: {
     fontSize: 15,
     '& > span': {
@@ -14,35 +19,27 @@ const useStyles = makeStyles({
   },
 });
 
-export default function AutocompleteSelector({ selectionOptions, setSelection, id='selector', label='Enter a selection' }) {
-  // const [selectionOptions, setSelectionOptions] = useState( [ {
-  //   "datacoverage": 1,
-  //   "id": "CITY:US530018",
-  //   "maxdate": "2021-07-02",
-  //   "mindate": "1891-01-01",
-  //   "name": "Seattle, WA US"
-  // } ] );
-  
-  // useEffect(() => {
-  //   fetchData();
-  //   async function fetchData() {
-  //     const result = await fetch('/api/locations/cities').then(res => res.json()).then(data => {
-  //     //console.log(data.cities);
-  //     setSelectionOptions(data.cities);
-  //     });
-  //   }
-  // }, []);
+function AutocompleteSelector({ size, selection, selectionOptions, setSelection, id='selector', label }) {
 
+  // TODO ensure selection options always has a value ?
+  const [value, setValue] = useState(selectionOptions[0])
 
   const classes = useStyles();
 
+  function valueChanged(newValue) {
+    setValue(newValue);
+    setSelection(newValue);
+  }
+
   return (
     <Autocomplete
+      value={selectionOptions[0]}
       onChange={(event, value) => setSelection(value)}
       id={id}
-      style={{ width: 300 }}
+      style={{ width: size.width }}
       options={selectionOptions}
       classes={{
+        root: classes.root,
         option: classes.option,
       }}
       autoHighlight
@@ -60,10 +57,12 @@ export default function AutocompleteSelector({ selectionOptions, setSelection, i
           variant="outlined"
           inputProps={{
             ...params.inputProps,
-            autoComplete: 'new-password', // disable autocomplete and autofill
+            autoComplete: "off", // disable autocomplete and autofill
           }}
         />
       )}
     />
   );
 }
+
+export default withSize({ monitorHeight: true })(AutocompleteSelector)

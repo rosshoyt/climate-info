@@ -15,11 +15,10 @@ export default function LocationSelect({ location, setLocation, locationsList, s
 
   return (
     <AutocompleteSelector
-      // initialValue={location} // TODO implement
+      selection={location}
       selectionOptions={locationsList} 
       setSelection= { (newLocation) => { if (newLocation !== null) setLocation(newLocation) } }
       id='location-selector'
-      label='Enter a location (default: Seattle)'
     />
   );
 }
