@@ -2,7 +2,7 @@
 // Should default to MiniDrawer for desktop screens,
 // Responsive Drawer for Mobile size
 
-import React, { Children } from 'react';
+import React, { Children, useState } from 'react';
 import clsx from 'clsx';
 import { makeStyles, useTheme } from '@material-ui/core/styles';
 import Drawer from '@material-ui/core/Drawer';
@@ -103,7 +103,7 @@ export default function ResponsiveMiniDrawer({ children, darkMode, setDarkMode }
   const classes = useStyles();
   const theme = useTheme();
   const { height, width } = useWindowDimensions();
-  const [open, setOpen] = React.useState(width > 1920 ? true : false);
+  const [open, setOpen] = useState(false);
   
 
 
