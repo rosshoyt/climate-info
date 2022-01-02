@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Grid, Typography } from '@material-ui/core';
 import TimeseriesList from '../TimeseriesList';
 import useStore from '../../store';
@@ -33,6 +33,8 @@ const ClimateDataExplorer = () => {
   const setLocationsList = useStore(state => state.setLocationsList);
   const setStationsList = useStore(state => state.setStationsList);
   const createUpdateTimeseriesRawData = useStore(state => state.createUpdateTimeseriesRawData);
+
+  const [globalErrorMessage, setGlobalErrorMessage] = useState(null);
 
   const fetchNOAAQuery = (noaaQueryString) => axios.get(noaaQueryString).then((res) => res.data);
 
@@ -82,6 +84,11 @@ const ClimateDataExplorer = () => {
                 //deleteTimeseriesRawData(timeseriesInfo)
               }
 
+            } else if (Object.keys(data).includes('error')) {
+              console.log('Error occured, according to API. Status code = ', data.error)
+              if(data.error == 503){
+                setGlobalErrorMessage('Error 503: NOAA GHCN Service is temporarily unavailable. See https://www.ncei.noaa.gov/');
+              }  
             } else {
               console.log('No results in response to timeseires query', timeseriesInfo.queryString);
 
@@ -204,7 +211,7 @@ const ClimateDataExplorer = () => {
                     </Typography>
                     {/* <Divider variant="middle" /> */}
 
-                    <ScatterChartExample height={.8 * getContainerHeight()} />
+                    <ScatterChartExample height={.8 * getContainerHeight()} errorMessage={globalErrorMessage}/>
                   </div>
                 </Grid>
               </div>

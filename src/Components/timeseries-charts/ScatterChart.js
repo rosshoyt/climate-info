@@ -5,6 +5,7 @@ import { format } from "d3-format";
 import moment from "moment";
 import useStore from '../../store';
 import useCDEGraphSettingsStore from "../CDEGraphSettingsStore";
+import Alert from '@material-ui/lab/Alert';
 
 // Pond
 import { TimeSeries } from "pondjs";
@@ -21,7 +22,7 @@ import { CircularProgress, Typography } from "@material-ui/core";
 // Render scatter chart
 //
 
-export default function ScatterChartExample( { height }) {
+export default function ScatterChartExample( { height, errorMessage=null}) {
     /// the main timeseries data
     const [series, setSeries] = useState(null);
 
@@ -379,7 +380,14 @@ export default function ScatterChartExample( { height }) {
             </>
             <>
             { series === null || series === undefined ? (
-                <CircularProgress/>
+                errorMessage === null ? (
+                    <CircularProgress/>
+                ):(
+                    <Alert variant="filled" severity="warning" >
+                        {errorMessage}
+                    </Alert>
+                        
+                )
             ) : (
                 <div className="row">
                     <Typography  gutterBottom align="right">

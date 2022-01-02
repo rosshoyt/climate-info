@@ -20,6 +20,9 @@ def sendNoaaCdoRequest(url):
   return requests.get(
     url, headers={"token": os.environ['TOKEN_NOAA_NCDC_CDO']})
 
+def responseContainsJSON(response):
+    return response.headers.get('content-type') == 'application/json'
+
 @app.errorhandler(404)
 def not_found(e):
     return app.send_static_file('index.html')
@@ -45,12 +48,13 @@ def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date
     url += "&enddate=" + end_date
     url += "&limit=1000"
 
-    jsonResp = {} # the json object we'll return our results, or error message with
-    
     # send the GET request with auth token header
     response = sendNoaaCdoRequest(url)
     
-    return response.json()
+    if responseContainsJSON(response):    
+        return response.json()
+    else:
+        return { 'error': response.status_code }
 
 @app.route('/api/locations/get/stations/<location_id>')
 def get_stations_in_location(location_id=None):
@@ -70,13 +74,17 @@ def get_stations_in_location(location_id=None):
 
         response = sendNoaaCdoRequest(url)
 
-        response_json = response.json()
+        if responseContainsJSON(response):
+            
+            response_json = response.json()
 
-        # update the total count of results
-        total_count = response_json["metadata"]["resultset"]["count"]
-        
-        # add the results to the list
-        results_list.extend(response_json["results"])
+            # update the total count of results
+            total_count = response_json["metadata"]["resultset"]["count"]
+            
+            # add the results to the list
+            results_list.extend(response_json["results"])
+        else:
+            return { 'error': response.status_code }
 
     return {'stations': results_list}
 
@@ -99,13 +107,16 @@ def get_cities():
         # TODO move NOAA API code to a separate class, add request method
         response = sendNoaaCdoRequest(url)
 
-        response_json = response.json()
+        if responseContainsJSON(response):
+            response_json = response.json()
         
-        # TODO handle errors (send error result json through to client)
-        # update the total count of results
-        total_count = response_json["metadata"]["resultset"]["count"]
+            # TODO handle errors (send error result json through to client)
+            # update the total count of results
+            total_count = response_json["metadata"]["resultset"]["count"]
         
-        # add the results to the list
-        results_list.extend(response_json["results"])
+            # add the results to the list
+            results_list.extend(response_json["results"])
+        else:
+            return { 'error': response.status_code }
 
     return {'cities': results_list}
