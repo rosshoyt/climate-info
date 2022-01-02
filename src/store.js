@@ -2,6 +2,7 @@ import create from 'zustand';
 import { Timeseries } from './model/Timeseries';
 import { processScatterplotTimeseriesData } from './Data/converters/NivoDataConverters';
 
+// TODO move to utils or a class
 const createTimeseries = (timeseriesList) => [
   ...timeseriesList,
   {
@@ -29,6 +30,21 @@ const updateTimeseriesRawData = (rawData, id, data) => [
   }))
 ]
 
+const createUpdateActiveStationSet = (timeseries) => {
+  console.log('getting stations from data', timeseries)
+  let activeStations = new Set()
+  timeseries.forEach(timeseries => {
+    //console.log(timeseries)
+    timeseries.data.forEach(element => {
+      //console.log(element)
+      activeStations.add(element.station)
+    });
+  })
+  console.log('active stations', activeStations)
+  return activeStations
+}
+
+
 const clearRawDataTimeseries = (rawData, id) =>
   rawData.filter((timeseries) => timeseries.id !== id);
 
@@ -51,7 +67,6 @@ const updateTimeseriesColorSelectorOpen = (timeseriesList, id, isOpen) =>
     colorSelectorOpen: timeseries.id === id ? isOpen : timeseries.colorSelectorOpen,
   }));
 
-
 const findStationWithID = (stationsList, stationID) => {
   // TODO convert to array.find()
   // e.g let station = stationsList.find(station => station['id'] === stationID)
@@ -66,19 +81,6 @@ const findStationWithID = (stationsList, stationID) => {
   return station
 }
 
-const getActiveStationsSet = (rawData) => {
-  console.log('getting stations from data', rawData)
-  let activeStations = new Set()
-  rawData.forEach(timeseries => {
-    //console.log(timeseries)
-    timeseries.data.forEach(element => {
-      //console.log(element)
-      activeStations.add(element.station)
-    });
-  })
-  console.log('active stations', activeStations)
-  return activeStations
-}
 
 // TODO move to a class, e.g. NoaaLocations.js
 const defaultLocation = {
@@ -90,9 +92,10 @@ const defaultLocation = {
 }
 
 const useStore = create((set, get) => ({
+  
   /**
-   * The main datastore
-   * List of objects in form { queryID, queryResults }  
+   * A list of weather data query results
+   * Stored as timeseries
    */
   rawData: [],
   createUpdateTimeseriesRawData(timeseries, newData) {
@@ -100,14 +103,11 @@ const useStore = create((set, get) => ({
     set((state) => ({
       ...state,
       rawData: createUpdateTimeseriesRawData(
-        state.rawData, { 
-          id: timeseries.id, 
-          data: newData, 
-          //stations: new Set(newData.map(entry => entry.station))
-        }
+        state.rawData, 
+        { id: timeseries.id, data: newData }
       ),
-      // also update the map of stations that are used in the raw timeseries data
-      activeStationIDsSet: getActiveStationsSet(state.rawData)
+      //update the set of stations that are used in the raw timeseries data
+      activeStationIDsSet: createUpdateActiveStationSet(timeseries)
     }));
   },
 
