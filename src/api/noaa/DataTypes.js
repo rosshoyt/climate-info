@@ -1,7 +1,7 @@
 export default {
   "PRCP": "Precipitation",
   "SNOW": "Snowfall",
-  "SNWD": "Snow depth",
-  "TMAX": "Maximum temperature",
-  "TMIN": "Minimum temperature"
+  "SNWD": "Snow Depth",
+  "TMAX": "Max Temperature",
+  "TMIN": "Min Temperature"
 }
