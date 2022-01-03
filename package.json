@@ -36,6 +36,7 @@
     "react-sizeme": "^3.0.2",
     "react-timeseries-charts": "^0.16.1",
     "react-virtualized-auto-sizer": "^1.0.6",
+    "react-window": "^1.8.6",
     "recharts": "^2.1.8",
     "web-vitals": "^2.1.0",
     "worker-loader": "^3.0.8",
