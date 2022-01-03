@@ -18,6 +18,7 @@ import MapboxComponent from '../../mapbox/MapboxComponent';
 import PopoverButton from '../Buttons/PopoverButton';
 import SelectableList from '../Lists/SelectableList';
 import CustomAutocomplete from '../Autocomplete/CustomAutocomplete';
+import QueryAlerts from '../Alerts/QueryAlerts';
 
 const ClimateDataExplorer = () => {
   const { height } = useWindowDimensions();
@@ -151,7 +152,7 @@ const ClimateDataExplorer = () => {
   }
 
   return (
-    <Grid container direction="column">
+    <Grid container direction="column" spacing={2}>
       <Typography variant='h4' align='left' fontWeight="fontWeightBold">
         NOAA Global Historical Climate Network Daily (GHCN) - Data Explorer
       </Typography>
@@ -195,7 +196,9 @@ const ClimateDataExplorer = () => {
         </Grid>
       </Grid>
       <Grid container direction="row" justifyContent="center">
-
+        <Grid item xs={12}>
+          <QueryAlerts errorMessage={globalErrorMessage}/>
+        </Grid>
         <Grid item container direction="column" sm={12} lg={8}>
           {/* <Grid item> */}
           <div>

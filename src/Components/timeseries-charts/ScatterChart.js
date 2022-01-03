@@ -380,14 +380,14 @@ export default function ScatterChartExample( { height, errorMessage=null}) {
             </>
             <>
             { series === null || series === undefined ? (
-                errorMessage === null ? (
+                // errorMessage === null ? (
                     <CircularProgress/>
-                ):(
-                    <Alert variant="filled" severity="warning" >
-                        {errorMessage}
-                    </Alert>
+                // ):(
+                //     <Alert variant="filled" severity="warning" >
+                //         {errorMessage}
+                //     </Alert>
                         
-                )
+                // )
             ) : (
                 <div className="row">
                     <Typography  gutterBottom align="right">
