@@ -142,6 +142,44 @@ const ClimateDataExplorer = () => {
       }
     }
   })
+  // Get static Cities json file
+  useQuery({
+
+    queryKey: [],
+
+    staleTime: Number.MAX_SAFE_INTEGER,
+
+    refetchOnWindowFocus: false,
+
+    queryFn: () => {
+      return axios.get('/static/Cities.json').then((res) => res.data);
+    },
+
+    onSettled: (data, error, variables, context) => {
+      console.log('cities data',data)
+      if (error !== null) {
+        console.log(error);
+        if (data === null || data === undefined) {
+          console.log("did not recieve response to cities query")
+        }
+        else if (Object.keys(data).includes('message')) {
+          let errorMessage = data['message'];
+          console.log("Server returned error", errorMessage, "on request for cities");
+        }
+      }
+      else if (data !== null || data !== undefined) {
+        // TODO improve results processing. Sometimes may not get past Object.keys check
+        if (Object.keys(data).includes('cities')) {
+          if (data.cities.length > 0) {
+            console.log('got cities', data.cities);
+            setLocationsList(data.cities);
+          } else {
+            console.log('cities list was 0 length');
+          }
+        }
+      }
+    }
+  })
 
   useEffect(() => {
   }, [timeseriesList]);
