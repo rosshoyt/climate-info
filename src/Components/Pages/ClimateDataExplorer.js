@@ -190,7 +190,7 @@ const ClimateDataExplorer = () => {
   }
 
   return (
-    <Grid container direction="column" spacing={2}>
+    <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
         <Typography variant='h4' align='left' fontWeight="fontWeightBold">
           NOAA Global Historical Climate Network Daily (GHCN) - Data Explorer
@@ -242,10 +242,10 @@ const ClimateDataExplorer = () => {
               <div tabName="Graph">
                 <Grid item>
                   <div style={{ height: getContainerHeight() }}>
-                    <Typography variant='h5' align='left' fontWeight="fontWeightBold">
+                    <Typography variant='h5' align='center' fontWeight="fontWeightBold">
                       {DataTypes[dataType]} in {location.name} from {dayRange.map(mmDD => getReadableTimeString(mmDD)).join(' to ')}
                     </Typography>
-                    <Typography variant='h6' align='left'>
+                    <Typography variant='h6' align='center'>
                       Years: {timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}
                     </Typography>
                     {/* <Divider variant="middle" /> */}
