@@ -29,11 +29,15 @@ function MapboxComponent({ size }) {
 
   const activeStationIDsSet = useStore(state => state.activeStationIDsSet);
 
+  const rawData = useStore(state => state.rawData);
+
   const getStationsBoundingBox = () => {
     console.log('getting bounding box for ', stationsList, activeStationIDsSet)
     if(stationsList.length > 0) {
       let minLat = Number.MAX_SAFE_INTEGER, minLong = Number.MAX_SAFE_INTEGER;
       let maxLat = Number.MIN_SAFE_INTEGER, maxLong = Number.MIN_SAFE_INTEGER;
+      // let minLat = 90, minLong = 180;
+      // let maxLat = -90, maxLong = -180;
       // TODO only iterate over active stations
       stationsList.forEach((station, index) => {
         if(activeStationIDsSet.has(station.id)) {
@@ -72,7 +76,7 @@ function MapboxComponent({ size }) {
       window.removeEventListener("keydown", listener);
     };
 
-  }, [stationsList, activeStationIDsSet]);
+  }, [stationsList, activeStationIDsSet, rawData]);
 
   return (
     <div>
