@@ -8,8 +8,7 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 // pick a date util library
 import MomentUtils from '@date-io/moment';
 import ClimateDataExplorer from './Components/Pages/ClimateDataExplorer';
-import FoodFootprintExplorer from './Components/Pages/FoodFootprintExplorer'
-import { blueGrey, orange } from '@material-ui/core/colors';
+import FoodFootprintExplorer from './Components/Pages/FoodFootprintExplorer';
 import ResponsiveMiniDrawer from './Components/Drawers/ResponsiveMiniDrawer'
 
  // React Query client
@@ -21,8 +20,12 @@ function App() {
   const theme = createTheme({
     palette: {
       type: darkMode ? "dark" : "light",
-      primary: blueGrey,
-      secondary: orange
+      primary: {
+        main: "#5bbbb2" //"#009688"
+      },
+      secondary: { 
+        main: "#3f51b5" //"#303f9f"
+      }
     },
     paper: {
       textAlign: 'left'
