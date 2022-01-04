@@ -191,18 +191,20 @@ const ClimateDataExplorer = () => {
 
   return (
     <Grid container direction="column" spacing={2}>
-      <Typography variant='h4' align='left' fontWeight="fontWeightBold">
-        NOAA Global Historical Climate Network Daily (GHCN) - Data Explorer
-      </Typography>
+      <Grid item xs={12}>
+        <Typography variant='h4' align='left' fontWeight="fontWeightBold">
+          NOAA Global Historical Climate Network Daily (GHCN) - Data Explorer
+        </Typography>
+      </Grid>
       <Grid
         container
-        item
-        spacing={0}
         direction="row"
+        // wrap="no-wrap"
+        spacing={3}
         justifyContent="flex-start"
         alignItems="center"
+        overflow-x="scroll"
       >
-        <Grid item xs={3}>
           <PopoverButton currentValue={location.name}>
             <CustomAutocomplete 
               selectedOption={location} 
@@ -210,8 +212,6 @@ const ClimateDataExplorer = () => {
               selectionOptions={locationsList}
             />
           </PopoverButton>
-        </Grid>
-        <Grid item xs={3}>
           <PopoverButton currentValue={dataType}>
             <SelectableList
               // secondaryValues={false}
@@ -219,19 +219,17 @@ const ClimateDataExplorer = () => {
               setCurrentValue={setDataType}
               valuesList={Object.entries(DataTypes)} />
           </PopoverButton>
-        </Grid>
-        <Grid item xs={3}>
-          <PopoverButton currentValue={dayRange.join(' to ')} secondaryValues>
+          <PopoverButton currentValue={'Days: ' + dayRange.join(' to ')} secondaryValues>
             <DateRangeSlider title='Day Range' currentValueText={dayRange.join(' to ')} dayRange={dayRange} setDayRange={setDayRange} />
 
           </PopoverButton>
-        </Grid>
-        <Grid item xs={3}>
+        {/* </Grid>
+        <Grid  item xl={2} lg={2} md={4} xs={6}   > */}
 
           <PopoverButton currentValue={'Years: ' + timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')}>
             <TimeseriesList title='Years' currentValueText={timeseriesList.map(yearEntry => { return yearEntry.year }).join(', ')} />
           </PopoverButton>
-        </Grid>
+        {/* </Grid> */}
       </Grid>
       <Grid container direction="row" justifyContent="center">
         <Grid item xs={12}>
