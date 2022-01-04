@@ -59,6 +59,7 @@ export default function ScatterChartExample( { height, errorMessage=null}) {
     const pointSize = useCDEGraphSettingsStore(state => state.pointSize);
 
     const dataType = useStore(state => state.dataType)
+    const timeRange = useStore(state => state.timeRange)
     
     
 
@@ -294,7 +295,7 @@ export default function ScatterChartExample( { height, errorMessage=null}) {
             // series isn't null or undefined
             setSeries(ts);
         }
-    }, [rawData, tmsrsInfoList, lineWidth, pointSize ])
+    }, [rawData, tmsrsInfoList, lineWidth, pointSize, dataType, timeRange])
     
    
     const formatter = format(".2f");
