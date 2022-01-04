@@ -66,18 +66,14 @@ const findStationWithID = (stationsList, stationID) => {
   return station
 }
 
-const getActiveStationsSet = (rawData) => {
-  console.log('getting stations from data', rawData)
-  let activeStations = new Set()
-  rawData.forEach(timeseries => {
-    //console.log(timeseries)
-    timeseries.data.forEach(element => {
+const updateActiveStationIDsSet = (activeStationIDsSet, newData) => {
+  // create a new set so that elements will update
+  let activeStations = new Set(activeStationIDsSet);
+  newData.forEach(element => {
       //console.log(element)
       activeStations.add(element.station)
-    });
-  })
-  console.log('active stations', activeStations)
-  return activeStations
+  });
+  return activeStations;
 }
 
 // TODO move to a class, e.g. NoaaLocations.js
@@ -107,7 +103,10 @@ const useStore = create((set, get) => ({
         }
       ),
       // also update the map of stations that are used in the raw timeseries data
-      activeStationIDsSet: getActiveStationsSet(state.rawData)
+      activeStationIDsSet: updateActiveStationIDsSet(
+        state.activeStationIDsSet, 
+        newData
+      )
     }));
   },
 
@@ -117,6 +116,8 @@ const useStore = create((set, get) => ({
     set(state => ({
       ...state,
       rawData: [],
+      stationsList: [],
+      activeStationIDsSet: new Set(),
       location: location
     }))
   },
