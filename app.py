@@ -2,10 +2,16 @@ import os
 from os import path
 from flask import Flask
 from dotenv import load_dotenv
+from flask_caching import Cache
 import requests
+
+cache = Cache()
 
 app = Flask(__name__, static_folder='build/', static_url_path='/')
 app.debug = 'DEBUG' in os.environ
+app.config['CACHE_TYPE'] = 'SimpleCache'
+
+cache.init_app(app)
 
 # Load environment variables from .env if exists (during local debug mode)
 if os.path.exists('.env'):
@@ -33,7 +39,8 @@ def index():
 
 
 @app.route('/api/noaa/data/daily/<data_type>/<location_id>/<start_date>/<end_date>')
-def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date=None, end_date=None):
+@cache.cached(9999999999)
+def get_noaa_ghcnd_data(data_type=None, location_id=None, start_date=None, end_date=None):
     # Setup the request url
     url = URL_NOAA_API
     url += "/data?"
@@ -57,6 +64,7 @@ def get_average_daily_max_temp_city(data_type=None, location_id=None, start_date
         return { 'error': response.status_code }
 
 @app.route('/api/locations/get/stations/<location_id>')
+@cache.cached(9999999999)
 def get_stations_in_location(location_id=None):
     
     # print('getting the stations for location', location_id)
@@ -89,6 +97,7 @@ def get_stations_in_location(location_id=None):
     return {'stations': results_list}
 
 @app.route('/api/locations/cities')
+@cache.cached(99999999)
 def get_cities():
     # print('getting cities')
     results_list = []
