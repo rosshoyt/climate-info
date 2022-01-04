@@ -119,6 +119,7 @@ export default function ScatterChartExample( { height, errorMessage=null}) {
     useEffect(() => {
         console.log('Scatterplot useEffect, rawData =', rawData);
         
+        setSeries(null);
         
         let readingsByDate = new Map();
         //let stationIDToReadingsListIndexMap = new Map();
