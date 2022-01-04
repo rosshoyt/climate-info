@@ -10,8 +10,9 @@ const useStyles = makeStyles((theme) => ({
     padding: theme.spacing(2),
   },
   button: {
-    minWidth: 150,
-    maxWidth: 275
+    minWidth: 160,
+    maxWidth: 275,
+    borderRadius: 25
   }
 }));
 
@@ -43,12 +44,23 @@ export default function PopoverButton({ children, currentValue, secondaryValues 
       <Box m={2}>
         <Button 
           aria-describedby={id} 
-          variant="contained" 
-          color="secondary" 
+          variant="outlined" 
+         // color="secondary" 
           onClick={handleClick} 
-          className={classes.button} 
-          endIcon={<KeyboardArrowDownIcon />}>
-          <Typography variant="button" noWrap>{currentValue}</Typography>
+          className={classes.button}
+          size='large'
+          endIcon={<KeyboardArrowDownIcon />}
+        >
+          <Typography 
+            //variant="subtitle" 
+            noWrap
+          >
+            <Box 
+              //fontWeight={"fontWeightBold"}
+              >
+              {currentValue}
+            </Box>
+            </Typography>
         </Button>
       </Box>
       <Popover
