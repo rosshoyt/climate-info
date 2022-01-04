@@ -158,7 +158,10 @@ const useStore = create((set, get) => ({
     set(state => ({
       ...state,
       rawData: [],
-      dayRange: dayRange
+      dayRange: dayRange,
+      activeStationIDsSet: new Set(),
+      stationsList: [],
+      selectedStation: undefined,
     }))
   },
 
@@ -167,6 +170,9 @@ const useStore = create((set, get) => ({
     set(state => ({
       ...state,
       rawData: [],
+      activeStationIDsSet: new Set(),
+      stationsList: [],
+      selectedStation: undefined,
       dataType: dataType
     }))
   },
