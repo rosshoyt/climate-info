@@ -193,7 +193,12 @@ const ClimateDataExplorer = () => {
     <Grid container direction="column" spacing={3}>
       <Grid item xs={12}>
         <Typography variant='h4' align='left' fontWeight="fontWeightBold">
-          NOAA Global Historical Climate Network Daily (GHCN) - Data Explorer
+          Climate Data Explorer
+        </Typography>
+        </Grid>
+        <Grid item xs={12}> 
+        <Typography  align='left' fontWeight="fontWeightBold">
+          Explore the National Oceanic and Atmospheric Administration's (NOAA) Global Historical Climate Network Daily (GHCND) climate database 
         </Typography>
       </Grid>
       <Grid
