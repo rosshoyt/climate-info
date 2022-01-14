@@ -1,6 +1,6 @@
 import React from 'react'
 import RangeSlider from './RangeSlider'
-import { Grid } from '@material-ui/core';
+import { Grid, Typography } from '@material-ui/core';
 import moment from 'moment';
 
 const marks = [
@@ -49,6 +49,9 @@ export default function DateRangeSlider({ dayRange, setDayRange }) {
           min={1}
         />
         </Grid>
+        <Typography>
+          {dayRange.join(' to ')}
+        </Typography>
       </Grid>
     </div>
   )
