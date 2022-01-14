@@ -63,7 +63,7 @@ function ThumbComponent(props) {
   );
 }
 
-export default function RangeSlider( { label=false, onChangeCommitted, startingValue }) {
+export default function RangeSlider( { label=false, onChangeCommitted, startingValue, max, min, marks }) {
   const classes = useStyles();
 
   return (
@@ -77,8 +77,10 @@ export default function RangeSlider( { label=false, onChangeCommitted, startingV
         ThumbComponent={ThumbComponent}
         onChangeCommitted={onChangeCommitted}
         defaultValue={startingValue}
-        max={365}
-        min={0}
+        max={max}
+        min={min}
+        marks={marks}
+
         // valueLabelDisplay="on"
         // TODO implement custom slider label ala https://codesandbox.io/s/material-demo-y76cj?file=/demo.js:196-258
         //aria-labelledby="range-slider"

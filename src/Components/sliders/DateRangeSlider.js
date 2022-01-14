@@ -1,7 +1,18 @@
 import React from 'react'
 import RangeSlider from './RangeSlider'
+import { Grid } from '@material-ui/core';
 import moment from 'moment';
 
+const marks = [
+  {
+    value: 1,
+    label: '1 January'
+  },
+  {
+    value: 365,
+    label: '31 December'
+  }
+]
 export default function DateRangeSlider({ dayRange, setDayRange }) {
   
   function rangeChangeCommitted(event, value){
@@ -26,9 +37,19 @@ export default function DateRangeSlider({ dayRange, setDayRange }) {
   }
 
   return (
-    <RangeSlider
-      onChangeCommitted={rangeChangeCommitted}
-      startingValue={convertStartingDayRange}
-    />
+    <div style={{height: 100, width: 400}}>
+      <br />
+      <Grid container direction="row" justifyContent="center">
+        <Grid item>
+        <RangeSlider
+          onChangeCommitted={rangeChangeCommitted}
+          startingValue={convertStartingDayRange}
+          marks={marks}
+          max={365}
+          min={1}
+        />
+        </Grid>
+      </Grid>
+    </div>
   )
 }
